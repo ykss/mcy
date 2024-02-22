@@ -1,11 +1,13 @@
-import "./App.css";
 import Stack from "@mui/material/stack";
-import Typography from "@mui/material/Typography";
+
+import Main from "./pages/Main";
+
+import "./App.css";
 
 function App() {
   return (
     <Stack>
-      <Typography>메인 페이지</Typography>
+      <Main />
     </Stack>
   );
 }
