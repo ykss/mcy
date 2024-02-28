@@ -1,3 +1,5 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 import Main from "./pages/Main";
 import BirthDay from "./pages/BirthDay";
 import Attendance from "./pages/Attendance";
@@ -6,7 +8,6 @@ import ReaderAdmin from "./pages/ReaderAdmin.jsx";
 import MemberAdmin from "./pages/MemberAdmin.jsx";
 
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
@@ -16,8 +17,10 @@ function App() {
         <Route path="/birthDay" element={<BirthDay />} />
         <Route path="/attendance" element={<Attendance />} />
         <Route path="/news" element={<News />} />
-        <Route path="/readerAdmin" element={<ReaderAdmin />} />
-        <Route path="/memberAdmin" element={<MemberAdmin />} />
+        {/* 셀 관리 페이지 */}
+        <Route path="/reader-admin" element={<ReaderAdmin />} />
+        {/* 셀원 관리 페이지 */}
+        <Route path="/member-admin" element={<MemberAdmin />} />
       </Routes>
     </BrowserRouter>
   );
