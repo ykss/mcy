@@ -2,10 +2,6 @@
 
 -
 
-## PR Link
-
-- https://github.com/ykss/mcy/pull/6
-
 ## 고민하거나 궁금한 부분
 
 -
