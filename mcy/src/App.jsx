@@ -4,8 +4,8 @@ import Main from "./pages/Main";
 import BirthDay from "./pages/BirthDay";
 import Attendance from "./pages/Attendance";
 import News from "./pages/News";
-import ReaderAdmin from "./pages/ReaderAdmin.jsx";
-import MemberAdmin from "./pages/MemberAdmin.jsx";
+// import ReaderAdmin from "./pages/ReaderAdmin.jsx";
+// import MemberAdmin from "./pages/MemberAdmin.jsx";
 
 import "./App.css";
 
@@ -18,9 +18,9 @@ function App() {
         <Route path="/attendance" element={<Attendance />} />
         <Route path="/news" element={<News />} />
         {/* 셀 관리 페이지 */}
-        <Route path="/reader-admin" element={<ReaderAdmin />} />
+        {/* <Route path="/reader-admin" element={<ReaderAdmin />} /> */}
         {/* 셀원 관리 페이지 */}
-        <Route path="/member-admin" element={<MemberAdmin />} />
+        {/* <Route path="/member-admin" element={<MemberAdmin />} /> */}
       </Routes>
     </BrowserRouter>
   );
