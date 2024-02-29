@@ -1,0 +1,15 @@
+## 작업내용
+
+-
+
+## PR Link
+
+- https://github.com/ykss/mcy/pull/6
+
+## 고민하거나 궁금한 부분
+
+-
+
+## 캡처 또는 영상 (optional)
+
+-
