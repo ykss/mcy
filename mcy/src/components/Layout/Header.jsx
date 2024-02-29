@@ -4,18 +4,14 @@ import MenuIcon from "@mui/icons-material/Menu";
 const Header = () => {
   return (
     <>
-      <HeaderWrapper
-        borderBottom="1px solid #000"
-        justifyContent="center"
-        padding="5px"
-      >
+      <HeaderWrapper>
         <Typography fontWeight="bold">MCY</Typography>
       </HeaderWrapper>
-      <HeaderWrapper justifyContent="flex-end">
+      <MenuIconWrapper>
         <IconButton>
-          <MenuIcon></MenuIcon>
+          <MenuIcon />
         </IconButton>
-      </HeaderWrapper>
+      </MenuIconWrapper>
     </>
   );
 };
@@ -23,6 +19,18 @@ const Header = () => {
 const HeaderWrapper = styled(Stack)`
   flex-direction: row;
   align-items: center;
+  justify-content: center;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  border-bottom: 1px solid #000;
+  padding: 5px;
+`;
+
+const MenuIconWrapper = styled(Stack)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
   width: 100vw;
   position: fixed;
   top: 0;
