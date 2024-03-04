@@ -1,28 +1,31 @@
-/** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { Stack, styled, Typography, IconButton } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const Header = () => {
   return (
-    <div
-      css={css({
-        color: "black",
-        fontWeight: "bold",
-        position: "fixed",
-        borderBottom: "solid #FEEDCD",
-        top: "10px",
-        right: "0",
-        width: "100vw",
-      })}
-    >
-      <div
-        css={css({
-          margin: "0 auto",
-        })}
+    <>
+      <HeaderWrapper
+        borderBottom="1px solid #000"
+        justifyContent="center"
+        padding="5px"
       >
-        MCY
-      </div>
-    </div>
+        <Typography fontWeight="bold">MCY</Typography>
+      </HeaderWrapper>
+      <HeaderWrapper justifyContent="flex-end">
+        <IconButton>
+          <MenuIcon></MenuIcon>
+        </IconButton>
+      </HeaderWrapper>
+    </>
   );
 };
+
+const HeaderWrapper = styled(Stack)`
+  flex-direction: row;
+  align-items: center;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+`;
 
 export default Header;
