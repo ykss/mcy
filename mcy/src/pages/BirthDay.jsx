@@ -4,6 +4,7 @@ const BirthDay = () => {
   return (
     <div>
       <Header />
+      <div>BirthDay</div>
     </div>
   );
 };
