@@ -1,5 +1,5 @@
-import { Stack, styled, Typography, IconButton } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import { Stack, styled, Typography } from "@mui/material";
+import Drawer from "./Drawer";
 
 const Header = () => {
   return (
@@ -8,9 +8,7 @@ const Header = () => {
         <Typography fontWeight="bold">MCY</Typography>
       </HeaderWrapper>
       <MenuIconWrapper>
-        <IconButton>
-          <MenuIcon />
-        </IconButton>
+        <Drawer />
       </MenuIconWrapper>
     </>
   );

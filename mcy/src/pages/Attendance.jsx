@@ -4,6 +4,7 @@ const Attendance = () => {
   return (
     <div>
       <Header />
+      <div>Attendance</div>
     </div>
   );
 };
