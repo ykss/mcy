@@ -26,8 +26,6 @@ const HeaderWrapper = styled(Stack)`
   justify-content: center;
   width: 100%;
   height: 50px;
-  position: fixed;
-  top: 0;
   border-bottom: 1px solid #FEEDCD;
 `;
 
