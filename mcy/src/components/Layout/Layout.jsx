@@ -1,11 +1,14 @@
-/* eslint-disable react/prop-types */
-import Footer from "./Footer";
+import React from "react";
+import Drawer from "./Drawer";
 import Header from "./Header";
 
-const Layout = ({ children }) => {
+const Layout = () => {
+  const [open, setOpen] = React.useState(false);
+
   return (
     <div>
-      <Header />
+      <Header setOpen={setOpen} />
+      <Drawer open={open} setOpen={setOpen} />
     </div>
   );
 };
