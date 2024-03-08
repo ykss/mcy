@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material";
 import Stack from "@mui/material/Stack";
@@ -13,7 +11,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckIcon from "@mui/icons-material/Check";
 
-// eslint-disable-next-line react/prop-types
 const Drawer = ({ open, setOpen }) => {
   const Navigate = useNavigate();
 
@@ -26,11 +23,15 @@ const Drawer = ({ open, setOpen }) => {
   };
 
   const handleGoToAttendance = () => {
-    Navigate("/Attendance");
+    Navigate("/attendance");
+  };
+
+  const handleGoToBirthday = () => {
+    Navigate("/birthday");
   };
 
   const DrawerList = (
-    <DrawerWapper rol="presentation">
+    <Box rol="presentation">
       <DrawerTop>
         <ExitIcon onClick={toggleDrawer(false)} />
       </DrawerTop>
@@ -51,16 +52,10 @@ const Drawer = ({ open, setOpen }) => {
           <ListIcon>
             <ListCheckIcon />
           </ListIcon>
-          <ListText
-            onClick={() => {
-              Navigate("/birthDay");
-            }}
-          >
-            생일
-          </ListText>
+          <ListText onClick={handleGoToBirthday}>생일</ListText>
         </ListButton>
       </List>
-    </DrawerWapper>
+    </Box>
   );
 
   return (
@@ -72,10 +67,6 @@ const Drawer = ({ open, setOpen }) => {
     </>
   );
 };
-
-const DrawerWapper = styled(Box)`
-  width: 213px;
-`;
 
 const DrawerTop = styled(Stack)`
   flex-direction: row;
