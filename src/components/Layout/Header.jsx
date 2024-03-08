@@ -1,12 +1,9 @@
-/* eslint-disable no-unused-vars */
-import React from "react";
 import { styled } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 
-// eslint-disable-next-line react/prop-types
 const Header = ({ setOpen }) => {
   return (
     <>
