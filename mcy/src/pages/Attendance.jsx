@@ -1,11 +1,10 @@
-import Header from "../components/Layout/Header";
+import Layout from "../components/Layout/Layout";
 
 const Attendance = () => {
   return (
-    <div>
-      <Header />
+    <Layout>
       <div>Attendance</div>
-    </div>
+    </Layout>
   );
 };
 

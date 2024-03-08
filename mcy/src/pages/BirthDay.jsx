@@ -1,11 +1,10 @@
-import Header from "../components/Layout/Header";
+import Layout from "../components/Layout/Layout";
 
 const BirthDay = () => {
   return (
-    <div>
-      <Header />
+    <Layout>
       <div>BirthDay</div>
-    </div>
+    </Layout>
   );
 };
 

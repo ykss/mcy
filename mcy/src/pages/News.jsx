@@ -1,11 +1,10 @@
-import Header from "../components/Layout/Header";
+import Layout from "../components/Layout/Layout";
 
 const News = () => {
   return (
-    <div>
-      <Header />
-      <div>News</div>
-    </div>
+    <Layout>
+      <div>BirthDay</div>
+    </Layout>
   );
 };
 
