@@ -3,7 +3,6 @@ import { styled } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import DrawerSlide from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItemText from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -13,7 +12,6 @@ import CheckIcon from "@mui/icons-material/Check";
 
 const Drawer = ({ open, setOpen }) => {
   const Navigate = useNavigate();
-
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
@@ -60,10 +58,9 @@ const Drawer = ({ open, setOpen }) => {
 
   return (
     <>
-      <Button onClick={toggleDrawer(true)}></Button>
-      <DrawerSlide open={open} onClose={toggleDrawer(false)} anchor="right">
+      <DrawerSlideBox open={open} onClose={toggleDrawer(false)} anchor="right">
         {DrawerList}
-      </DrawerSlide>
+      </DrawerSlideBox>
     </>
   );
 };
@@ -104,5 +101,9 @@ const ListText = styled(ListItemText)`
   font-weight: 700;
   font-size: 20px;
 `;
-
+const DrawerSlideBox = styled(DrawerSlide)`
+  .MuiPaper-root {
+    width: 70%;
+  }
+`;
 export default Drawer;
