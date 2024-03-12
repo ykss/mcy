@@ -3,7 +3,6 @@ import { styled } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import DrawerSlide from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItemText from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -60,7 +59,6 @@ const Drawer = ({ open, setOpen }) => {
 
   return (
     <>
-      <Button onClick={toggleDrawer(true)}></Button>
       <DrawerSlide open={open} onClose={toggleDrawer(false)} anchor="right">
         {DrawerList}
       </DrawerSlide>
