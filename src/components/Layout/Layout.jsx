@@ -17,6 +17,7 @@ const Layout = ({ children }) => {
     </>
   );
 };
+
 const ContentWrapper = styled(Stack)`
   width: 100vw;
   height: calc(100dvh - 120px);
