@@ -32,7 +32,6 @@ body {
   height: 100%;
   min-width: 320px;
   min-height: 100vh;
-
 }
 
 h1 {
@@ -59,6 +58,19 @@ button:hover {
   :root {
     color: #213547;
     background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #ffffff;
+    background-color: #333;
   }
   a:hover {
     color: #747bff;
