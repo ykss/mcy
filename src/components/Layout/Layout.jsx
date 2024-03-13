@@ -1,16 +1,20 @@
 import React from "react";
-import Drawer from "./Drawer";
-import Header from "./Header";
-import Footer from "./Footer";
 import { Stack, styled } from "@mui/material";
 
+import MenuDrawer from "./MenuDrawer";
+import Header from "./Header";
+import Footer from "./Footer";
+
 const Layout = ({ children }) => {
-  const [open, setOpen] = React.useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   return (
     <>
-      <Header setOpen={setOpen} />
-      <Drawer open={open} setOpen={setOpen} />
+      <Header setIsDrawerOpen={setIsDrawerOpen} />
+      <MenuDrawer
+        isDrawerOpen={isDrawerOpen}
+        setIsDrawerOpen={setIsDrawerOpen}
+      />
       <ContentWrapper>{children}</ContentWrapper>
       <Footer />
     </>

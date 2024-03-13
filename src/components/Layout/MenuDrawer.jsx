@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-import DrawerSlide from "@mui/material/Drawer";
+import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItemText from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -10,10 +10,10 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckIcon from "@mui/icons-material/Check";
 
-const Drawer = ({ open, setOpen }) => {
+const MenuDrawer = ({ isDrawerOpen, setIsDrawerOpen }) => {
   const Navigate = useNavigate();
   const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
+    setIsDrawerOpen(newOpen);
   };
 
   const handleGoToNews = () => {
@@ -58,9 +58,13 @@ const Drawer = ({ open, setOpen }) => {
 
   return (
     <>
-      <DrawerSlideBox open={open} onClose={toggleDrawer(false)} anchor="right">
+      <DrawerWrapper
+        open={isDrawerOpen}
+        onClose={toggleDrawer(false)}
+        anchor="right"
+      >
         {DrawerList}
-      </DrawerSlideBox>
+      </DrawerWrapper>
     </>
   );
 };
@@ -101,9 +105,10 @@ const ListText = styled(ListItemText)`
   font-weight: 700;
   font-size: 20px;
 `;
-const DrawerSlideBox = styled(DrawerSlide)`
-  .MuiPaper-root {
+
+const DrawerWrapper = styled(Drawer)`
+  .MuiDrawer-paper {
     width: 70%;
   }
 `;
-export default Drawer;
+export default MenuDrawer;
