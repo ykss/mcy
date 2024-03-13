@@ -71,7 +71,7 @@ const CarouselWrapper = styled(Stack)`
   height: 50%;
   width: 100%;
 `;
-// 감싸는 것은 Wrapper Stack
+
 const ContentWrapper = styled(Stack)`
   width: 80%;
   align-items: flex-start;
