@@ -4,7 +4,12 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 
-const Header = ({ setOpen }) => {
+const Header = ({ setIsDrawerOpen }) => {
+  
+  const handleDrawerOpen = (newOpen) => () => {
+    setIsDrawerOpen(newOpen);
+  };
+  
   return (
     <>
       <HeaderWrapper>
@@ -12,7 +17,7 @@ const Header = ({ setOpen }) => {
           <Typography fontWeight="bold">MCY</Typography>
         </LogoWrapper>
         <MenuIconWrapper>
-          <IconButton onClick={() => setOpen(true)}>
+          <IconButton onClick={handleDrawerOpen(true)}>
             <MenuIcons />
           </IconButton>
         </MenuIconWrapper>
@@ -25,13 +30,13 @@ const LogoWrapper = styled(Stack)`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 100vw; 
+  width: 100vw;
 `;
 
 const MenuIconWrapper = styled(Stack)`
   position: absolute;
   top: 5px;
-  right: 1%; 
+  right: 1%;
 `;
 
 const MenuIcons = styled(MenuIcon)`

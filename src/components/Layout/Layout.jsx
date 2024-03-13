@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
 
   return (
     <div>
-      <Header setOpen={setIsDrawerOpen} />
+      <Header setIsDrawerOpen={setIsDrawerOpen} />
       <Drawer open={isDrawerOpen} setOpen={setIsDrawerOpen} />
       <ContentWrapper>{children}</ContentWrapper>
       <Footer />
