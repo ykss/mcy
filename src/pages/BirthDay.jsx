@@ -5,12 +5,10 @@ import { styled, Stack, Typography } from "@mui/material";
 const BirthDay = () => {
   return (
     <Layout>
-      <BirthdayComponentWrapper>
+      <BirthdayWrapper>
         <TitleWrapper>
-          <Title>
-            <CakeIcon sx={{ fontSize: 40 }} />
-            <Typography fontSize="20px">생일!</Typography>
-          </Title>
+          <CakeIcon sx={{ fontSize: 40 }} />
+          <Typography fontSize="20px">생일!</Typography>
         </TitleWrapper>
         <MonthChip>
           <Typography>MonthChip</Typography>
@@ -18,26 +16,23 @@ const BirthDay = () => {
         <BirthdayList>
           <Typography>생일자 명단</Typography>
         </BirthdayList>
-      </BirthdayComponentWrapper>
+      </BirthdayWrapper>
     </Layout>
   );
 };
 
-const BirthdayComponentWrapper = styled(Stack)`
+const BirthdayWrapper = styled(Stack)`
   height: calc(100dvh - 120px);
-  width:100vw;
+  width: 100vw;
 `;
 const TitleWrapper = styled(Stack)`
   flex-direction: row;
-  align-items: center;
-  height: 15%;
-`;
-const Title = styled(Stack)`
-  width: 35%;
-  flex-direction: row;
   align-items: flex-end;
+  width: 35%;
+  height: 10  %;
   justify-content: space-evenly;
 `;
+
 const MonthChip = styled(Stack)`
   height: 15%;
   width: 100%;
