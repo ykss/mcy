@@ -10,10 +10,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckIcon from "@mui/icons-material/Check";
 
-const MenuDrawer = ({ isDrawerOpen, setIsDrawerOpen }) => {
+const MenuDrawer = ({ open, setOpen }) => {
   const Navigate = useNavigate();
-  const toggleDrawer = (newOpen) => () => {
-    setIsDrawerOpen(newOpen);
+
+  const toggleDrawer = () => {
+    setOpen(false);
   };
 
   const handleGoToNews = () => {
@@ -31,7 +32,7 @@ const MenuDrawer = ({ isDrawerOpen, setIsDrawerOpen }) => {
   const DrawerList = (
     <Box rol="presentation">
       <DrawerTop>
-        <ExitIcon onClick={toggleDrawer(false)} />
+        <ExitIcon onClick={toggleDrawer} />
       </DrawerTop>
       <List>
         <ListButton>
@@ -58,11 +59,7 @@ const MenuDrawer = ({ isDrawerOpen, setIsDrawerOpen }) => {
 
   return (
     <>
-      <DrawerWrapper
-        open={isDrawerOpen}
-        onClose={toggleDrawer(false)}
-        anchor="right"
-      >
+      <DrawerWrapper open={open} onClose={toggleDrawer} anchor="right">
         {DrawerList}
       </DrawerWrapper>
     </>
@@ -111,4 +108,5 @@ const DrawerWrapper = styled(Drawer)`
     width: 70%;
   }
 `;
+
 export default MenuDrawer;

@@ -1,7 +1,7 @@
 import Carousel from "react-material-ui-carousel";
-import mainSlider1 from "../../images/mainSlider1.webp";
-import mainSlider2 from "../../images/mainSlider2.webp";
-import mainSlider3 from "../../images/mainSlider3.webp";
+import mainSlider1 from "../../assets/images/mainSlider1.webp";
+import mainSlider2 from "../../assets/images/mainSlider2.webp";
+import mainSlider3 from "../../assets/images/mainSlider3.webp";
 import { Box, styled } from "@mui/material";
 
 const CarouselSilder = () => {

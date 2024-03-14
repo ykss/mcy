@@ -1,5 +1,5 @@
-import React from "react";
 import { Stack, styled } from "@mui/material";
+import React from "react";
 
 import MenuDrawer from "./MenuDrawer";
 import Header from "./Header";
@@ -11,21 +11,17 @@ const Layout = ({ children }) => {
   return (
     <>
       <Header setIsDrawerOpen={setIsDrawerOpen} />
-      <MenuDrawer
-        isDrawerOpen={isDrawerOpen}
-        setIsDrawerOpen={setIsDrawerOpen}
-      />
+      <MenuDrawer open={isDrawerOpen} setOpen={setIsDrawerOpen} />
       <ContentWrapper>{children}</ContentWrapper>
       <Footer />
     </>
   );
 };
-
-export default Layout;
-
 const ContentWrapper = styled(Stack)`
+  width: 100vw;
   height: calc(100dvh - 120px);
   flex-direction: row;
   justify-content: center;
   align-items: center;
 `;
+export default Layout;
