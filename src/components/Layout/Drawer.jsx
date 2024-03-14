@@ -13,8 +13,8 @@ import CheckIcon from "@mui/icons-material/Check";
 const Drawer = ({ open, setOpen }) => {
   const Navigate = useNavigate();
 
-  const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
+  const toggleDrawer = () => {
+    setOpen(false);
   };
 
   const handleGoToNews = () => {
@@ -32,7 +32,7 @@ const Drawer = ({ open, setOpen }) => {
   const DrawerList = (
     <Box rol="presentation">
       <DrawerTop>
-        <ExitIcon onClick={toggleDrawer(false)} />
+        <ExitIcon onClick={toggleDrawer} />
       </DrawerTop>
       <List>
         <ListButton>
@@ -59,7 +59,7 @@ const Drawer = ({ open, setOpen }) => {
 
   return (
     <>
-      <DrawerSlide open={open} onClose={toggleDrawer(false)} anchor="right">
+      <DrawerSlide open={open} onClose={toggleDrawer} anchor="right">
         {DrawerList}
       </DrawerSlide>
     </>
