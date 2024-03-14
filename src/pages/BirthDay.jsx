@@ -1,6 +1,7 @@
-import Layout from "../components/Layout/Layout";
 import CakeIcon from "@mui/icons-material/Cake";
 import { styled, Stack, Typography } from "@mui/material";
+
+import Layout from "../components/Layout/Layout";
 
 const BirthDay = () => {
   return (
@@ -27,10 +28,10 @@ const BirthdayWrapper = styled(Stack)`
 `;
 const TitleWrapper = styled(Stack)`
   flex-direction: row;
-  align-items: flex-end;
-  width: 35%;
-  height: 10  %;
-  justify-content: space-evenly;
+  align-items: center;
+  height: 10%;
+  gap: 15px;
+  padding: 0 10px;
 `;
 
 const MonthChip = styled(Stack)`

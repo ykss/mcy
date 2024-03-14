@@ -6,8 +6,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 const Header = ({ setIsDrawerOpen }) => {
   
-  const handleDrawerOpen = (newOpen) => () => {
-    setIsDrawerOpen(newOpen);
+  const handleDrawerOpen = () => {
+    setIsDrawerOpen(true);
   };
   
   return (
@@ -17,7 +17,7 @@ const Header = ({ setIsDrawerOpen }) => {
           <Typography fontWeight="bold">MCY</Typography>
         </LogoWrapper>
         <MenuIconWrapper>
-          <IconButton onClick={handleDrawerOpen(true)}>
+          <IconButton onClick={handleDrawerOpen}>
             <MenuIcons />
           </IconButton>
         </MenuIconWrapper>
