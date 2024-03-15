@@ -6,7 +6,7 @@ import Attendance from "./pages/Attendance";
 import News from "./pages/News";
 // import ReaderAdmin from "./pages/ReaderAdmin.jsx";
 // import MemberAdmin from "./pages/MemberAdmin.jsx";
-import theme from "./assets/theme/Theme";
+import theme from "./assets/theme/theme.js";
 
 import "./App.css";
 
