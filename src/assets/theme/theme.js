@@ -2,13 +2,18 @@ import { createTheme } from "@material-ui/core/styles";
 
 const theme = createTheme({
   palette: {
-    h5: {
+    primary: {
+      main: "#FFFAEC",
+    },
+  },
+  typography: {
+    h4: {
       fontFamily: "INTER",
       fontSize: "15px",
       fontWeight: "700",
       color: "#000",
     },
-    h6: {
+    h5: {
       fontFamily: "LINE SEED SANS KR",
       fontSize: "12px",
       fontWeight: "700",
@@ -25,9 +30,6 @@ const theme = createTheme({
       fontSize: "8px",
       fontWeight: "600",
       color: "#000",
-    },
-    primary: {
-      main: "#FFFAEC",
     },
   },
 });

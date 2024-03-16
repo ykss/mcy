@@ -1,65 +1,65 @@
 import Carousel from "react-material-ui-carousel";
-import mainSlider1 from "../../images/mainSlider1.webp";
-import mainSlider2 from "../../images/mainSlider2.webp";
-import mainSlider3 from "../../images/mainSlider3.webp";
-import { Box, styled } from "@mui/material";
+import { Stack, styled } from "@mui/material";
 
-const CarouselSilder = () => {
-  const McyImgs = [
-    {
-      img: mainSlider1,
-    },
-    {
-      img: mainSlider2,
-    },
-    {
-      img: mainSlider3,
-    },
-  ];
-
+const CarouselSilder = ({ imageArray }) => {
   const settings = {
     interval: 3000,
-    indicators: true,
+    animation: "slide",
+    indicatorContainerProps: {
+      style: {
+        width: "100%",
+        marginTop: "-30px",
+        textAlign: "center",
+        zIndex: 1,
+      },
+    },
+    indicatorIconButtonProps: {
+      style: {
+        color: "#000",
+        opacity: "0.7",
+        transition: "transform 0.3s ease-in-out",
+      },
+    },
+    activeIndicatorIconButtonProps: {
+      style: {
+        color: "#fff",
+        opacity: "1",
+        transform: "scale(1.2)",
+      },
+    },
+    navButtonsProps: {
+      style: {
+        display: "none",
+      },
+    },
   };
 
   return (
-    <CarouselBox {...settings}>
-      {McyImgs.map((content, index) => (
-        <ImgBox key={index}>
-          <img src={content.img} alt={`Slider ${index + 1}`} />
-        </ImgBox>
+    <CarouselWapper {...settings}>
+      {imageArray.map((content, index) => (
+        <Stack key={index}>
+          <ImgWapper src={content.img} alt={`Slider ${index + 1}`} />
+        </Stack>
       ))}
-    </CarouselBox>
+    </CarouselWapper>
   );
 };
 
 export default CarouselSilder;
 
-const CarouselBox = styled(Carousel)`
-  width: 100%;
-  height: 100%;
-
-  .react-material-ui-carousel__container {
-    height: 100%;
-    display: flex;
-    align-items: stretch;
-  }
-
-  .react-material-ui-carousel__dot {
-    bottom: 20px;
-  }
-`;
-
-const ImgBox = styled(Box)`
-  width: 100%;
-  height: 100%;
+const CarouselWapper = styled(Carousel)`
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
-  & > img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  flex-direction: column;
+  width: 80%;
+  height: 100%;
+`;
+
+const ImgWapper = styled("img")`
+  display: flex;
+  justify-content: center;
+  height: 200px;
+  border-radius: 20px;
+  background-repeat: no-repeat;
 `;
