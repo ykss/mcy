@@ -4,26 +4,35 @@ import Typography from "@mui/material/Typography";
 import { Chip, styled } from "@mui/material";
 import Layout from "../components/Layout/Layout";
 import CarouselSilder from "../components/shared/CarouselSilder";
+import mainSlider1 from "../assets/images/mainSlider1.webp";
+import mainSlider2 from "../assets/images/mainSlider2.webp";
+import mainSlider3 from "../assets/images/mainSlider3.webp";
 
 const Main = () => {
+  const McyImgs = [
+    {
+      img: mainSlider1,
+    },
+    {
+      img: mainSlider2,
+    },
+    {
+      img: mainSlider3,
+    },
+  ];
+
   return (
     <Layout>
       <MainWrapper>
         <CarouselWrapper>
-          <CarouselSilder />
+          <CarouselSilder imageArray={McyImgs} />
         </CarouselWrapper>
         <ContentWrapper sx={{ height: "20%" }}>
           <Chip
             label="교육 표어"
             color="primary"
-            sx={{
-              fontFamily: "LINE SEED SANS KR",
-              fontSize: "12px",
-              fontWeight: "700",
-              color: "#000",
-            }}
+            style={{ fontWeight: "700" }}
           />
-
           <Typography variant="body1">
             예수그리스도의 영이 다시 살아나게 하소서
           </Typography>
@@ -33,12 +42,7 @@ const Main = () => {
           <Chip
             label="교육 목표"
             color="primary"
-            sx={{
-              fontFamily: "LINE SEED SANS KR",
-              fontSize: "12px",
-              fontWeight: "700",
-              color: "#000",
-            }}
+            style={{ fontWeight: "700" }}
           />
           <Typography variant="body1">
             1. 예배로 온전한 신앙을 회복하자.
@@ -67,7 +71,7 @@ const CarouselWrapper = styled(Stack)`
   height: 50%;
   width: 100%;
 `;
-
+// 감싸는 것은 Wrapper Stack
 const ContentWrapper = styled(Stack)`
   width: 80%;
   align-items: flex-start;

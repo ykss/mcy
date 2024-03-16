@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -5,15 +6,21 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 
 const Header = ({ setIsDrawerOpen }) => {
+  const Navigate = useNavigate();
+
   const handleDrawerOpen = () => {
     setIsDrawerOpen(true);
   };
-
+  const handleGoMain = () => {
+    Navigate("/");
+  };
   return (
     <>
       <HeaderWrapper>
         <LogoWrapper>
-          <Typography fontWeight="bold">MCY</Typography>
+          <Typography fontWeight="bold" variant="h6" onClick={handleGoMain}>
+            MCY
+          </Typography>
         </LogoWrapper>
         <MenuIconWrapper>
           <IconButton onClick={handleDrawerOpen}>
