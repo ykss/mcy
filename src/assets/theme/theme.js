@@ -9,7 +9,7 @@ const theme = createTheme({
   typography: {
     h4: {
       fontFamily: "INTER",
-      fontSize: "15px",
+      fontSize: "20px",
       fontWeight: "700",
       color: "#000",
     },
