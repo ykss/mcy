@@ -20,6 +20,7 @@ const CarouselSilder = ({ imageArray }) => {
         transition: "transform 0.3s ease-in-out",
       },
     },
+
     activeIndicatorIconButtonProps: {
       style: {
         color: "#fff",
@@ -54,6 +55,9 @@ const CarouselWapper = styled(Carousel)`
   flex-direction: column;
   width: 80%;
   height: 100%;
+  .MuiSvgIcon-root {
+    font-size: 12px;
+  }
 `;
 
 const ImgWapper = styled("img")`
