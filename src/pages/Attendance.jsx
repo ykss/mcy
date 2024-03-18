@@ -38,16 +38,15 @@ const Attendance = () => {
     setValue(newDate);
   };
 
-  const handleCalendarClick = () => {
-    setIsOpenCalendar(true);
-  };
-
   const handleLeaderClick = (cell) => {
     setSelectedLeader(cell);
   };
 
   const handleCheck = () => {
     setIsChecked(true);
+  };
+  const handleCalendarClick = () => {
+    setIsOpenCalendar(true);
   };
   return (
     <Layout>
