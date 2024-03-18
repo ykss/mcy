@@ -4,6 +4,7 @@ import { Stack, styled } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ChurchIcon from "@mui/icons-material/Church";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
@@ -21,13 +22,6 @@ const Attendance = () => {
   };
 
   const settings = {
-    MuiInputBase: {
-      input: {
-        // fontSize: "200px",
-        backgroundColor: "blue",
-        color: "red",
-      },
-    },
     MuiPickersToolbar: {
       styleOverrides: {
         root: {
@@ -35,6 +29,9 @@ const Attendance = () => {
         },
       },
     },
+  };
+  const handleCalendarClick = () => {
+    setOpenCalendar(true);
   };
   return (
     <Layout>
@@ -46,12 +43,15 @@ const Attendance = () => {
         <CalendarWapper sx={{ height: "10%" }}>
           <ArrowLeftIcon />
           <LocalizationProvider dateAdapter={AdapterDayjs} {...settings}>
+            <CalendarMonthIcon
+              onClick={handleCalendarClick}
+              onChange={handleChange}
+            />
             <MobileDatePicker
               defaultValue={dayjs(value)}
               onChange={handleChange}
               format="YYYY.MM.DD"
               open={openCalendar}
-              onOpen={() => setOpenCalendar(true)}
               onClose={() => setOpenCalendar(false)}
             />
           </LocalizationProvider>
