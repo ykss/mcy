@@ -1,7 +1,6 @@
-import { styled, Stack, Typography } from "@mui/material";
+import { styled, Stack, Typography} from "@mui/material";
 import CakeIcon from "@mui/icons-material/Cake";
 import Chip from "@mui/material-next/Chip";
-
 
 import Layout from "../components/Layout/Layout";
 
@@ -13,9 +12,27 @@ const BirthDay = () => {
           <CakeIcon sx={{ fontSize: 40 }} />
           <Typography fontSize="20px">생일!</Typography>
         </TitleWrapper>
-        <MonthChip>
-          <ChipsArray />
-        </MonthChip>
+        <ChipWrapper>
+          {chipData.map((data) => {
+            return (
+              <ChipItem key={data.key}>
+                <Chip
+                  sx={{
+                    width: "100%",
+                    height: "80%",
+                    px: 0,
+                    border: 2,
+                    borderColor: "#986C6C",
+                    fontSize: 9,
+                  }}
+                  label={data.label}
+                  variant="outlined"
+                />
+              </ChipItem>
+            );
+          })}
+        </ChipWrapper>
+        <BirthdayList></BirthdayList>
       </BirthdayWrapper>
     </Layout>
   );
@@ -35,21 +52,65 @@ const TitleWrapper = styled(Stack)`
 `;
 
 // MonthChip
-const MonthChip = styled(Stack)`
-  height: 90%;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-`;
+const chipData = [
+  {
+    key: 0,
+    label: "1월",
+  },
+  {
+    key: 1,
+    label: "2월",
+  },
+  {
+    key: 2,
+    label: "3월",
+  },
+  {
+    key: 3,
+    label: "4월",
+  },
+  {
+    key: 4,
+    label: "5월",
+  },
+  {
+    key: 5,
+    label: "6월",
+  },
+  {
+    key: 6,
+    label: "7월",
+  },
+  {
+    key: 7,
+    label: "8월",
+  },
+  {
+    key: 8,
+    label: "9월",
+  },
+  {
+    key: 9,
+    label: "10월",
+  },
+  {
+    key: 10,
+    label: "11월",
+  },
+  {
+    key: 11,
+    label: "12월",
+  },
+];
 
-const ListItem = styled("li")(({ theme }) => ({
+const ChipItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
   width: "calc(100%/7)",
-  height: "60%",
+  height: "25%",
 }));
 
 const ChipWrapper = styled(Stack)`
-  height: 10%;
+  height: 20%;
   width: 100%;
   flex-direction: row;
   justify-content: center;
@@ -58,88 +119,9 @@ const ChipWrapper = styled(Stack)`
   list-style: none;
 `;
 
-const ChipsArray = () => {
-  const chipData = [
-    {
-      key: 0,
-      label: "1월",
-    },
-    {
-      key: 1,
-      label: "2월",
-    },
-    {
-      key: 2,
-      label: "3월",
-    },
-    {
-      key: 3,
-      label: "4월",
-    },
-    {
-      key: 4,
-      label: "5월",
-    },
-    {
-      key: 5,
-      label: "6월",
-    },
-    {
-      key: 6,
-      label: "7월",
-    },
-    {
-      key: 7,
-      label: "8월",
-    },
-    {
-      key: 8,
-      label: "9월",
-    },
-    {
-      key: 9,
-      label: "10월",
-    },
-    {
-      key: 10,
-      label: "11월",
-    },
-    {
-      key: 11,
-      label: "12월",
-    },
-  ];
-
-  return (
-    <>
-      <ChipWrapper>
-        {chipData.map((data) => {
-          return (
-            <ListItem key={data.key}>
-              <Chip
-                sx={{
-                  width: "100%",
-                  height: "80%",
-                  px: 0,
-                  border: 2,
-                  borderColor: "#986C6C",
-                  fontSize: 9,
-                }}
-                label={data.label}
-                variant="outlined"
-              />
-            </ListItem>
-          );
-        })}
-      </ChipWrapper>
-      <BirthdayList></BirthdayList>
-    </>
-  );
-};
-
 // 생일 명단
 const BirthdayList = styled(Stack)`
-  height: 80%;
+  height: 50%;
   width: 100%;
   align-items: center;
   justify-content: center;
