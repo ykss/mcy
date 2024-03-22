@@ -42,8 +42,8 @@ const Attendance = () => {
     setIsOpenCalendar(true);
   };
 
-  const handleLeaderClick = (sell) => {
-    setSelectedLeader(sell);
+  const handleLeaderClick = (cell) => {
+    setSelectedLeader(cell);
   };
 
   const handleCheck = () => {
@@ -89,16 +89,16 @@ const Attendance = () => {
             return (
               <ChipItem key={item.id}>
                 <Chip
-                  label={item.sell}
-                  onClick={() => handleLeaderClick(item.sell)}
-                  color={selectedLeader === item.sell ? "secondary" : "info"}
+                  label={item.cell}
+                  onClick={() => handleLeaderClick(item.cell)}
+                  color={selectedLeader === item.cell ? "secondary" : "info"}
                   sx={{
                     width: "100%",
                     height: "80%",
                     border: "2px solid #c27979",
                     fontWeight: "700",
                     fontSize: "10px",
-                    color: selectedLeader === item.sell ? "#fff" : "#000",
+                    color: selectedLeader === item.cell ? "#fff" : "#000",
                   }}
                 />
               </ChipItem>
@@ -108,8 +108,8 @@ const Attendance = () => {
         <CounterWrapper sx={{ height: "5%" }}></CounterWrapper>
         <DataWrapper>
           {mcyMember.map((leader) => {
-            if (leader.sell === selectedLeader) {
-              return leader.sellMember.map((member) => (
+            if (leader.cell === selectedLeader) {
+              return leader.cellMember.map((member) => (
                 <Stack
                   style={{
                     flexDirection: "row",
