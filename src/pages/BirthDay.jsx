@@ -1,6 +1,5 @@
-import { styled, Stack, Typography} from "@mui/material";
+import { styled, Stack, Typography, Chip } from "@mui/material";
 import CakeIcon from "@mui/icons-material/Cake";
-import Chip from "@mui/material-next/Chip";
 
 import Layout from "../components/Layout/Layout";
 
@@ -103,11 +102,11 @@ const chipData = [
   },
 ];
 
-const ChipItem = styled("li")(({ theme }) => ({
-  margin: theme.spacing(0.5),
-  width: "calc(100%/7)",
-  height: "25%",
-}));
+const ChipItem = styled(Stack)`
+  width: calc(100%/7);
+  height: 25%;
+  margin: 1%;
+`;
 
 const ChipWrapper = styled(Stack)`
   height: 20%;
