@@ -1,6 +1,10 @@
 import React from "react";
 import dayjs from "dayjs";
+import "dayjs/locale/ko";
 import { Stack, styled } from "@mui/material";
+import Chip from "@mui/material/Chip";
+import Typography from "@mui/material/Typography";
+import Checkbox from "@mui/material/Checkbox";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
@@ -11,68 +15,129 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Layout from "../components/Layout/Layout";
 import Title from "../components/shared/Title";
+import mcyMember from "../components/shared/member.js";
 
 const Attendance = () => {
-  const [value, setValue] = React.useState(new Date());
-  const [openCalendar, setOpenCalendar] = React.useState(false);
+  const [value, setValue] = React.useState(dayjs());
+  const [isOpenCalendar, setIsOpenCalendar] = React.useState(false);
+  const [selectedLeader, setSelectedLeader] = React.useState(null);
+  const [isChecked, setIsChecked] = React.useState(false);
 
   const handleChange = (newData) => {
     setValue(newData);
-    setOpenCalendar(false);
+    setIsOpenCalendar(false);
   };
 
-  const settings = {
-    MuiPickersToolbar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "#000",
-        },
-      },
-    },
+  const handlePrevDayClick = () => {
+    const newDate = dayjs(value).subtract(1, "day");
+    setValue(newDate);
   };
+
+  const handleNextDayClick = () => {
+    const newDate = dayjs(value).add(1, "day");
+    setValue(newDate);
+  };
+
   const handleCalendarClick = () => {
-    setOpenCalendar(true);
+    setIsOpenCalendar(true);
+  };
+
+  const handleLeaderClick = (sell) => {
+    setSelectedLeader(sell);
+  };
+
+  const handleCheck = () => {
+    setIsChecked(true);
   };
   return (
     <Layout>
-      <AttendanceWapper>
-        <TitleWapper sx={{ height: "20%" }}>
+      <AttendanceWrapper>
+        <TitleWrapper sx={{ height: "20%" }}>
           <ChurchIcon sx={{ fontSize: 40 }} />
           <Title>출석</Title>
-        </TitleWapper>
-        <CalendarWapper sx={{ height: "10%" }}>
-          <ArrowLeftIcon />
-          <LocalizationProvider dateAdapter={AdapterDayjs} {...settings}>
-            <CalendarMonthIcon
-              onClick={handleCalendarClick}
-              onChange={handleChange}
+        </TitleWrapper>
+        <CalendarWrapper sx={{ height: "10%" }}>
+          <DateWrapper>
+            <ArrowIconWrapper
+              onClick={handlePrevDayClick}
+              icon={ArrowLeftIcon}
             />
-            <MobileDatePicker
-              defaultValue={dayjs(value)}
-              onChange={handleChange}
-              format="YYYY.MM.DD"
-              open={openCalendar}
-              onClose={() => setOpenCalendar(false)}
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+              <CalendarMonthIcon
+                onClick={handleCalendarClick}
+                onChange={handleChange}
+              />
+              <MobileDateWrapper
+                value={value}
+                onChange={handleChange}
+                format="YYYY.MM.DD"
+                open={isOpenCalendar}
+                onClose={() => setIsOpenCalendar(false)}
+              />
+            </LocalizationProvider>
+            <ArrowIconWrapper
+              onClick={handleNextDayClick}
+              icon={ArrowRightIcon}
             />
-          </LocalizationProvider>
-          <ArrowRightIcon />
-          <SettingsIcon />
-        </CalendarWapper>
-        <ReaderWapper sx={{ height: "20%" }}></ReaderWapper>
-        <CounterWapper sx={{ height: "5%" }}></CounterWapper>
-        <DataWapper sx={{ height: "50%" }}></DataWapper>
-      </AttendanceWapper>
+          </DateWrapper>
+          <SettingsWrapper>
+            <SettingsIcon />
+          </SettingsWrapper>
+        </CalendarWrapper>
+        <LeaderWrapper>
+          {mcyMember.map((item) => {
+            return (
+              <ChipItem key={item.id}>
+                <Chip
+                  label={item.sell}
+                  onClick={() => handleLeaderClick(item.sell)}
+                  color={selectedLeader === item.sell ? "secondary" : "info"}
+                  sx={{
+                    width: "100%",
+                    height: "80%",
+                    border: "2px solid #c27979",
+                    fontWeight: "700",
+                    fontSize: "10px",
+                    color: selectedLeader === item.sell ? "#fff" : "#000",
+                  }}
+                />
+              </ChipItem>
+            );
+          })}
+        </LeaderWrapper>
+        <CounterWrapper sx={{ height: "5%" }}></CounterWrapper>
+        <DataWrapper>
+          {mcyMember.map((leader) => {
+            if (leader.sell === selectedLeader) {
+              return leader.sellMember.map((member) => (
+                <Stack
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  key={member.member}
+                >
+                  <Checkbox onClick={handleCheck} isChecked={isChecked} />
+                  <Typography>{member.member}</Typography>
+                </Stack>
+              ));
+            }
+            return null;
+          })}
+        </DataWrapper>
+      </AttendanceWrapper>
     </Layout>
   );
 };
 export default Attendance;
 
-const AttendanceWapper = styled(Stack)`
+const AttendanceWrapper = styled(Stack)`
   width: 90%;
   height: calc(90dvh - 120px);
 `;
 
-const TitleWapper = styled(Stack)`
+const TitleWrapper = styled(Stack)`
   flex-direction: row;
   align-items: center;
   height: 10%;
@@ -80,19 +145,76 @@ const TitleWapper = styled(Stack)`
   padding: 0 10px;
 `;
 
-const CalendarWapper = styled(Stack)`
+const CalendarWrapper = styled(Stack)`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const DateWrapper = styled(Stack)`
+  flex: 1;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border: 1px solid blue;
 `;
 
-const ReaderWapper = styled(Stack)`
-  border: 1px solid green;
+const ArrowIconWrapper = styled(({ icon: IconComponent, ...props }) => (
+  <IconComponent {...props} />
+))`
+  color: #69535f;
+  font-size: 35px;
+  font-weight: 700;
 `;
-const CounterWapper = styled(Stack)`
+
+const MobileDateWrapper = styled(MobileDatePicker)`
+  width: 40%;
+  & .MuiInputBase-root {
+    justify-content: center;
+    align-items: center;
+    font-family: "Inter";
+    font-weight: 600;
+    font-size: 15px;
+    padding: 0px;
+  }
+  & .MuiInputBase-input {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0px;
+  }
+`;
+
+const SettingsWrapper = styled(Stack)`
+  margin-left: auto;
+`;
+
+const LeaderWrapper = styled(Stack)`
+  height: 20%;
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  list-style: none;
+`;
+
+const ChipItem = styled(Stack)`
+  width: 30%;
+  height: 25%;
+  margin-left: 10px;
+`;
+
+const CounterWrapper = styled(Stack)`
   border: 1px solid red;
 `;
-const DataWapper = styled(Stack)`
-  border: 1px solid purple;
+
+const DataWrapper = styled(Stack)`
+  width: 100%;
+  height: 50%;
+  border: 1px solid #986c6c;
+  border-radius: 8px;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 `;

@@ -36,19 +36,19 @@ const CarouselSilder = ({ imageArray }) => {
   };
 
   return (
-    <CarouselWapper {...settings}>
+    <CarouselWrapper {...settings}>
       {imageArray.map((content, index) => (
         <Stack key={index}>
-          <ImgWapper src={content.img} alt={`Slider ${index + 1}`} />
+          <ImgWrapper src={content.img} alt={`Slider ${index + 1}`} />
         </Stack>
       ))}
-    </CarouselWapper>
+    </CarouselWrapper>
   );
 };
 
 export default CarouselSilder;
 
-const CarouselWapper = styled(Carousel)`
+const CarouselWrapper = styled(Carousel)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -60,7 +60,7 @@ const CarouselWapper = styled(Carousel)`
   }
 `;
 
-const ImgWapper = styled("img")`
+const ImgWrapper = styled("img")`
   display: flex;
   justify-content: center;
   height: 200px;
