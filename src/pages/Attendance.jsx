@@ -45,6 +45,7 @@ const Attendance = () => {
   const handleCheck = () => {
     setIsChecked(true);
   };
+
   const handleCalendarClick = () => {
     setIsOpenCalendar(true);
   };
