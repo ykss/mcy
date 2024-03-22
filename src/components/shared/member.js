@@ -1,8 +1,8 @@
 const member = [
   {
     id: 1,
-    sell: "대예배",
-    sellMember: [
+    cell: "대예배",
+    cellMember: [
       {
         member: "강인영",
         birthday: "",
@@ -171,8 +171,8 @@ const member = [
   },
   {
     id: 2,
-    sell: "이화승 / 류지연 셀",
-    sellMember: [
+    cell: "이화승 / 류지연 셀",
+    cellMember: [
       {
         member: "이화승",
         birthday: [
@@ -276,8 +276,8 @@ const member = [
   },
   {
     id: 3,
-    sell: "박유리 셀",
-    sellMember: [
+    cell: "박유리 셀",
+    cellMember: [
       {
         member: "박유리",
         birthday: [
@@ -372,8 +372,8 @@ const member = [
   },
   {
     id: 4,
-    sell: "신이슬 / 김다은 셀",
-    sellMember: [
+    cell: "신이슬 / 김다은 셀",
+    cellMember: [
       {
         member: "신이슬",
         birthday: [
@@ -468,8 +468,8 @@ const member = [
   },
   {
     id: 5,
-    sell: "정구연 셀",
-    sellMember: [
+    cell: "정구연 셀",
+    cellMember: [
       {
         member: "정구연",
         birthday: [
@@ -563,8 +563,8 @@ const member = [
   },
   {
     id: 6,
-    sell: "봉지수 셀",
-    sellMember: [
+    cell: "봉지수 셀",
+    cellMember: [
       {
         member: "봉지수",
         birthday: "",
@@ -627,8 +627,8 @@ const member = [
   },
   {
     id: 7,
-    sell: "유경상 / 신중석 셀",
-    sellMember: [
+    cell: "유경상 / 신중석 셀",
+    cellMember: [
       {
         member: "유경상",
         birthday: [
@@ -718,8 +718,8 @@ const member = [
   },
   {
     id: 8,
-    sell: "전대현 셀",
-    sellMember: [
+    cell: "전대현 셀",
+    cellMember: [
       {
         member: "전대현",
         birthday: [
@@ -814,8 +814,8 @@ const member = [
   },
   {
     id: 9,
-    sell: "이채영 / 류지애 셀",
-    sellMember: [
+    cell: "이채영 / 류지애 셀",
+    cellMember: [
       {
         member: "이채영",
         birthday: [
