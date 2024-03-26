@@ -20,6 +20,7 @@
     "@mui/x-date-pickers": "^6.19.7",
     "add": "^2.0.6",
     "dayjs": "^1.11.10",
+    "nanoid": "^5.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-material-ui-carousel": "^3.4.2",
@@ -34,6 +35,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
+    "prettier": "^3.2.5",
     "vite": "^5.0.8"
   }
 }

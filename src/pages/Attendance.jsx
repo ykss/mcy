@@ -1,55 +1,55 @@
-import React from "react";
-import dayjs from "dayjs";
-import "dayjs/locale/ko";
-import { Stack, styled } from "@mui/material";
-import Chip from "@mui/material/Chip";
-import Typography from "@mui/material/Typography";
-import Checkbox from "@mui/material/Checkbox";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import ChurchIcon from "@mui/icons-material/Church";
-import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import SettingsIcon from "@mui/icons-material/Settings";
+import React from "react"
+import dayjs from "dayjs"
+import "dayjs/locale/ko"
+import { Stack, styled } from "@mui/material"
+import Chip from "@mui/material/Chip"
+import Typography from "@mui/material/Typography"
+import Checkbox from "@mui/material/Checkbox"
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker"
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
+import ChurchIcon from "@mui/icons-material/Church"
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
+import ArrowRightIcon from "@mui/icons-material/ArrowRight"
+import SettingsIcon from "@mui/icons-material/Settings"
 
-import Layout from "../components/Layout/Layout";
-import Title from "../components/shared/Title";
-import { mcyMember } from "../data/mcyMember";
+import Layout from "../components/Layout/Layout"
+import Title from "../components/shared/Title"
+import { mcyMember } from "../data/mcyMember"
 
 const Attendance = () => {
-  const [value, setValue] = React.useState(dayjs());
-  const [isOpenCalendar, setIsOpenCalendar] = React.useState(false);
-  const [selectedLeader, setSelectedLeader] = React.useState(null);
-  const [isChecked, setIsChecked] = React.useState(false);
+  const [value, setValue] = React.useState(dayjs())
+  const [isOpenCalendar, setIsOpenCalendar] = React.useState(false)
+  const [selectedLeader, setSelectedLeader] = React.useState(null)
+  const [isChecked, setIsChecked] = React.useState(false)
 
-  const handleChange = (newData) => {
-    setValue(newData);
-    setIsOpenCalendar(false);
-  };
+  const handleChange = newData => {
+    setValue(newData)
+    setIsOpenCalendar(false)
+  }
 
   const handlePrevDayClick = () => {
-    const newDate = dayjs(value).subtract(1, "day");
-    setValue(newDate);
-  };
+    const newDate = dayjs(value).subtract(1, "day")
+    setValue(newDate)
+  }
 
   const handleNextDayClick = () => {
-    const newDate = dayjs(value).add(1, "day");
-    setValue(newDate);
-  };
+    const newDate = dayjs(value).add(1, "day")
+    setValue(newDate)
+  }
 
-  const handleLeaderClick = (cell) => {
-    setSelectedLeader(cell);
-  };
+  const handleLeaderClick = cell => {
+    setSelectedLeader(cell)
+  }
 
-  const handleCheck = () => {
-    setIsChecked(true);
-  };
+  const handleCheck = e => {
+    setIsChecked(e.target.checked)
+  }
 
   const handleCalendarClick = () => {
-    setIsOpenCalendar(true);
-  };
+    setIsOpenCalendar(true)
+  }
   return (
     <Layout>
       <AttendanceWrapper>
@@ -59,34 +59,19 @@ const Attendance = () => {
         </TitleWrapper>
         <CalendarWrapper>
           <DateWrapper>
-            <ArrowIconWrapper
-              onClick={handlePrevDayClick}
-              icon={ArrowLeftIcon}
-            />
+            <ArrowIconWrapper onClick={handlePrevDayClick} icon={ArrowLeftIcon} />
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-              <CalendarMonthIcon
-                onClick={handleCalendarClick}
-                onChange={handleChange}
-              />
-              <MobileDateWrapper
-                value={value}
-                onChange={handleChange}
-                format="YYYY.MM.DD"
-                open={isOpenCalendar}
-                onClose={() => setIsOpenCalendar(false)}
-              />
+              <CalendarMonthIcon onClick={handleCalendarClick} onChange={handleChange} />
+              <MobileDateWrapper value={value} onChange={handleChange} format="YYYY.MM.DD" open={isOpenCalendar} onClose={() => setIsOpenCalendar(false)} />
             </LocalizationProvider>
-            <ArrowIconWrapper
-              onClick={handleNextDayClick}
-              icon={ArrowRightIcon}
-            />
+            <ArrowIconWrapper onClick={handleNextDayClick} icon={ArrowRightIcon} />
           </DateWrapper>
           <SettingsWrapper>
             <SettingsIcon />
           </SettingsWrapper>
         </CalendarWrapper>
         <LeaderWrapper>
-          {mcyMember.map((item) => {
+          {mcyMember.map(item => {
             return (
               <ChipItem key={item.id}>
                 <Chip
@@ -103,33 +88,33 @@ const Attendance = () => {
                   }}
                 />
               </ChipItem>
-            );
+            )
           })}
         </LeaderWrapper>
         <CounterWrapper />
         <DataWrapper>
-          {mcyMember.map((leader) => {
+          {mcyMember.map(leader => {
             if (leader.cell === selectedLeader) {
-              return leader.cellMember.map((member) => (
-                <MemberDataWrapper key={member.member}>
-                  <Checkbox onClick={handleCheck} isChecked={isChecked} />
-                  <Typography>{member.member}</Typography>
+              return leader.cellMember.map(member => (
+                <MemberDataWrapper key={member}>
+                  <Checkbox onClick={handleCheck} checked={isChecked} />
+                  <Typography>{member}</Typography>
                 </MemberDataWrapper>
-              ));
+              ))
             }
-            return null;
+            return null
           })}
         </DataWrapper>
       </AttendanceWrapper>
     </Layout>
-  );
-};
-export default Attendance;
+  )
+}
+export default Attendance
 
 const AttendanceWrapper = styled(Stack)`
   width: 90%;
   height: calc(90dvh - 120px);
-`;
+`
 
 const TitleWrapper = styled(Stack)`
   flex-direction: row;
@@ -137,33 +122,31 @@ const TitleWrapper = styled(Stack)`
   height: 20%;
   gap: 15px;
   padding: 0 10px;
-`;
+`
 
 const ChurchIconWrapper = styled(ChurchIcon)`
   font-size: 40px;
-`;
+`
 
 const CalendarWrapper = styled(Stack)`
   height: 10%;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-`;
+`
 
 const DateWrapper = styled(Stack)`
   flex: 1;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-`;
+`
 
-const ArrowIconWrapper = styled(({ icon: IconComponent, ...props }) => (
-  <IconComponent {...props} />
-))`
+const ArrowIconWrapper = styled(({ icon: IconComponent, ...props }) => <IconComponent {...props} />)`
   color: #69535f;
   font-size: 35px;
   font-weight: 700;
-`;
+`
 
 const MobileDateWrapper = styled(MobileDatePicker)`
   width: 40%;
@@ -181,11 +164,11 @@ const MobileDateWrapper = styled(MobileDatePicker)`
     text-align: center;
     padding: 0px;
   }
-`;
+`
 
 const SettingsWrapper = styled(Stack)`
   margin-left: auto;
-`;
+`
 
 const LeaderWrapper = styled(Stack)`
   height: 20%;
@@ -195,18 +178,18 @@ const LeaderWrapper = styled(Stack)`
   align-items: center;
   flex-wrap: wrap;
   list-style: none;
-`;
+`
 
 const ChipItem = styled(Stack)`
   width: 30%;
   height: 25%;
   margin-left: 10px;
-`;
+`
 
 const CounterWrapper = styled(Stack)`
   height: 5%;
   border: 1px solid red;
-`;
+`
 
 const DataWrapper = styled(Stack)`
   width: 100%;
@@ -217,10 +200,10 @@ const DataWrapper = styled(Stack)`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-`;
+`
 
 const MemberDataWrapper = styled(Stack)`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-`;
+`
