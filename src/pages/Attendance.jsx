@@ -13,6 +13,7 @@ import ChurchIcon from "@mui/icons-material/Church";
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import SettingsIcon from "@mui/icons-material/Settings";
+
 import Layout from "../components/Layout/Layout";
 import Title from "../components/shared/Title";
 import { mcyMember } from "../data/mcyMember";
@@ -52,11 +53,11 @@ const Attendance = () => {
   return (
     <Layout>
       <AttendanceWrapper>
-        <TitleWrapper sx={{ height: "20%" }}>
-          <ChurchIcon sx={{ fontSize: 40 }} />
+        <TitleWrapper>
+          <ChurchIconWrapper />
           <Title>출석</Title>
         </TitleWrapper>
-        <CalendarWrapper sx={{ height: "10%" }}>
+        <CalendarWrapper>
           <DateWrapper>
             <ArrowIconWrapper
               onClick={handlePrevDayClick}
@@ -105,22 +106,15 @@ const Attendance = () => {
             );
           })}
         </LeaderWrapper>
-        <CounterWrapper sx={{ height: "5%" }}></CounterWrapper>
+        <CounterWrapper />
         <DataWrapper>
           {mcyMember.map((leader) => {
             if (leader.cell === selectedLeader) {
               return leader.cellMember.map((member) => (
-                <Stack
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  key={member.member}
-                >
+                <MemberDataWrapper key={member.member}>
                   <Checkbox onClick={handleCheck} isChecked={isChecked} />
                   <Typography>{member.member}</Typography>
-                </Stack>
+                </MemberDataWrapper>
               ));
             }
             return null;
@@ -140,12 +134,17 @@ const AttendanceWrapper = styled(Stack)`
 const TitleWrapper = styled(Stack)`
   flex-direction: row;
   align-items: center;
-  height: 10%;
+  height: 20%;
   gap: 15px;
   padding: 0 10px;
 `;
 
+const ChurchIconWrapper = styled(ChurchIcon)`
+  font-size: 40px;
+`;
+
 const CalendarWrapper = styled(Stack)`
+  height: 10%;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -205,6 +204,7 @@ const ChipItem = styled(Stack)`
 `;
 
 const CounterWrapper = styled(Stack)`
+  height: 5%;
   border: 1px solid red;
 `;
 
@@ -217,4 +217,10 @@ const DataWrapper = styled(Stack)`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
+`;
+
+const MemberDataWrapper = styled(Stack)`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
