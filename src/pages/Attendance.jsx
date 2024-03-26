@@ -15,7 +15,7 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Layout from "../components/Layout/Layout";
 import Title from "../components/shared/Title";
-import mcyMember from "../components/shared/member.js";
+import { mcyMember } from "../data/mcyMember";
 
 const Attendance = () => {
   const [value, setValue] = React.useState(dayjs());
