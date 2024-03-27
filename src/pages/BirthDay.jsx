@@ -1,466 +1,440 @@
-import { styled, Stack, Typography } from "@mui/material";
+//외부 컴포넌트 
+import { styled, Stack, Typography, Grid } from "@mui/material";
 import CakeIcon from "@mui/icons-material/Cake";
 import Chip from "@mui/material/Chip";
-import React from "react";
+import React, { useEffect } from "react";
 
+// 내부 컴포넌트 
+import Title from "../components/shared/Title";
 import Layout from "../components/Layout/Layout";
 
-const BirthDay = () => {
-  const chipData = [
-    {
-      key: 0,
-      label: "1월",
-      List: [
-        {
-          day: "04일",
-          name: "권  율",
-        },
-        {
-          day: "11일",
-          name: "박동진",
-        },
-        {
-          day: "14일",
-          name: "신이서",
-        },
-        {
-          day: "15일",
-          name: "최세현",
-        },
-        {
-          day: "16일",
-          name: "이유진",
-        },
-        {
-          day: "17일",
-          name: "류지연",
-        },
-        {
-          day: "22일",
-          name: "김아영",
-        },
-        {
-          day: "27일",
-          name: "박기열",
-        },
-        {
-          day: "28일",
-          name: "정영운",
-        },
-      ],
-      setData: function setData() {
-        setShowList(chipData[0]);
+const chipData = [
+  {
+    id: 0,
+    label: "1월",
+    list: [
+      {
+        day: "04일",
+        name: "권  율",
       },
-    },
-    {
-      key: 1,
-      label: "2월",
-      List: [
-        {
-          day: "03일",
-          name: "이화승",
-        },
-        {
-          day: "07일",
-          name: "한지선",
-        },
-        {
-          day: "12일",
-          name: "한명수",
-        },
-        {
-          day: "22일",
-          name: "전혜현",
-        },
-      ],
-      setData: function setData() {
-        setShowList(chipData[1]);
+      {
+        day: "11일",
+        name: "박동진",
       },
-    },
-    {
-      key: 2,
-      label: "3월",
-      List: [
-        {
-          day: "04일",
-          name: "김예찬",
-        },
-        {
-          day: "06일",
-          name: "이예진",
-        },
-        {
-          day: "09일",
-          name: "황주연",
-        },
-        {
-          day: "22일",
-          name: "류지애",
-        },
-      ],
-      setData: function setData() {
-        setShowList(chipData[2]);
+      {
+        day: "14일",
+        name: "신이서",
       },
-    },
-    {
-      key: 3,
-      label: "4월",
-      List: [
-        {
-          day: "03일",
-          name: "박준배",
-        },
-        {
-          day: "04일",
-          name: "서도원",
-        },
-        {
-          day: "05일",
-          name: "진서윤",
-        },
-        {
-          day: "06일",
-          name: "박천진",
-        },
-        {
-          day: "10일",
-          name: "최지혜",
-        },
-        {
-          day: "20일",
-          name: "신이슬",
-        },
-        {
-          day: "25일",
-          name: "김성용",
-        },
-        {
-          day: "26일",
-          name: "이유미",
-        },
-        {
-          day: "28일",
-          name: "유경상",
-        },
-      ],
-      setData: function setData() {
-        setShowList(chipData[3]);
+      {
+        day: "15일",
+        name: "최세현",
       },
-    },
-    {
-      key: 4,
-      label: "5월",
-      List: [
-        {
-          day: "03일",
-          name: "이채영",
-        },
-        {
-          day: "03일",
-          name: "전한나",
-        },
-        {
-          day: "06일",
-          name: "최정완",
-        },
-        {
-          day: "08일",
-          name: "이경원",
-        },
-        {
-          day: "10일",
-          name: "이선화",
-        },
+      {
+        day: "16일",
+        name: "이유진",
+      },
+      {
+        day: "17일",
+        name: "류지연",
+      },
+      {
+        day: "22일",
+        name: "김아영",
+      },
+      {
+        day: "27일",
+        name: "박기열",
+      },
+      {
+        day: "28일",
+        name: "정영운",
+      },
+    ],
+  },
+  {
+    id: 1,
+    label: "2월",
+    list: [
+      {
+        day: "03일",
+        name: "이화승",
+      },
+      {
+        day: "07일",
+        name: "한지선",
+      },
+      {
+        day: "12일",
+        name: "한명수",
+      },
+      {
+        day: "22일",
+        name: "전혜현",
+      },
+    ],
+  },
+  {
+    id: 2,
+    label: "3월",
+    list: [
+      {
+        day: "04일",
+        name: "김예찬",
+      },
+      {
+        day: "06일",
+        name: "이예진",
+      },
+      {
+        day: "09일",
+        name: "황주연",
+      },
+      {
+        day: "22일",
+        name: "류지애",
+      },
+    ],
+  },
+  {
+    id: 3,
+    label: "4월",
+    list: [
+      {
+        day: "03일",
+        name: "박준배",
+      },
+      {
+        day: "04일",
+        name: "서도원",
+      },
+      {
+        day: "05일",
+        name: "진서윤",
+      },
+      {
+        day: "06일",
+        name: "박천진",
+      },
+      {
+        day: "10일",
+        name: "최지혜",
+      },
+      {
+        day: "20일",
+        name: "신이슬",
+      },
+      {
+        day: "25일",
+        name: "김성용",
+      },
+      {
+        day: "26일",
+        name: "이유미",
+      },
+      {
+        day: "28일",
+        name: "유경상",
+      },
+    ],
+  },
+  {
+    id: 4,
+    label: "5월",
+    list: [
+      {
+        day: "03일",
+        name: "이채영",
+      },
+      {
+        day: "03일",
+        name: "전한나",
+      },
+      {
+        day: "06일",
+        name: "최정완",
+      },
+      {
+        day: "08일",
+        name: "이경원",
+      },
+      {
+        day: "10일",
+        name: "이선화",
+      },
 
-        {
-          day: "16일",
-          name: "정 현",
-        },
-        {
-          day: "16일",
-          name: "정 빈",
-        },
-        {
-          day: "23일",
-          name: "오예솔",
-        },
-        {
-          day: "27일",
-          name: "황윤표",
-        },
-        {
-          day: "29일",
-          name: "박찬주",
-        },
-      ],
-      setData: function setData() {
-        setShowList(chipData[4]);
+      {
+        day: "16일",
+        name: "정 현",
       },
-    },
-    {
-      key: 5,
-      label: "6월",
-      List: [
-        {
-          day: "02일",
-          name: "최현빈",
-        },
-        {
-          day: "23일",
-          name: "박유리",
-        },
-        {
-          day: "29일",
-          name: "하유진",
-        },
-        {
-          day: "30일",
-          name: "국다혜",
-        },
-      ],
-      setData: function setData() {
-        setShowList(chipData[5]);
+      {
+        day: "16일",
+        name: "정 빈",
       },
-    },
-    {
-      key: 6,
-      label: "7월",
-      List: [
-        {
-          day: "02일",
-          name: "유지원",
-        },
-        {
-          day: "03일",
-          name: "선승훈",
-        },
-        {
-          day: "06일",
-          name: "윤태호",
-        },
-        {
-          day: "07일",
-          name: "윤동하",
-        },
-        {
-          day: "10일",
-          name: "이재연",
-        },
-        {
-          day: "20일",
-          name: "신중석",
-        },
-        {
-          day: "21일",
-          name: "박한빈",
-        },
-        {
-          day: "28일",
-          name: "윤지원",
-        },
-      ],
-      setData: function setData() {
-        setShowList(chipData[6]);
+      {
+        day: "23일",
+        name: "오예솔",
       },
-    },
-    {
-      key: 7,
-      label: "8월",
-      List: [
-        {
-          day: "03일",
-          name: "윤소영",
-        },
-        {
-          day: "12일",
-          name: "정지민",
-        },
-        {
-          day: "13일",
-          name: "김승찬",
-        },
-        {
-          day: "16일",
-          name: "백승도",
-        },
-        {
-          day: "21일",
-          name: "전대현",
-        },
-        {
-          day: "27일",
-          name: "김민준",
-        },
-        {
-          day: "28일",
-          name: "차미진",
-        },
-      ],
-      setData: function setData() {
-        setShowList(chipData[7]);
+      {
+        day: "27일",
+        name: "황윤표",
       },
-    },
-    {
-      key: 8,
-      label: "9월",
-      List: [
-        {
-          day: "04일",
-          name: "김태균",
-        },
-        {
-          day: "04일",
-          name: "신중범",
-        },
-        {
-          day: "18일",
-          name: "김다은",
-        },
-        {
-          day: "21일",
-          name: "김예빈",
-        },
-        {
-          day: "25일",
-          name: "윤동주",
-        },
-        {
-          day: "28일",
-          name: "마관영",
-        },
-      ],
-      setData: function setData() {
-        setShowList(chipData[8]);
+      {
+        day: "29일",
+        name: "박찬주",
       },
-    },
-    {
-      key: 9,
-      label: "10월",
-      List: [
-        {
-          day: "04일",
-          name: "정구연",
-        },
-        {
-          day: "17일",
-          name: "최대한",
-        },
-        {
-          day: "22일",
-          name: "김옥주",
-        },
-        {
-          day: "26일",
-          name: "황수정",
-        },
-        {
-          day: "31일",
-          name: "김윤주",
-        },
-      ],
-      setData: function setData() {
-        setShowList(chipData[9]);
+    ],
+  },
+  {
+    id: 5,
+    label: "6월",
+    list: [
+      {
+        day: "02일",
+        name: "최현빈",
       },
-    },
-    {
-      key: 10,
-      label: "11월",
-      List: [
-        {
-          day: "07일",
-          name: "정지혁",
-        },
-        {
-          day: "11일",
-          name: "서다현",
-        },
-        {
-          day: "13일",
-          name: "황명표",
-        },
-        {
-          day: "20일",
-          name: "김태경",
-        },
-        {
-          day: "21일",
-          name: "이규영",
-        },
-        {
-          day: "22일",
-          name: "정한슬",
-        },
-      ],
-      setData: function setData() {
-        setShowList(chipData[10]);
+      {
+        day: "23일",
+        name: "박유리",
       },
-    },
-    {
-      key: 11,
-      label: "12월",
-      List: [
-        {
-          day: "13일",
-          name: "구민경",
-        },
-        {
-          day: "22일",
-          name: "김예슬",
-        },
-      ],
-      setData: function setData() {
-        setShowList(chipData[11]);
+      {
+        day: "29일",
+        name: "하유진",
       },
-    },
-  ];
-  const [showList, setShowList] = React.useState(chipData[0]);
+      {
+        day: "30일",
+        name: "국다혜",
+      },
+    ],
+  },
+  {
+    id: 6,
+    label: "7월",
+    list: [
+      {
+        day: "02일",
+        name: "유지원",
+      },
+      {
+        day: "03일",
+        name: "선승훈",
+      },
+      {
+        day: "06일",
+        name: "윤태호",
+      },
+      {
+        day: "07일",
+        name: "윤동하",
+      },
+      {
+        day: "10일",
+        name: "이재연",
+      },
+      {
+        day: "20일",
+        name: "신중석",
+      },
+      {
+        day: "21일",
+        name: "박한빈",
+      },
+      {
+        day: "28일",
+        name: "윤지원",
+      },
+    ],
+  },
+  {
+    id: 7,
+    label: "8월",
+    list: [
+      {
+        day: "03일",
+        name: "윤소영",
+      },
+      {
+        day: "12일",
+        name: "정지민",
+      },
+      {
+        day: "13일",
+        name: "김승찬",
+      },
+      {
+        day: "16일",
+        name: "백승도",
+      },
+      {
+        day: "21일",
+        name: "전대현",
+      },
+      {
+        day: "27일",
+        name: "김민준",
+      },
+      {
+        day: "28일",
+        name: "차미진",
+      },
+    ],
+  },
+  {
+    id: 8,
+    label: "9월",
+    list: [
+      {
+        day: "04일",
+        name: "김태균",
+      },
+      {
+        day: "04일",
+        name: "신중범",
+      },
+      {
+        day: "18일",
+        name: "김다은",
+      },
+      {
+        day: "21일",
+        name: "김예빈",
+      },
+      {
+        day: "25일",
+        name: "윤동주",
+      },
+      {
+        day: "28일",
+        name: "마관영",
+      },
+    ],
+  },
+  {
+    id: 9,
+    label: "10월",
+    list: [
+      {
+        day: "04일",
+        name: "정구연",
+      },
+      {
+        day: "17일",
+        name: "최대한",
+      },
+      {
+        day: "22일",
+        name: "김옥주",
+      },
+      {
+        day: "26일",
+        name: "황수정",
+      },
+      {
+        day: "31일",
+        name: "김윤주",
+      },
+    ],
+  },
+  {
+    id: 10,
+    label: "11월",
+    list: [
+      {
+        day: "07일",
+        name: "정지혁",
+      },
+      {
+        day: "11일",
+        name: "서다현",
+      },
+      {
+        day: "13일",
+        name: "황명표",
+      },
+      {
+        day: "20일",
+        name: "김태경",
+      },
+      {
+        day: "21일",
+        name: "이규영",
+      },
+      {
+        day: "22일",
+        name: "정한슬",
+      },
+    ],
+  },
+  {
+    id: 11,
+    label: "12월",
+    list: [
+      {
+        day: "13일",
+        name: "구민경",
+      },
+      {
+        day: "22일",
+        name: "김예슬",
+      },
+    ],
+  },
+];
+
+const BirthDay = () => {
+  const [showListId, setShowListId] = React.useState(0);
+  const [showList, setShowList] = React.useState(chipData);
+
+  const handleChipClick = (event) => {
+    setShowListId(+event.target.parentElement.id);
+  };
+
+  useEffect(() => {
+    setShowList(chipData.filter((chip) => chip.id === showListId));
+  }, [showListId]);
+
   return (
     <Layout>
       <BirthdayWrapper>
         <TitleWrapper>
           <CakeIcon sx={{ fontSize: 40 }} />
-          <Typography fontSize="20px">생일!</Typography>
+          <Title>생일!</Title>
         </TitleWrapper>
         <ChipWrapper>
           {chipData.map((data) => {
             return (
-              <ChipItem key={data.key}>
-                <Chip
-                  sx={{
-                    width: "100%",
-                    height: "80%",
-                    px: 0,
-                    border: 2,
-                    borderColor: "#986C6C",
-                    fontSize: 9,
-                  }}
-                  label={data.label}
-                  variant="outlined"
-                  onClick={data.setData}
-                />
-              </ChipItem>
+              <Chip
+                key={data.id}
+                id={data.id}
+                sx={{
+                  width: "14%",
+                  height: "20%",
+                  margin: "1%",
+                  border: 2,
+                  borderColor: "#986C6C",
+                  fontSize: 10,
+                }}
+                label={data.label}
+                variant="outlined"
+                onClick={handleChipClick}
+              />
             );
           })}
         </ChipWrapper>
-        <BirthdayList> {/* 리스트 전체 레이아웃 영역 */}
-          <RenderingPaper> {/* 제목 및 리스트 렌더링 영역 */}
-            <ListTitle>{showList.label} 생일자 축하합니다!</ListTitle>
-            <ListArea>{/* 리스트만 렌더링 되는 영역 */}
-              <ListWrapper> {/* 리스트 영역 */}
-                {showList.List.map((item, index) => (
-                  <List key={index}>
-                    <Typography
-                      sx={{ width: `30%` }}
-                      fontSize={14}
-                      fontWeight={"bold"}
-                    >
+        <BirthdayList>
+          {/* 리스트 전체 레이아웃 영역 */}
+          <RenderingPaper>
+            {/* 제목 및 리스트 렌더링 영역 */}
+            <ListTitle>{showList[0].label} 생일자 축하합니다!</ListTitle>
+            <ListArea>
+              {/* 리스트만 렌더링 되는 영역 */}
+              <ListWrapper>
+                {/* 리스트 영역 */}
+                {showList[0].list.map((item) => (
+                  <List key={item.id}>
+                    <Typography fontSize={14} fontWeight={"bold"}>
                       {item.day}
                     </Typography>
-                    <Typography
-                      sx={{ width: `30%` }}
-                      fontSize={14}
-                      fontWeight={"bold"}
-                    >
+                    <Typography fontSize={14} fontWeight={"bold"}>
                       {item.name}
                     </Typography>
                   </List>
@@ -488,12 +462,6 @@ const TitleWrapper = styled(Stack)`
 `;
 
 // MonthChip
-
-const ChipItem = styled(Stack)`
-  width: calc(100% / 7);
-  height: 25%;
-  margin: 1%;
-`;
 
 const ChipWrapper = styled(Stack)`
   height: 20%;
@@ -530,10 +498,10 @@ const ListArea = styled(Stack)`
 `;
 
 const List = styled(Stack)`
-  height: 50%;
-  width: 50%;
+  height: 100%;
   flex-direction: row;
   justify-content: center;
+  gap: 20%;
 `;
 const RenderingPaper = styled(Stack)`
   background-color: #fffcf6;
@@ -543,10 +511,11 @@ const RenderingPaper = styled(Stack)`
   border-radius: 5%;
 `;
 
-const ListWrapper = styled(Stack)`
-  height: 40%;
+const ListWrapper = styled(Grid)`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  height: 30%;
+  gap: 15px;
   width: 100%;
-  flex-direction: row;
-  flex-wrap: wrap;
 `;
 export default BirthDay;
