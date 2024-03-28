@@ -2,7 +2,7 @@ import { Stack } from "@mui/system";
 import Typography from "@mui/material/Typography";
 import { Chip, styled } from "@mui/material";
 import Layout from "../components/Layout/Layout";
-import CarouselSilder from "../components/shared/CarouselSilder";
+import CarouselSlider from "../components/shared/CarouselSlider";
 import mainSlider1 from "../assets/images/mainSlider1.webp";
 import mainSlider2 from "../assets/images/mainSlider2.webp";
 import mainSlider3 from "../assets/images/mainSlider3.webp";
@@ -24,7 +24,7 @@ const Main = () => {
     <Layout>
       <MainWrapper>
         <CarouselWrapper>
-          <CarouselSilder imageArray={McyImgs} />
+          <CarouselSlider imageArray={McyImgs} />
         </CarouselWrapper>
         <ContentWrapper sx={{ height: "20%" }}>
           <Chip
