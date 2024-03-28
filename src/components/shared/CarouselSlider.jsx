@@ -1,7 +1,7 @@
 import Carousel from "react-material-ui-carousel";
 import { Stack, styled } from "@mui/material";
 
-const CarouselSilder = ({ imageArray }) => {
+const CarouselSlider = ({ imageArray }) => {
   const settings = {
     interval: 3000,
     animation: "slide",
@@ -46,7 +46,7 @@ const CarouselSilder = ({ imageArray }) => {
   );
 };
 
-export default CarouselSilder;
+export default CarouselSlider;
 
 const CarouselWrapper = styled(Carousel)`
   display: flex;
