@@ -1,24 +1,22 @@
-//외부 컴포넌트
 import { styled, Stack, Typography, Grid } from "@mui/material";
 import CakeIcon from "@mui/icons-material/Cake";
 import Chip from "@mui/material/Chip";
 import React, { useEffect } from "react";
 
-// 내부 컴포넌트
 import Title from "../components/shared/Title";
 import Layout from "../components/Layout/Layout";
-import birthDayData from "../data/BirthdayList";
+import {birthDayData} from "../data/BirthdayData";
 
 const BirthDay = () => {
-  const [monthchipId, setMonthchipId] = React.useState(0);
+  const [monthChipId, setMonthChipId] = React.useState(0);
   const [birthDayInfo, setBirthDayInfo] = React.useState(birthDayData[0]);
   const handleChipClick = (event) => {
-    setMonthchipId(+event.target.parentElement.id);
+    setMonthChipId(+event.target.parentElement.id);
   };
 
   useEffect(() => {
-    setBirthDayInfo(birthDayData.filter((chip) => chip.id === monthchipId)[0]);
-  }, [monthchipId]);
+    setBirthDayInfo(birthDayData.filter((chip) => chip.id === monthChipId)[0]);
+  }, [monthChipId]);
 
   return (
     <Layout>
