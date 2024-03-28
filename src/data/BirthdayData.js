@@ -370,4 +370,4 @@ const birthDayData = [
     },
   ];
 
-  export default birthDayData;
+  export {birthDayData};
