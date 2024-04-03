@@ -28,7 +28,7 @@ const News = () => {
     setSelectedMonth(previousMonth)
     // 월 변경에 따라 연도 변경
     if (previousMonth === months[months.length - 1]) {
-      // 이전 월이 1월인 경우 이전 연도로 변경
+      // 이전 월이 12월인 경우 이전 연도로 변경
       const currentYearIndex = years.indexOf(selectedYear)
       const previousYear = currentYearIndex === 0 ? years[years.length - 1] : years[currentYearIndex - 1]
       setSelectedYear(previousYear)
@@ -41,7 +41,7 @@ const News = () => {
     setSelectedMonth(nextMonth)
     // 월 변경에 따라 연도 변경
     if (nextMonth === months[0]) {
-      // 다음 월이 12월인 경우 다음 연도로 변경
+      // 다음 월이 1월인 경우 다음 연도로 변경
       const currentYearIndex = years.indexOf(selectedYear)
       const nextYear = currentYearIndex === years.length - 1 ? years[0] : years[currentYearIndex + 1]
       setSelectedYear(nextYear)
