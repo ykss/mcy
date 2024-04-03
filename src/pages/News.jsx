@@ -4,7 +4,11 @@ import CampaignOutlinedIcon from "@mui/icons-material/CampaignOutlined"
 import Accordion from "@mui/material/Accordion"
 import AccordionSummary from "@mui/material/AccordionSummary"
 import AccordionDetails from "@mui/material/AccordionDetails"
+import IconButton from "@mui/material/IconButton"
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
+// import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import React, { useEffect } from "react"
 
 import Layout from "../components/Layout/Layout"
@@ -18,13 +22,22 @@ const News = () => {
   const [selectedYear, setSelectedYear] = React.useState(years[0])
   const [selectedMonth, setSelectedMonth] = React.useState(months[0])
 
+  const handlePreviousMonth = () => {
+    const monthIndex = months.indexOf(selectedMonth)
+    const previousMonth = monthIndex === 0 ? months[months.length - 1] : months[monthIndex - 1]
+    setSelectedMonth(previousMonth)
+  }
+
+  const handleNextMonth = () => {
+    const monthIndex = months.indexOf(selectedMonth)
+    const nextMonth = monthIndex === months.length - 1 ? months[0] : months[monthIndex + 1]
+    setSelectedMonth(nextMonth)
+  }
+
   const handleYearChange = event => {
     setSelectedYear(event.target.value)
   }
 
-  const handleMonthChange = event => {
-    setSelectedMonth(event.target.value)
-  }
   return (
     <Layout>
       <NewsWrapper>
@@ -33,7 +46,7 @@ const News = () => {
           <Title>MCY 소식</Title>
         </TitleWrapper>
         <SelectWrapper>
-          <SelectItem>
+          <SelectYearItem>
             <select value={selectedYear} onChange={handleYearChange}>
               {years.map((year, index) => (
                 <option key={index} value={year}>
@@ -41,16 +54,16 @@ const News = () => {
                 </option>
               ))}
             </select>
-          </SelectItem>
-          <SelectItem>
-            <select value={selectedMonth} onChange={handleMonthChange}>
-              {months.map((month, index) => (
-                <option key={index} value={month}>
-                  {month}월
-                </option>
-              ))}
-            </select>
-          </SelectItem>
+          </SelectYearItem>
+          <SelectMonthItem>
+            <IconButton onClick={handlePreviousMonth}>
+              <ArrowBackIosIcon />
+            </IconButton>
+            <Typography fontSize={15}>{selectedMonth}월</Typography>
+            <IconButton onClick={handleNextMonth}>
+              <ArrowForwardIosIcon />
+            </IconButton>
+          </SelectMonthItem>
         </SelectWrapper>
         <RenderingArea>
           {NewsData.filter(item => item.year === +selectedYear && item.month === selectedMonth).map(item => (
@@ -74,6 +87,7 @@ const News = () => {
     </Layout>
   )
 }
+
 const NewsWrapper = styled(Stack)`
   height: calc(100dvh - 120px);
   width: 100vw;
@@ -95,8 +109,13 @@ const SelectWrapper = styled(Stack)`
   gap: 10px;
 `
 
-const SelectItem = styled(Stack)`
+const SelectYearItem = styled(Stack)`
   width: 30%;
+`
+
+const SelectMonthItem = styled(Stack)`
+  flex-direction: row;
+  align-items: center;
 `
 
 const RenderingArea = styled(Stack)`
