@@ -17,7 +17,7 @@ import { NewsData } from "../data/NewsData"
 const News = () => {
   // 연도와 월 데이터 추출하여 중복 제거
   const years = [...new Set(NewsData.map(item => item.year))]
-  const months = [...new Set(NewsData.map(item => item.month))]
+  const months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
 
   const [selectedYear, setSelectedYear] = React.useState(years[0])
   const [selectedMonth, setSelectedMonth] = React.useState(months[0])
@@ -26,16 +26,26 @@ const News = () => {
     const monthIndex = months.indexOf(selectedMonth)
     const previousMonth = monthIndex === 0 ? months[months.length - 1] : months[monthIndex - 1]
     setSelectedMonth(previousMonth)
+    // 월 변경에 따라 연도 변경
+    if (previousMonth === months[months.length - 1]) {
+      // 이전 월이 1월인 경우 이전 연도로 변경
+      const currentYearIndex = years.indexOf(selectedYear)
+      const previousYear = currentYearIndex === 0 ? years[years.length - 1] : years[currentYearIndex - 1]
+      setSelectedYear(previousYear)
+    }
   }
 
   const handleNextMonth = () => {
     const monthIndex = months.indexOf(selectedMonth)
     const nextMonth = monthIndex === months.length - 1 ? months[0] : months[monthIndex + 1]
     setSelectedMonth(nextMonth)
-  }
-
-  const handleYearChange = event => {
-    setSelectedYear(event.target.value)
+    // 월 변경에 따라 연도 변경
+    if (nextMonth === months[0]) {
+      // 다음 월이 12월인 경우 다음 연도로 변경
+      const currentYearIndex = years.indexOf(selectedYear)
+      const nextYear = currentYearIndex === years.length - 1 ? years[0] : years[currentYearIndex + 1]
+      setSelectedYear(nextYear)
+    }
   }
 
   return (
@@ -46,30 +56,21 @@ const News = () => {
           <Title>MCY 소식</Title>
         </TitleWrapper>
         <SelectWrapper>
-          <SelectYearItem>
-            <select value={selectedYear} onChange={handleYearChange}>
-              {years.map((year, index) => (
-                <option key={index} value={year}>
-                  {year}년
-                </option>
-              ))}
-            </select>
-          </SelectYearItem>
-          <SelectMonthItem>
-            <IconButton onClick={handlePreviousMonth}>
-              <ArrowBackIosIcon />
-            </IconButton>
-            <Typography fontSize={15}>{selectedMonth}월</Typography>
-            <IconButton onClick={handleNextMonth}>
-              <ArrowForwardIosIcon />
-            </IconButton>
-          </SelectMonthItem>
+          <IconButton onClick={handlePreviousMonth}>
+            <ArrowBackIosIcon />
+          </IconButton>
+          <Typography fontSize={15}>
+            {selectedYear}년 {selectedMonth}월
+          </Typography>
+          <IconButton onClick={handleNextMonth}>
+            <ArrowForwardIosIcon />
+          </IconButton>
         </SelectWrapper>
         <RenderingArea>
           {NewsData.filter(item => item.year === +selectedYear && item.month === selectedMonth).map(item => (
             <NewsListWrapper key={item.id}>
               <Accordion>
-                <AccordionSummary expandIcon={<ArrowDropDownIcon />} aria-controls="panel2-content">
+                <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
                   <NewsItem fontSize={16} fontWeight={"bold"}>
                     {item.month}월 {item.date}일 광고
                   </NewsItem>
@@ -103,19 +104,10 @@ const TitleWrapper = styled(Stack)`
 
 const SelectWrapper = styled(Stack)`
   height: 10%;
-  width: 90%;
+  width: 100%;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
-`
-
-const SelectYearItem = styled(Stack)`
-  width: 30%;
-`
-
-const SelectMonthItem = styled(Stack)`
-  flex-direction: row;
-  align-items: center;
+  justify-content: center;
 `
 
 const RenderingArea = styled(Stack)`
