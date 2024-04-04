@@ -8,44 +8,40 @@ import IconButton from "@mui/material/IconButton"
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
-// import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import React, { useEffect } from "react"
+import React from "react"
 
 import Layout from "../components/Layout/Layout"
 import Title from "../components/shared/Title"
 import { NewsData } from "../data/NewsData"
+
 const News = () => {
-  // 연도와 월 데이터 추출하여 중복 제거
-  const years = [...new Set(NewsData.map(item => item.year))]
-  const months = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"]
+  const currentDate = new Date()
+  const currentYear = currentDate.getFullYear()
+  const currentMonth = currentDate.getMonth() + 1
 
-  const [selectedYear, setSelectedYear] = React.useState(years[0])
-  const [selectedMonth, setSelectedMonth] = React.useState(months[0])
-
+  const [selectedYear, setSelectedYear] = React.useState(currentYear)
+  const [selectedMonth, setSelectedMonth] = React.useState(currentMonth)
+  
   const handlePreviousMonth = () => {
-    const monthIndex = months.indexOf(selectedMonth)
-    const previousMonth = monthIndex === 0 ? months[months.length - 1] : months[monthIndex - 1]
-    setSelectedMonth(previousMonth)
-    // 월 변경에 따라 연도 변경
-    if (previousMonth === months[months.length - 1]) {
-      // 이전 월이 12월인 경우 이전 연도로 변경
-      const currentYearIndex = years.indexOf(selectedYear)
-      const previousYear = currentYearIndex === 0 ? years[years.length - 1] : years[currentYearIndex - 1]
-      setSelectedYear(previousYear)
+    let newYear = selectedYear
+    let newMonth = selectedMonth - 1
+    if (newMonth === 0) {
+      newMonth = 12
+      newYear--
     }
+    setSelectedYear(newYear)
+    setSelectedMonth(newMonth)
   }
 
   const handleNextMonth = () => {
-    const monthIndex = months.indexOf(selectedMonth)
-    const nextMonth = monthIndex === months.length - 1 ? months[0] : months[monthIndex + 1]
-    setSelectedMonth(nextMonth)
-    // 월 변경에 따라 연도 변경
-    if (nextMonth === months[0]) {
-      // 다음 월이 1월인 경우 다음 연도로 변경
-      const currentYearIndex = years.indexOf(selectedYear)
-      const nextYear = currentYearIndex === years.length - 1 ? years[0] : years[currentYearIndex + 1]
-      setSelectedYear(nextYear)
+    let newYear = selectedYear
+    let newMonth = selectedMonth + 1
+    if (newMonth === 13) {
+      newMonth = 1
+      newYear++
     }
+    setSelectedYear(newYear)
+    setSelectedMonth(newMonth)
   }
 
   return (
@@ -67,18 +63,18 @@ const News = () => {
           </IconButton>
         </SelectWrapper>
         <RenderingArea>
-          {NewsData.filter(item => item.year === +selectedYear && item.month === selectedMonth).map(item => (
+          {NewsData.filter(item => Number(item.year) === selectedYear && Number(item.month) === selectedMonth).map(item => (
             <NewsListWrapper key={item.id}>
               <Accordion>
                 <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
                   <NewsItem fontSize={16} fontWeight={"bold"}>
-                    {item.month}월 {item.date}일 광고
+                    {item.month}월 {item.day}일 광고
                   </NewsItem>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography>
-                    {item.month}월 {item.date}일 소식입니다
-                  </Typography>
+                  {item.content.map((news,index) => {
+                    return <Typography sx={{padding:2}}fontSize={14} key={item }>{index+1}. {news}</Typography>
+                  })}
                 </AccordionDetails>
               </Accordion>
             </NewsListWrapper>
