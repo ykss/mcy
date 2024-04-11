@@ -1,6 +1,8 @@
-import React from "react"
+import { useState, useEffect } from "react"
+
 import dayjs from "dayjs"
 import "dayjs/locale/ko"
+
 import { Stack, styled } from "@mui/material"
 import Chip from "@mui/material/Chip"
 import Typography from "@mui/material/Typography"
@@ -8,6 +10,7 @@ import Checkbox from "@mui/material/Checkbox"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker"
+
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
 import ChurchIcon from "@mui/icons-material/Church"
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
@@ -21,75 +24,131 @@ import Title from "../components/shared/Title"
 import { mcyMember } from "../data/mcyMember"
 
 const Attendance = () => {
-  const [isOpenCalendar, setIsOpenCalendar] = React.useState(false)
-  const [selectedLeader, setSelectedLeader] = React.useState(null)
-  const [adultCount, setAdultCount] = React.useState(0)
-  const [memberCount, setMemberCount] = React.useState(0)
-  const totalCount = adultCount + memberCount
-  const [attendanceAllData, setAttendanceAllData] = React.useState({})
-  const [isChecked, setIsChecked] = React.useState({})
-  const currentDayOfWeek = dayjs().day()
-  const daysToLastSunday = currentDayOfWeek === 0 ? 7 : currentDayOfWeek
-  const lastSunday = dayjs().subtract(daysToLastSunday, "day")
-  const [value, setValue] = React.useState(dayjs(lastSunday))
+  const [state, setState] = useState({
+    isOpenCalendar: false,
+    selectedLeader: null,
+    adultCount: 0,
+    memberCount: 0,
+    attendanceAllData: {},
+    isChecked: {},
+    value: dayjs().subtract(dayjs().day() === 0 ? 7 : dayjs().day(), "day"),
+  })
 
-  React.useEffect(() => {
+  useEffect(() => {
     const initialCheckedState = {}
+    const currentDayOfWeek = dayjs().day()
+    const daysToLastSunday = currentDayOfWeek === 0 ? 7 : currentDayOfWeek
+    const lastSunday = dayjs().subtract(daysToLastSunday, "day")
     mcyMember.forEach(leader => {
       leader.cellMember.forEach(member => {
-        initialCheckedState[member] = false
+        initialCheckedState[member] = leader.isChecked
       })
     })
-    setIsChecked(initialCheckedState)
-    setSelectedLeader(null)
-    setAdultCount(0)
-    setMemberCount(0)
-    setAttendanceAllData({})
-  }, [value])
+    setState(prevState => ({
+      ...prevState,
+      isChecked: initialCheckedState,
+      selectedLeader: null,
+      adultCount: 0,
+      memberCount: 0,
+      totalCount: 0,
+      attendanceAllData: {},
+      value: dayjs(lastSunday),
+    }))
+  }, [])
 
   const handleChange = newData => {
-    setValue(newData)
-    setIsOpenCalendar(false)
+    setState(prevState => ({
+      ...prevState,
+      value: newData,
+      isOpenCalendar: false,
+    }))
   }
 
   const handlePrevDayClick = () => {
-    const newDate = dayjs(value).subtract(7, "day")
-    setValue(newDate)
+    setState(prevState => ({
+      ...prevState,
+      value: dayjs(prevState.value).subtract(7, "day"),
+      selectedLeader: null,
+      adultCount: 0,
+      memberCount: 0,
+      totalCount: 0,
+      isChecked: {},
+      attendanceAllData: {},
+    }))
   }
 
   const handleNextDayClick = () => {
-    const newDate = dayjs(value).add(7, "day")
-    setValue(newDate)
+    setState(prevState => ({
+      ...prevState,
+      value: dayjs(prevState.value).add(7, "day"),
+      selectedLeader: null,
+      adultCount: 0,
+      memberCount: 0,
+      totalCount: 0,
+      isChecked: {},
+      attendanceAllData: {},
+    }))
   }
 
   const handleLeaderClick = cell => {
-    setSelectedLeader(cell)
+    setState(prevState => ({
+      ...prevState,
+      selectedLeader: cell,
+    }))
   }
 
   const handleCheck = member => {
-    setIsChecked(prevState => ({
-      ...prevState,
-      [member]: !prevState[member],
-    }))
-    isChecked[member] ? setMemberCount(memberCount - 1) : setMemberCount(memberCount + 1)
-    updateAttendanceData(value.format("YYYY-MM-DD"), selectedLeader, member)
-  }
+    setState(prevState => {
+      const isChecked = { ...prevState.isChecked }
+      isChecked[member] = !isChecked[member]
 
+      let memberCount = prevState.memberCount
+      if (isChecked[member]) memberCount++
+      else memberCount--
+
+      const totalCount = isChecked[member] ? prevState.totalCount + 1 : prevState.totalCount - 1
+
+      updateAttendanceData(state.value.format("YYYY-MM-DD"), state.selectedLeader, member)
+
+      return {
+        ...prevState,
+        isChecked,
+        memberCount,
+        totalCount,
+      }
+    })
+  }
   const handleCalendarClick = () => {
-    setIsOpenCalendar(true)
+    setState(prevState => ({
+      ...prevState,
+      isOpenCalendar: true,
+      selectedLeader: null,
+      adultCount: 0,
+      memberCount: 0,
+      totalCount: 0,
+      isChecked: {},
+      attendanceAllData: {},
+    }))
   }
 
-  const shouldDisableDate = date => {
-    return date.day() !== 0
+  const handleAdultData = id => {
+    setState(
+      prevState => {
+        const adultCount = id === "add" ? prevState.adultCount + 1 : prevState.adultCount > 0 ? prevState.adultCount - 1 : 0
+        // const totalCount = prevState.memberCount + adultCount
+
+        return {
+          ...prevState,
+          adultCount,
+          totalCount: prevState.memberCount + adultCount,
+        }
+      },
+      updateAttendanceData(state.value.format("YYYY-MM-DD"), state.selectedLeader, "adults", id),
+    )
   }
 
-  const handleAdultData = action => {
-    action === "add" ? setAdultCount(adultCount + 1) : adultCount > 0 ? setAdultCount(adultCount - 1) : 0
-    updateAttendanceData(value.format("YYYY-MM-DD"), selectedLeader, "adults", action)
-  }
-
-  const updateAttendanceData = (date, leader, member, action) => {
-    const updatedData = { ...attendanceAllData }
+  const updateAttendanceData = (date, leader, member, id) => {
+    const updatedData = { ...state.attendanceAllData }
 
     if (!updatedData[date]) {
       updatedData[date] = {
@@ -106,12 +165,22 @@ const Attendance = () => {
         updatedData[date].cellData.adults = []
       }
       if (member === "adults") {
-        if (action === "add") {
+        if (id === "add") {
           updatedData[date].cellData.adults.push(member)
           updatedData[date].adultAttendance++
-        } else if (action === "remove") {
-          updatedData[date].cellData.adults.pop()
-          updatedData[date].adultAttendance--
+          setState(prevState => ({
+            ...prevState,
+            totalCount: prevState.adultCount + prevState.memberCount,
+          }))
+        } else if (id === "remove") {
+          if (updatedData[date].adultAttendance > 0) {
+            updatedData[date].cellData.adults.pop()
+            updatedData[date].adultAttendance--
+            setState(prevState => ({
+              ...prevState,
+              totalCount: prevState.adultCount > 0 ? prevState.adultCount - 1 : 0,
+            }))
+          }
         }
       }
     } else {
@@ -122,27 +191,50 @@ const Attendance = () => {
         if (!updatedData[date].cellData.adults) {
           updatedData[date].cellData.adults = []
         }
-        if (action === "add") {
+        if (id === "add") {
           updatedData[date].cellData.adults.push(member)
           updatedData[date].adultAttendance++
-        } else if (action === "remove") {
-          updatedData[date].cellData.adults.pop()
-          updatedData[date].adultAttendance--
+          setState(prevState => ({
+            ...prevState,
+            totalCount: prevState.adultCount + prevState.memberCount,
+          }))
+        } else if (id === "remove") {
+          if (updatedData[date].adultAttendance > 0) {
+            updatedData[date].cellData.adults.pop()
+            updatedData[date].adultAttendance--
+            setState(prevState => ({
+              ...prevState,
+              totalCount: prevState.adultCount > 0 ? prevState.adultCount - 1 : 0,
+            }))
+          }
         }
       } else {
         if (updatedData[date].cellData[leader].includes(member)) {
           updatedData[date].cellData[leader] = updatedData[date].cellData[leader].filter(m => m !== member)
-          updatedData[date].adultAttendance--
-          updatedData[date].memberAttendance--
+          if (updatedData[date].adultAttendance > 0) {
+            updatedData[date].adultAttendance--
+            updatedData[date].memberAttendance--
+            setState(prevState => ({
+              ...prevState,
+              totalCount: prevState.adultCount > 0 ? prevState.adultCount - 1 : 0,
+            }))
+          }
         } else {
           updatedData[date].cellData[leader].push(member)
           updatedData[date].adultAttendance++
           updatedData[date].memberAttendance++
+          setState(prevState => ({
+            ...prevState,
+            totalCount: prevState.adultCount + prevState.memberCount,
+          }))
         }
       }
     }
-
-    setAttendanceAllData(updatedData)
+    console.log("출석 데이터 업데이트:", updatedData)
+    setState(prevState => ({
+      ...prevState,
+      attendanceAllData: updatedData,
+    }))
   }
 
   return (
@@ -158,12 +250,12 @@ const Attendance = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
               <CalendarMonthIcon onClick={handleCalendarClick} onChange={handleChange} />
               <MobileDateWrapper
-                value={value}
+                value={state.value}
                 onChange={handleChange}
                 format="YYYY.MM.DD"
-                open={isOpenCalendar}
-                onClose={() => setIsOpenCalendar(false)}
-                shouldDisableDate={shouldDisableDate}
+                open={state.isOpenCalendar}
+                onClose={() => setState(prevState => ({ ...prevState, isOpenCalendar: false }))}
+                shouldDisableDate={date => date.day() !== 0}
                 minDate={dayjs("2024-01-01")}
                 views={["month", "year", "day"]}
                 slots={{
@@ -182,14 +274,14 @@ const Attendance = () => {
               <ChipItem key={item.id} onClick={() => handleLeaderClick(item.cell)}>
                 <Chip
                   label={item.cell}
-                  color={selectedLeader === item.cell ? "secondary" : "info"}
+                  color={state.selectedLeader === item.cell ? "secondary" : "info"}
                   sx={{
                     width: "100%",
                     height: "80%",
-                    border: selectedLeader === item.cell ? "none" : "2px solid #c27979",
+                    border: state.selectedLeader === item.cell ? "none" : "2px solid #c27979",
                     fontWeight: "700",
                     fontSize: "10px",
-                    color: selectedLeader === item.cell ? "#fff" : "#000",
+                    color: state.selectedLeader === item.cell ? "#fff" : "#000",
                   }}
                 />
               </ChipItem>
@@ -203,9 +295,8 @@ const Attendance = () => {
             </Typography>
             <ButtonWrapper>
               <AddBoxOutlinedIcon onClick={() => handleAdultData("add")} sx={{ fill: "#69535F" }} />
-
               <Typography fontSize={15} fontWeight={700}>
-                {adultCount}
+                {state.adultCount}
               </Typography>
               <IndeterminateCheckBoxOutlinedIcon onClick={() => handleAdultData("remove")} sx={{ fill: "#69535F" }} />
             </ButtonWrapper>
@@ -215,27 +306,27 @@ const Attendance = () => {
               출석 :
             </Typography>
             <Typography fontSize={15} fontWeight={700}>
-              {memberCount}
+              {state.memberCount}
             </Typography>
             <Typography fontSize={15} fontWeight={700}>
               /
             </Typography>
             <Typography fontSize={15} fontWeight={700}>
-              {totalCount}
+              {state.totalCount}
             </Typography>
           </AttendanceTotalDataWrapper>
         </CounterWrapper>
-        <DataWrapper sx={{ display: selectedLeader === null ? "none" : "grid" }}>
+        <DataWrapper sx={{ display: state.selectedLeader === null ? "none" : "grid" }}>
           {mcyMember.map(leader => {
-            if (leader.cell === selectedLeader) {
+            if (leader.cell === state.selectedLeader) {
               return leader.cellMember.map(member => (
                 <MemberDataWrapper key={member}>
                   <Checkbox
-                    onClick={() => handleCheck(member)}
-                    checked={isChecked[member]}
+                    checked={state.isChecked[member] || false}
+                    onChange={() => handleCheck(member)}
                     sx={{
                       "& .MuiSvgIcon-root": {
-                        color: isChecked[member] ? "#3F805D" : "#000",
+                        color: state.isChecked[member] ? "#3F805D" : "#000",
                       },
                     }}
                   />
@@ -244,7 +335,7 @@ const Attendance = () => {
                     fontWeight={"bold"}
                     width={"100%"}
                     sx={{
-                      color: isChecked[member] ? "#3F805D" : "#000",
+                      color: state.isChecked[member] ? "#3F805D" : "#000",
                     }}>
                     {member}
                   </Typography>
