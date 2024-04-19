@@ -1,148 +1,125 @@
-import React from "react"
-import dayjs from "dayjs"
-import "dayjs/locale/ko"
-import { Stack, styled } from "@mui/material"
+import React, { useEffect } from "react"
+import { Stack, styled, Grid, IconButton } from "@mui/material"
 import Chip from "@mui/material/Chip"
 import Typography from "@mui/material/Typography"
+import Button from "@mui/material/Button"
+import ChurchIcon from "@mui/icons-material/Church"
 import Checkbox from "@mui/material/Checkbox"
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
+import ArrowRightIcon from "@mui/icons-material/ArrowRight"
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker"
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
-import ChurchIcon from "@mui/icons-material/Church"
-import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
-import ArrowRightIcon from "@mui/icons-material/ArrowRight"
-import SettingsIcon from "@mui/icons-material/Settings"
-import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined"
-import IndeterminateCheckBoxOutlinedIcon from "@mui/icons-material/IndeterminateCheckBoxOutlined"
+import dayjs from "dayjs"
 
 import Layout from "../components/Layout/Layout"
 import Title from "../components/shared/Title"
 import { mcyMember } from "../data/mcyMember"
 
 const Attendance = () => {
+  // 달력
+
+  // 이번주 일요일 날짜 계산
+  const calculateCurrentSunday = () => {
+    const currentDate = dayjs()
+    const currentDayOfWeek = currentDate.day() // 0은 일요일, 1은 월요일, ..., 6은 토요일
+    const sundayDate = currentDate.subtract(currentDayOfWeek, "day")
+    return sundayDate
+  }
+
+  const [currentSunday, setCurrentSunday] = React.useState(calculateCurrentSunday())
   const [isOpenCalendar, setIsOpenCalendar] = React.useState(false)
-  const [selectedLeader, setSelectedLeader] = React.useState(null)
-  const [adultCount, setAdultCount] = React.useState(0)
-  const [memberCount, setMemberCount] = React.useState(0)
-  const totalCount = adultCount + memberCount
-  const [attendanceAllData, setAttendanceAllData] = React.useState({})
-  const [isChecked, setIsChecked] = React.useState({})
-  const currentDayOfWeek = dayjs().day()
-  const daysToLastSunday = currentDayOfWeek === 0 ? 7 : currentDayOfWeek
-  const lastSunday = dayjs().subtract(daysToLastSunday, "day")
-  const [value, setValue] = React.useState(dayjs(lastSunday))
 
-  React.useEffect(() => {
-    const initialCheckedState = {}
-    mcyMember.forEach(leader => {
-      leader.cellMember.forEach(member => {
-        initialCheckedState[member] = false
-      })
-    })
-    setIsChecked(initialCheckedState)
-    setSelectedLeader(null)
-    setAdultCount(0)
-    setMemberCount(0)
-    setAttendanceAllData({})
-  }, [value])
-
-  const handleChange = newData => {
-    setValue(newData)
+  const handleDateChange = newData => {
+    setCurrentSunday(newData)
     setIsOpenCalendar(false)
-  }
-
-  const handlePrevDayClick = () => {
-    const newDate = dayjs(value).subtract(7, "day")
-    setValue(newDate)
-  }
-
-  const handleNextDayClick = () => {
-    const newDate = dayjs(value).add(7, "day")
-    setValue(newDate)
-  }
-
-  const handleLeaderClick = cell => {
-    setSelectedLeader(cell)
-  }
-
-  const handleCheck = member => {
-    setIsChecked(prevState => ({
-      ...prevState,
-      [member]: !prevState[member],
-    }))
-    isChecked[member] ? setMemberCount(memberCount - 1) : setMemberCount(memberCount + 1)
-    updateAttendanceData(value.format("YYYY-MM-DD"), selectedLeader, member)
   }
 
   const handleCalendarClick = () => {
     setIsOpenCalendar(true)
   }
 
+  // 달력에서 일요일을 제외한 날짜를 비활성화합니다.
   const shouldDisableDate = date => {
-    return date.day() !== 0
+    const dayOfWeek = dayjs(date).day()
+    return dayOfWeek !== 0 // 일요일이 아닌 경우에는 true를 반환하여 비활성화합니다.
   }
 
-  const handleAdultData = action => {
-    action === "add" ? setAdultCount(adultCount + 1) : adultCount > 0 ? setAdultCount(adultCount - 1) : 0
-    updateAttendanceData(value.format("YYYY-MM-DD"), selectedLeader, "adults", action)
+  // 저번주 일요일 날짜로 변경
+  const handlePreviousWeek = () => {
+    const newDate = dayjs(currentSunday).subtract(7, "day")
+    setCurrentSunday(newDate)
+  }
+  // 다음주 일요일 날짜로  변경
+  const handleNextWeek = () => {
+    const newDate = dayjs(currentSunday).add(7, "day")
+    setCurrentSunday(newDate)
   }
 
-  const updateAttendanceData = (date, leader, member, action) => {
-    const updatedData = { ...attendanceAllData }
+  const handleArrowLeftButtonClick = () => {
+    handlePreviousWeek()
+  }
 
-    if (!updatedData[date]) {
-      updatedData[date] = {
-        adultAttendance: 0,
-        memberAttendance: 0,
-        cellData: {},
-      }
+  const handleArrowRightButtonClick = () => {
+    handleNextWeek()
+  }
+
+  // 칩
+
+  const [cellChipId, setCellChipId] = React.useState(mcyMember[0].id)
+  const [cellMemberInfo, setCellMemberInfo] = React.useState(mcyMember.find(member => member.id === cellChipId)) // 칩 아이디 === 데이터 아이디
+
+  const handleChipClick = chipId => {
+    setCellChipId(chipId)
+  }
+
+  useEffect(() => {
+    setCellMemberInfo(mcyMember.filter(chip => chip.id === cellChipId)[0])
+  }, [cellChipId])
+
+  // 출석 체크
+  const [adultCount, setAdultCount] = React.useState(0)
+  const [memberCount, setMemberCount] = React.useState(0)
+  const [totalCount, setTotalCount] = React.useState(0)
+
+  useEffect(() => {
+    setTotalCount(adultCount + memberCount)
+  }, [adultCount, memberCount])
+
+  // 출석수 증가
+  const plus = () => {
+    setAdultCount(adultCount + 1)
+  }
+  // 출석수 감소
+  const minus = () => {
+    if (adultCount > 0) {
+      setAdultCount(adultCount - 1)
     }
+  }
 
-    const isLeaderEmpty = !leader
+  // 체크 박스
+  const handleChange = (event, memberId) => {
+    const isChecked = event.target.checked
 
-    if (isLeaderEmpty) {
-      if (!updatedData[date].cellData.adults) {
-        updatedData[date].cellData.adults = []
+    const updatedMembers = cellMemberInfo.cellMember.map(member => {
+      if (member.id === memberId) {
+        member.isChecked = isChecked // mcyMember 배열의 해당 멤버 객체의 isChecked 값을 업데이트
+        return member
       }
-      if (member === "adults") {
-        if (action === "add") {
-          updatedData[date].cellData.adults.push(member)
-          updatedData[date].adultAttendance++
-        } else if (action === "remove") {
-          updatedData[date].cellData.adults.pop()
-          updatedData[date].adultAttendance--
-        }
-      }
+      return member
+    })
+
+    setCellMemberInfo({ ...cellMemberInfo, cellMember: updatedMembers })
+
+    if (isChecked) {
+      setMemberCount(memberCount + 1)
+      setTotalCount(adultCount + memberCount + 1)
     } else {
-      if (!updatedData[date].cellData[leader]) {
-        updatedData[date].cellData[leader] = []
-      }
-      if (member === "adults") {
-        if (!updatedData[date].cellData.adults) {
-          updatedData[date].cellData.adults = []
-        }
-        if (action === "add") {
-          updatedData[date].cellData.adults.push(member)
-          updatedData[date].adultAttendance++
-        } else if (action === "remove") {
-          updatedData[date].cellData.adults.pop()
-          updatedData[date].adultAttendance--
-        }
-      } else {
-        if (updatedData[date].cellData[leader].includes(member)) {
-          updatedData[date].cellData[leader] = updatedData[date].cellData[leader].filter(m => m !== member)
-          updatedData[date].adultAttendance--
-          updatedData[date].memberAttendance--
-        } else {
-          updatedData[date].cellData[leader].push(member)
-          updatedData[date].adultAttendance++
-          updatedData[date].memberAttendance++
-        }
-      }
+      setMemberCount(memberCount - 1)
+      setTotalCount(adultCount + memberCount - 1)
     }
-
-    setAttendanceAllData(updatedData)
+    console.log(mcyMember)
   }
 
   return (
@@ -152,118 +129,80 @@ const Attendance = () => {
           <ChurchIconWrapper />
           <Title>출석</Title>
         </TitleWrapper>
-        <CalendarWrapper>
-          <DateWrapper>
-            <ArrowIconWrapper onClick={handlePrevDayClick} icon={ArrowLeftIcon} />
-            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-              <CalendarMonthIcon onClick={handleCalendarClick} onChange={handleChange} />
-              <MobileDateWrapper
-                value={value}
-                onChange={handleChange}
-                format="YYYY.MM.DD"
-                open={isOpenCalendar}
-                onClose={() => setIsOpenCalendar(false)}
-                shouldDisableDate={shouldDisableDate}
-                minDate={dayjs("2024-01-01")}
-                views={["month", "year", "day"]}
-                slots={{
-                  toolbar: "none",
-                  actionBar: "none",
-                }}
-              />
-            </LocalizationProvider>
-            <ArrowIconWrapper onClick={handleNextDayClick} icon={ArrowRightIcon} />
-          </DateWrapper>
-          <SettingsIcon />
-        </CalendarWrapper>
-        <LeaderWrapper>
+        <DateWrapper>
+          <IconButton onClick={handleArrowLeftButtonClick}>
+            <ArrowLeftIcon />
+          </IconButton>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
+            <CalendarMonthIcon onClick={handleCalendarClick} onChange={handleChange} />
+            <MobileDateWrapper
+              shouldDisableDate={shouldDisableDate}
+              value={currentSunday}
+              onChange={handleDateChange}
+              format="YYYY.MM.DD"
+              open={isOpenCalendar}
+              onClose={() => setIsOpenCalendar(false)}
+            />
+          </LocalizationProvider>
+
+          <IconButton onClick={handleArrowRightButtonClick}>
+            <ArrowRightIcon />
+          </IconButton>
+        </DateWrapper>
+        <ChipWrapper>
           {mcyMember.map(item => {
             return (
-              <ChipItem key={item.id} onClick={() => handleLeaderClick(item.cell)}>
-                <Chip
-                  label={item.cell}
-                  color={selectedLeader === item.cell ? "secondary" : "info"}
-                  sx={{
-                    width: "100%",
-                    height: "80%",
-                    border: selectedLeader === item.cell ? "none" : "2px solid #c27979",
-                    fontWeight: "700",
-                    fontSize: "10px",
-                    color: selectedLeader === item.cell ? "#fff" : "#000",
-                  }}
-                />
-              </ChipItem>
+              <Chip
+                key={item.id}
+                label={item.cell}
+                onClick={() => handleChipClick(item.id)}
+                color={cellChipId === item.id ? "secondary" : "info"}
+                sx={{
+                  width: "30%",
+                  height: "20%",
+                  margin: "1%",
+                  border: 2,
+                  borderColor: "#986C6C",
+                  fontSize: 10,
+                  color: cellChipId === item.id ? "#fff" : "#000",
+                }}
+              />
             )
           })}
-        </LeaderWrapper>
+        </ChipWrapper>
         <CounterWrapper>
-          <AdultWrapper>
-            <Typography fontSize={15} fontWeight={700}>
-              어른 :
-            </Typography>
-            <ButtonWrapper>
-              <AddBoxOutlinedIcon onClick={() => handleAdultData("add")} sx={{ fill: "#69535F" }} />
-
-              <Typography fontSize={15} fontWeight={700}>
-                {adultCount}
-              </Typography>
-              <IndeterminateCheckBoxOutlinedIcon onClick={() => handleAdultData("remove")} sx={{ fill: "#69535F" }} />
-            </ButtonWrapper>
-          </AdultWrapper>
-          <AttendanceTotalDataWrapper>
-            <Typography fontSize={15} fontWeight={700}>
-              출석 :
-            </Typography>
-            <Typography fontSize={15} fontWeight={700}>
-              {memberCount}
-            </Typography>
-            <Typography fontSize={15} fontWeight={700}>
-              /
-            </Typography>
-            <Typography fontSize={15} fontWeight={700}>
-              {totalCount}
-            </Typography>
-          </AttendanceTotalDataWrapper>
+          <AdultCount>
+            <Typography fontSize={15}>어른 :</Typography>
+            <Button sx={{ width: 50 }} color="error" size="small" onClick={plus}>
+              +
+            </Button>
+            {adultCount}
+            <Button sx={{ width: 50 }} color="error" size="small" onClick={minus}>
+              -
+            </Button>
+          </AdultCount>
+          <Typography fontSize={15}>
+            출석: {memberCount} / {totalCount}
+          </Typography>
         </CounterWrapper>
-        <DataWrapper sx={{ display: selectedLeader === null ? "none" : "grid" }}>
-          {mcyMember.map(leader => {
-            if (leader.cell === selectedLeader) {
-              return leader.cellMember.map(member => (
-                <MemberDataWrapper key={member}>
-                  <Checkbox
-                    onClick={() => handleCheck(member)}
-                    checked={isChecked[member]}
-                    sx={{
-                      "& .MuiSvgIcon-root": {
-                        color: isChecked[member] ? "#3F805D" : "#000",
-                      },
-                    }}
-                  />
-                  <Typography
-                    fontSize={14}
-                    fontWeight={"bold"}
-                    width={"100%"}
-                    sx={{
-                      color: isChecked[member] ? "#3F805D" : "#000",
-                    }}>
-                    {member}
-                  </Typography>
-                </MemberDataWrapper>
-              ))
-            }
-            return null
-          })}
-        </DataWrapper>
+        <ListWrapper>
+          {cellMemberInfo.cellMember.map(member => (
+            <List key={member.id} id={member.id}>
+              <Checkbox defaultChecked={member.isChecked} onChange={event => handleChange(event, member.id)} color="success" />
+              <Typography>{member.name}</Typography>
+            </List>
+          ))}
+        </ListWrapper>
       </AttendanceWrapper>
     </Layout>
   )
 }
-export default Attendance
 
 const AttendanceWrapper = styled(Stack)`
   width: 100vw;
   height: calc(100dvh - 120px);
 `
+// 제목 및 아이콘
 const TitleWrapper = styled(Stack)`
   flex-direction: row;
   align-items: center;
@@ -274,24 +213,11 @@ const TitleWrapper = styled(Stack)`
 const ChurchIconWrapper = styled(ChurchIcon)`
   font-size: 40px;
 `
-const CalendarWrapper = styled(Stack)`
-  width: 90%;
-  height: 10%;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto;
-`
+// 달력
 const DateWrapper = styled(Stack)`
-  flex: 1;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
-`
-const ArrowIconWrapper = styled(({ icon: IconComponent, ...props }) => <IconComponent {...props} />)`
-  color: #69535f;
-  font-size: 35px;
-  font-weight: 700;
+  justify-content: center;
 `
 const MobileDateWrapper = styled(MobileDatePicker)`
   width: 40%;
@@ -309,61 +235,44 @@ const MobileDateWrapper = styled(MobileDatePicker)`
     text-align: center;
     padding: 0px;
   }
-  & .MuiOutlinedInput-notchedOutline {
-    border: none;
-  }
 `
-const LeaderWrapper = styled(Stack)`
+// chip
+const ChipWrapper = styled(Stack)`
   height: 20%;
-  width: 90%;
-  margin: 0 auto;
+  width: 100%;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  list-style: none;
 `
-const ChipItem = styled(Stack)`
-  width: 30%;
-  height: 25%;
-  margin-left: 10px;
+// 청년 및 어른 출석
+const AdultCount = styled(Stack)`
+  flex-direction: row;
+  align-items: center;
+  gap: 0px;
+  width: 50%;
 `
 const CounterWrapper = styled(Stack)`
-  width: 90%;
   height: 10%;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
-  margin: 0 auto;
+  width: 100%;
+  justify-content: space-evenly;
 `
-const AdultWrapper = styled(Stack)`
-  flex: 1;
-  flex-direction: row;
-  gap: 10px;
-`
-
-const ButtonWrapper = styled(Stack)`
-  flex-direction: row;
-  gap: 10px;
-`
-const AttendanceTotalDataWrapper = styled(Stack)`
-  flex-direction: row;
-  gap: 10px;
-`
-
-const DataWrapper = styled(Stack)`
-  width: 90%;
-  height: 45%;
-  border: 2px solid #986c6c;
-  border-radius: 8px;
-  overflow-y: auto;
+// 셀 리스트
+const ListWrapper = styled(Grid)`
+  width: 100%;
+  display: grid;
   grid-template-columns: repeat(3, 1fr);
-  margin: 0 auto;
-  gap: 10px;
+  height: 30%;
+  gap: 15px;
+`
+const List = styled(Stack)`
+  height: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20%;
 `
 
-const MemberDataWrapper = styled(Stack)`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`
+export default Attendance
