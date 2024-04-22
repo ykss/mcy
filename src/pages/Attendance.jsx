@@ -56,6 +56,44 @@ const Attendance = () => {
     }))
   }, [])
 
+  useEffect(() => {
+    const updateAttendanceData = (date, leader) => {
+      setState(prevState => {
+        const updatedData = { ...prevState.attendanceAllData }
+
+        if (!updatedData[date]) {
+          updatedData[date] = {
+            adultAttendance: 0,
+            memberAttendance: 0,
+            cellData: {},
+          }
+        }
+
+        const leaderCellMembers = mcyMember.find(item => item.cell === leader)?.cellMember || []
+        const checkedMembers = leaderCellMembers.filter(member => state.isChecked[member])
+
+        if (leader) {
+          updatedData[date].cellData[leader] = checkedMembers
+        }
+
+        updatedData[date].adultAttendance = state.adultCount
+        updatedData[date].memberAttendance = Object.values(updatedData[date].cellData).reduce((acc, curr) => acc + curr.length, 0)
+        updatedData[date].totalAttendance = updatedData[date].adultAttendance + updatedData[date].memberAttendance
+
+        console.log("출석 데이터 업데이트:", updatedData)
+
+        return {
+          ...prevState,
+          attendanceAllData: updatedData,
+        }
+      })
+    }
+
+    if (state.selectedLeader !== null || state.adultCount !== 0) {
+      updateAttendanceData(state.value.format("YYYY-MM-DD"), state.selectedLeader)
+    }
+  }, [state.adultCount, state.isChecked])
+
   const handleChange = newData => {
     setState(prevState => ({
       ...prevState,
@@ -107,8 +145,6 @@ const Attendance = () => {
       else memberCount--
 
       const totalCount = isChecked[member] ? prevState.totalCount + 1 : prevState.totalCount - 1
-
-      updateAttendanceData(state.value.format("YYYY-MM-DD"), state.selectedLeader, member)
 
       return {
         ...prevState,
@@ -231,9 +267,19 @@ const Attendance = () => {
       }
     }
     console.log("출석 데이터 업데이트:", updatedData)
+  const handleAdultPlus = () => {
     setState(prevState => ({
       ...prevState,
-      attendanceAllData: updatedData,
+      adultCount: prevState.adultCount + 1,
+      totalCount: prevState.totalCount + 1,
+    }))
+  }
+
+  const handleAdultMinus = () => {
+    setState(prevState => ({
+      ...prevState,
+      adultCount: prevState.adultCount > 0 ? prevState.adultCount - 1 : 0,
+      totalCount: prevState.totalCount > 0 ? prevState.totalCount - 1 : 0,
     }))
   }
 
@@ -294,11 +340,11 @@ const Attendance = () => {
               어른 :
             </Typography>
             <ButtonWrapper>
-              <AddBoxOutlinedIcon onClick={() => handleAdultData("add")} sx={{ fill: "#69535F" }} />
+              <AddBoxOutlinedIcon onClick={handleAdultPlus} sx={{ fill: "#69535F" }} />
               <Typography fontSize={15} fontWeight={700}>
                 {state.adultCount}
               </Typography>
-              <IndeterminateCheckBoxOutlinedIcon onClick={() => handleAdultData("remove")} sx={{ fill: "#69535F" }} />
+              <IndeterminateCheckBoxOutlinedIcon onClick={handleAdultMinus} sx={{ fill: "#69535F" }} />
             </ButtonWrapper>
           </AdultWrapper>
           <AttendanceTotalDataWrapper>
