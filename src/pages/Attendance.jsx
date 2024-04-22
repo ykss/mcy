@@ -275,6 +275,7 @@ const Attendance = () => {
     }))
   }
 
+
   const handleAdultMinus = () => {
     setState(prevState => ({
       ...prevState,
