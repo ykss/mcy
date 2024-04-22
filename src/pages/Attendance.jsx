@@ -167,106 +167,6 @@ const Attendance = () => {
     }))
   }
 
-  const handleAdultData = id => {
-    setState(
-      prevState => {
-        const adultCount = id === "add" ? prevState.adultCount + 1 : prevState.adultCount > 0 ? prevState.adultCount - 1 : 0
-        // const totalCount = prevState.memberCount + adultCount
-
-        return {
-          ...prevState,
-          adultCount,
-          totalCount: prevState.memberCount + adultCount,
-        }
-      },
-      updateAttendanceData(state.value.format("YYYY-MM-DD"), state.selectedLeader, "adults", id),
-    )
-  }
-
-  const updateAttendanceData = (date, leader, member, id) => {
-    const updatedData = { ...state.attendanceAllData }
-
-    if (!updatedData[date]) {
-      updatedData[date] = {
-        adultAttendance: 0,
-        memberAttendance: 0,
-        cellData: {},
-      }
-    }
-
-    const isLeaderEmpty = !leader
-
-    if (isLeaderEmpty) {
-      if (!updatedData[date].cellData.adults) {
-        updatedData[date].cellData.adults = []
-      }
-      if (member === "adults") {
-        if (id === "add") {
-          updatedData[date].cellData.adults.push(member)
-          updatedData[date].adultAttendance++
-          setState(prevState => ({
-            ...prevState,
-            totalCount: prevState.adultCount + prevState.memberCount,
-          }))
-        } else if (id === "remove") {
-          if (updatedData[date].adultAttendance > 0) {
-            updatedData[date].cellData.adults.pop()
-            updatedData[date].adultAttendance--
-            setState(prevState => ({
-              ...prevState,
-              totalCount: prevState.adultCount > 0 ? prevState.adultCount - 1 : 0,
-            }))
-          }
-        }
-      }
-    } else {
-      if (!updatedData[date].cellData[leader]) {
-        updatedData[date].cellData[leader] = []
-      }
-      if (member === "adults") {
-        if (!updatedData[date].cellData.adults) {
-          updatedData[date].cellData.adults = []
-        }
-        if (id === "add") {
-          updatedData[date].cellData.adults.push(member)
-          updatedData[date].adultAttendance++
-          setState(prevState => ({
-            ...prevState,
-            totalCount: prevState.adultCount + prevState.memberCount,
-          }))
-        } else if (id === "remove") {
-          if (updatedData[date].adultAttendance > 0) {
-            updatedData[date].cellData.adults.pop()
-            updatedData[date].adultAttendance--
-            setState(prevState => ({
-              ...prevState,
-              totalCount: prevState.adultCount > 0 ? prevState.adultCount - 1 : 0,
-            }))
-          }
-        }
-      } else {
-        if (updatedData[date].cellData[leader].includes(member)) {
-          updatedData[date].cellData[leader] = updatedData[date].cellData[leader].filter(m => m !== member)
-          if (updatedData[date].adultAttendance > 0) {
-            updatedData[date].adultAttendance--
-            updatedData[date].memberAttendance--
-            setState(prevState => ({
-              ...prevState,
-              totalCount: prevState.adultCount > 0 ? prevState.adultCount - 1 : 0,
-            }))
-          }
-        } else {
-          updatedData[date].cellData[leader].push(member)
-          updatedData[date].adultAttendance++
-          updatedData[date].memberAttendance++
-          setState(prevState => ({
-            ...prevState,
-            totalCount: prevState.adultCount + prevState.memberCount,
-          }))
-        }
-      }
-    }
-    console.log("출석 데이터 업데이트:", updatedData)
   const handleAdultPlus = () => {
     setState(prevState => ({
       ...prevState,
@@ -274,7 +174,6 @@ const Attendance = () => {
       totalCount: prevState.totalCount + 1,
     }))
   }
-
 
   const handleAdultMinus = () => {
     setState(prevState => ({
