@@ -10,9 +10,9 @@ import {birthDayData} from "../data/BirthdayData";
 const BirthDay = () => {
   const [monthChipId, setMonthChipId] = React.useState(0);
   const [birthDayInfo, setBirthDayInfo] = React.useState(birthDayData[0]);
-  const handleChipClick = (event) => {
-    setMonthChipId(+event.target.parentElement.id);
-  };
+  const handleChipClick = (chipId) => {
+    setMonthChipId(chipId)
+  }
 
   useEffect(() => {
     setBirthDayInfo(birthDayData.filter((chip) => chip.id === monthChipId)[0]);
@@ -41,7 +41,7 @@ const BirthDay = () => {
                 }}
                 label={data.label}
                 variant="outlined"
-                onClick={handleChipClick}
+                onClick={() => handleChipClick(data.id)} 
               />
             );
           })}

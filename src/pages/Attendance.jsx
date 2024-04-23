@@ -57,14 +57,6 @@ const Attendance = () => {
     setCurrentSunday(newDate)
   }
 
-  const handleArrowLeftButtonClick = () => {
-    handlePreviousWeek()
-  }
-
-  const handleArrowRightButtonClick = () => {
-    handleNextWeek()
-  }
-
   // 칩
 
   const [cellChipId, setCellChipId] = React.useState(mcyMember[0].id)
@@ -99,28 +91,48 @@ const Attendance = () => {
   }
 
   // 체크 박스
+
+  // currentSunday를 이용하여 YYYY-MM-DD 형식으로 변환하여 currentDate 상태에 업데이트
+const [currentDate, setCurrentDate] = React.useState(currentSunday.format("YYYY-MM-DD"));
   const handleChange = (event, memberId) => {
-    const isChecked = event.target.checked
-
-    const updatedMembers = cellMemberInfo.cellMember.map(member => {
+    const isChecked = event.target.checked;
+  
+    const updatedMembers = cellMemberInfo.cellMember.map((member) => {
       if (member.id === memberId) {
-        member.isChecked = isChecked // mcyMember 배열의 해당 멤버 객체의 isChecked 값을 업데이트
-        return member
+        member.isChecked = isChecked;
+        return member;
       }
-      return member
-    })
-
-    setCellMemberInfo({ ...cellMemberInfo, cellMember: updatedMembers })
-
+      return member;
+    });
+  
+    setCellMemberInfo({ ...cellMemberInfo, cellMember: updatedMembers });
+  
     if (isChecked) {
-      setMemberCount(memberCount + 1)
-      setTotalCount(adultCount + memberCount + 1)
+      setMemberCount((prevMemberCount) => prevMemberCount + 1);
+      setTotalCount((prevTotalCount) => prevTotalCount + 1);
     } else {
-      setMemberCount(memberCount - 1)
-      setTotalCount(adultCount + memberCount - 1)
+      setMemberCount((prevMemberCount) => prevMemberCount - 1);
+      setTotalCount((prevTotalCount) => prevTotalCount - 1);
     }
-    console.log(mcyMember)
-  }
+    setCurrentDate(currentSunday.format("YYYY-MM-DD"));
+  };
+  
+  useEffect(() => {
+    // 체크된 멤버의 이름과 해당 멤버가 속한 Cell 데이터 업데이트
+    const checkedMembersData = cellMemberInfo.cellMember
+      .filter((member) => member.isChecked)
+      .map((member) => {
+        const cellData = mcyMember.find((cell) =>
+          cell.cellMember.some((item) => item.id === member.id)
+        );
+        return { name: member.name, cellData: cellData.cell, date:currentDate };
+      });
+    
+    // 업데이트된 데이터를 콘솔에 출력 또는 다른 곳에 사용
+    console.log("Checked Members Data:", checkedMembersData);
+  }, [cellMemberInfo]);
+  
+  
 
   return (
     <Layout>
@@ -130,7 +142,7 @@ const Attendance = () => {
           <Title>출석</Title>
         </TitleWrapper>
         <DateWrapper>
-          <IconButton onClick={handleArrowLeftButtonClick}>
+          <IconButton onClick={handlePreviousWeek}>
             <ArrowLeftIcon />
           </IconButton>
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
@@ -145,7 +157,7 @@ const Attendance = () => {
             />
           </LocalizationProvider>
 
-          <IconButton onClick={handleArrowRightButtonClick}>
+          <IconButton onClick={handleNextWeek}>
             <ArrowRightIcon />
           </IconButton>
         </DateWrapper>
