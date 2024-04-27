@@ -1,5 +1,9 @@
+import { useState } from "react"
+
 import styled from "@emotion/styled"
-import { Stack, Typography } from "@mui/material"
+
+import Stack from "@mui/material/Stack"
+import Typography from "@mui/material/Typography"
 import CampaignOutlinedIcon from "@mui/icons-material/CampaignOutlined"
 import Accordion from "@mui/material/Accordion"
 import AccordionSummary from "@mui/material/AccordionSummary"
@@ -8,7 +12,6 @@ import IconButton from "@mui/material/IconButton"
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
-import React from "react"
 
 import Layout from "../components/Layout/Layout"
 import Title from "../components/shared/Title"
@@ -19,9 +22,9 @@ const News = () => {
   const currentYear = currentDate.getFullYear()
   const currentMonth = currentDate.getMonth() + 1
 
-  const [selectedYear, setSelectedYear] = React.useState(currentYear)
-  const [selectedMonth, setSelectedMonth] = React.useState(currentMonth)
-  
+  const [selectedYear, setSelectedYear] = useState(currentYear)
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth)
+
   const handlePreviousMonth = () => {
     let newYear = selectedYear
     let newMonth = selectedMonth - 1
@@ -48,16 +51,16 @@ const News = () => {
     <Layout>
       <NewsWrapper>
         <TitleWrapper>
-          <CampaignOutlinedIcon sx={{ fontSize: 40 }} />
+          <CampaignOutlinedIconWrapper />
           <Title>MCY 소식</Title>
         </TitleWrapper>
         <SelectWrapper>
           <IconButton onClick={handlePreviousMonth}>
             <ArrowBackIosIcon />
           </IconButton>
-          <Typography fontSize={15}>
+          <DateWrapper>
             {selectedYear}년 {selectedMonth}월
-          </Typography>
+          </DateWrapper>
           <IconButton onClick={handleNextMonth}>
             <ArrowForwardIosIcon />
           </IconButton>
@@ -67,13 +70,17 @@ const News = () => {
             <NewsListWrapper key={item.id}>
               <Accordion>
                 <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
-                  <NewsItem fontSize={16} fontWeight={"bold"}>
+                  <NewsItem>
                     {item.month}월 {item.day}일 광고
                   </NewsItem>
                 </AccordionSummary>
                 <AccordionDetails>
-                  {item.content.map((news,index) => {
-                    return <Typography sx={{padding:2}}fontSize={14} key={item }>{index+1}. {news}</Typography>
+                  {item.content.map((news, index) => {
+                    return (
+                      <NewInfoDataWrapper key={item}>
+                        {index + 1}. {news}
+                      </NewInfoDataWrapper>
+                    )
                   })}
                 </AccordionDetails>
               </Accordion>
@@ -86,31 +93,39 @@ const News = () => {
 }
 
 const NewsWrapper = styled(Stack)`
-  height: calc(100dvh - 120px);
   width: 100vw;
+  height: calc(100dvh - 120px);
 `
 
 const TitleWrapper = styled(Stack)`
   flex-direction: row;
   align-items: center;
-  height: 10%;
   gap: 15px;
+  height: 10%;
   padding: 0 10px;
 `
 
+const CampaignOutlinedIconWrapper = styled(CampaignOutlinedIcon)`
+  font-size: 40px;
+`
+
 const SelectWrapper = styled(Stack)`
-  height: 10%;
-  width: 100%;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 10%;
+`
+
+const DateWrapper = styled(Typography)`
+  font-size: 15px;
 `
 
 const RenderingArea = styled(Stack)`
-  margin-top: 15px;
-  height: 500px;
-  width: 100%;
   align-items: center;
+  width: 100%;
+  height: 500px;
+  margin-top: 15px;
   overflow-y: auto; /* 스크롤이 있는 경우만 스크롤바를 표시 */
   &::-webkit-scrollbar {
     width: 0;
@@ -118,13 +133,22 @@ const RenderingArea = styled(Stack)`
 `
 
 const NewsListWrapper = styled(Stack)`
+  justify-content: center;
   width: 90%;
   margin: 10px 0;
-  justify-content: center;
 `
+
 const NewsItem = styled(Stack)`
+  justify-content: center;
   height: 60px;
   margin-left: 2px;
-  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
 `
+
+const NewInfoDataWrapper = styled(Typography)`
+  padding: 2px;
+  font-size: 14px;
+`
+
 export default News
