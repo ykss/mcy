@@ -1,13 +1,16 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { ThemeProvider } from "@mui/material/styles";
-import Main from "./pages/Main";
-import BirthDay from "./pages/BirthDay";
-import Attendance from "./pages/Attendance";
-import News from "./pages/News";
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+
+import { ThemeProvider } from "@mui/material/styles"
+
+import Main from "./pages/Main"
+import BirthDay from "./pages/BirthDay"
+import Attendance from "./pages/Attendance"
+import News from "./pages/News"
 // import ReaderAdmin from "./pages/ReaderAdmin.jsx";
 // import MemberAdmin from "./pages/MemberAdmin.jsx";
-import theme from "./assets/theme/theme.js";
-import "./App.css";
+import theme from "./assets/theme/theme.js"
+
+import "./App.css"
 
 function App() {
   return (
@@ -25,7 +28,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
-  );
+  )
 }
 
-export default App;
+export default App

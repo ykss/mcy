@@ -1,4 +1,4 @@
-import { createTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles"
 
 const theme = createTheme({
   palette: {
@@ -12,6 +12,7 @@ const theme = createTheme({
       main: "#fff",
     },
   },
+
   typography: {
     h4: {
       fontFamily: "INTER",
@@ -38,6 +39,6 @@ const theme = createTheme({
       color: "#000",
     },
   },
-});
+})
 
-export default theme;
+export default theme

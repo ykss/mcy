@@ -1,6 +1,8 @@
-import { Stack } from "@mui/system"
+import Stack from "@mui/material/Stack"
+import { styled } from "@mui/material"
 import Typography from "@mui/material/Typography"
-import { Chip, styled } from "@mui/material"
+import Chip from "@mui/material/Chip"
+
 import Layout from "../components/Layout/Layout"
 import CarouselSlider from "../components/shared/CarouselSlider"
 import mainSlider1 from "../assets/images/mainSlider1.webp"
@@ -27,30 +29,12 @@ const Main = () => {
           <CarouselSlider imageArray={McyImgs} />
         </CarouselWrapper>
         <ContentWrapper>
-          <Chip
-            label="교육 표어"
-            color="primary"
-            sx={{
-              fontFamily: "LINE SEED SANS KR",
-              fontSize: "12px",
-              fontWeight: "700",
-              color: "#000",
-            }}
-          />
+          <EducationSloganWrapper label="교육 표어" color="primary" />
           <Typography variant="body1">예수그리스도의 영이 다시 살아나게 하소서</Typography>
           <Typography variant="overline">시 51:10, 출23:25, 슥4:6</Typography>
         </ContentWrapper>
         <ContentWrapper>
-          <Chip
-            label="교육 목표"
-            color="primary"
-            sx={{
-              fontFamily: "LINE SEED SANS KR",
-              fontSize: "12px",
-              fontWeight: "700",
-              color: "#000",
-            }}
-          />
+          <EducationGoalsWrapper label="교육 목표" color="primary" />
           <Typography variant="body1">1. 예배로 온전한 신앙을 회복하자.</Typography>
           <Typography variant="body1">2. 기도로 상한 마음을 회복하자.</Typography>
           <Typography variant="body1">3. 교제와 셀 모임을 통해 관계 회복하자.</Typography>
@@ -60,10 +44,17 @@ const Main = () => {
   )
 }
 
+const EducationSloganWrapper = styled(Chip)`
+  font-family: "LINE SEED SANS KR";
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
+`
+
 const MainWrapper = styled(Stack)`
+  align-items: center;
   width: 100vw;
   height: calc(100dvh - 120px);
-  align-items: center;
 `
 
 const CarouselWrapper = styled(Stack)`
@@ -74,10 +65,17 @@ const CarouselWrapper = styled(Stack)`
 `
 
 const ContentWrapper = styled(Stack)`
-  width: 80%;
-  height: 30%;
   align-items: flex-start;
   justify-content: space-evenly;
+  width: 80%;
+  height: 30%;
+`
+
+const EducationGoalsWrapper = styled(Chip)`
+  font-family: "LINE SEED SANS KR";
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
 `
 
 export default Main

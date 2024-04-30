@@ -1,5 +1,7 @@
-import Carousel from "react-material-ui-carousel";
-import { Stack, styled } from "@mui/material";
+import Carousel from "react-material-ui-carousel"
+
+import Stack from "@mui/material/Stack"
+import { styled } from "@mui/material"
 
 const CarouselSlider = ({ imageArray }) => {
   const settings = {
@@ -7,24 +9,23 @@ const CarouselSlider = ({ imageArray }) => {
     animation: "slide",
     indicatorContainerProps: {
       style: {
+        zIndex: 1,
         width: "100%",
         marginTop: "-30px",
         textAlign: "center",
-        zIndex: 1,
       },
     },
     indicatorIconButtonProps: {
       style: {
-        color: "#000",
         opacity: "0.7",
+        color: "#000",
         transition: "transform 0.3s ease-in-out",
       },
     },
-
     activeIndicatorIconButtonProps: {
       style: {
-        color: "#fff",
         opacity: "1",
+        color: "#fff",
         transform: "scale(1.2)",
       },
     },
@@ -33,7 +34,7 @@ const CarouselSlider = ({ imageArray }) => {
         display: "none",
       },
     },
-  };
+  }
 
   return (
     <CarouselWrapper {...settings}>
@@ -43,10 +44,8 @@ const CarouselSlider = ({ imageArray }) => {
         </Stack>
       ))}
     </CarouselWrapper>
-  );
-};
-
-export default CarouselSlider;
+  )
+}
 
 const CarouselWrapper = styled(Carousel)`
   display: flex;
@@ -58,12 +57,14 @@ const CarouselWrapper = styled(Carousel)`
   .MuiSvgIcon-root {
     font-size: 12px;
   }
-`;
+`
 
 const ImgWrapper = styled("img")`
   display: flex;
   justify-content: center;
   height: 200px;
-  border-radius: 20px;
   background-repeat: no-repeat;
-`;
+  border-radius: 20px;
+`
+
+export default CarouselSlider
