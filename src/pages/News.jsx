@@ -1,23 +1,36 @@
-import { useState } from "react"
-
+import { useState, useEffect } from "react"
 import styled from "@emotion/styled"
-
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
-import CampaignOutlinedIcon from "@mui/icons-material/CampaignOutlined"
+import Chip from "@mui/material/Chip"
 import Accordion from "@mui/material/Accordion"
 import AccordionSummary from "@mui/material/AccordionSummary"
 import AccordionDetails from "@mui/material/AccordionDetails"
 import IconButton from "@mui/material/IconButton"
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos"
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"
+import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
+import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 
 import Layout from "../components/Layout/Layout"
-import Title from "../components/shared/Title"
-import { NewsData } from "../data/NewsData"
+import { PlusButton } from "../components/shared/PlusButton"
+import { getMcyNewsApi } from "../api/newsApi"
 
 const News = () => {
+  const [newsData, setNewsData] = useState([])
+  useEffect(() => {
+    // Firebase Firestore를 사용하여 데이터를 가져오는 예시
+    const fetchData = async () => {
+      try {
+        const data = await getMcyNewsApi()
+        setNewsData(data)
+      } catch (error) {
+        console.error("Error fetching data: ", error)
+      }
+    }
+
+    fetchData()
+  }, [])
+
   const currentDate = new Date()
   const currentYear = currentDate.getFullYear()
   const currentMonth = currentDate.getMonth() + 1
@@ -50,42 +63,47 @@ const News = () => {
   return (
     <Layout>
       <NewsWrapper>
-        <TitleWrapper>
-          <CampaignOutlinedIconWrapper />
-          <Title>MCY 소식</Title>
-        </TitleWrapper>
         <SelectWrapper>
           <IconButton onClick={handlePreviousMonth}>
-            <ArrowBackIosIcon />
+            <ArrowLeftIcon fontSize="large" />
           </IconButton>
           <DateWrapper>
             {selectedYear}년 {selectedMonth}월
           </DateWrapper>
           <IconButton onClick={handleNextMonth}>
-            <ArrowForwardIosIcon />
+            <ArrowRightIcon fontSize="large" />
           </IconButton>
+          <StyledIconButton>
+            <PlusButton />
+          </StyledIconButton>
         </SelectWrapper>
         <RenderingArea>
-          {NewsData.filter(item => Number(item.year) === selectedYear && Number(item.month) === selectedMonth).map(item => (
-            <NewsListWrapper key={item.id}>
-              <Accordion>
-                <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
-                  <NewsItem>
-                    {item.month}월 {item.day}일 광고
-                  </NewsItem>
-                </AccordionSummary>
-                <AccordionDetails>
-                  {item.content.map((news, index) => {
-                    return (
-                      <NewInfoDataWrapper key={item}>
-                        {index + 1}. {news}
-                      </NewInfoDataWrapper>
-                    )
-                  })}
-                </AccordionDetails>
-              </Accordion>
-            </NewsListWrapper>
-          ))}
+          {newsData
+            .filter(item => Number(item.year) === selectedYear && Number(item.month) === selectedMonth)
+            .map(item => (
+              <NewsListWrapper key={item.id}>
+                <StyledAccordion>
+                  <AccordionSummary expandIcon={<StyledArrowDropDownIcon />}>
+                    <NewsItem>
+                      {item.month}월 {item.day}일 광고
+                    </NewsItem>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <ChipWrapper>
+                      <Chip label="수정" variant="outlined" />
+                      <Chip label="삭제" variant="outlined" />
+                    </ChipWrapper>
+                    {item.content.map((news, index) => {
+                      return (
+                        <NewInfoDataWrapper key={item}>
+                          {index + 1}. {news}
+                        </NewInfoDataWrapper>
+                      )
+                    })}
+                  </AccordionDetails>
+                </StyledAccordion>
+              </NewsListWrapper>
+            ))}
         </RenderingArea>
       </NewsWrapper>
     </Layout>
@@ -94,19 +112,8 @@ const News = () => {
 
 const NewsWrapper = styled(Stack)`
   width: 100vw;
-  height: calc(100dvh - 120px);
-`
-
-const TitleWrapper = styled(Stack)`
-  flex-direction: row;
-  align-items: center;
-  gap: 15px;
-  height: 10%;
-  padding: 0 10px;
-`
-
-const CampaignOutlinedIconWrapper = styled(CampaignOutlinedIcon)`
-  font-size: 40px;
+  height: calc(100dvh - 180px);
+  background-color: #fffcf6;
 `
 
 const SelectWrapper = styled(Stack)`
@@ -114,11 +121,15 @@ const SelectWrapper = styled(Stack)`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 10%;
+  height: 15%;
 `
+const StyledIconButton = styled(IconButton)`
+  position: absolute;
 
+  right: 1%;
+`
 const DateWrapper = styled(Typography)`
-  font-size: 15px;
+  font-size: 20px;
 `
 
 const RenderingArea = styled(Stack)`
@@ -137,13 +148,39 @@ const NewsListWrapper = styled(Stack)`
   width: 90%;
   margin: 10px 0;
 `
+const StyledAccordion = styled(Accordion)`
+  background-color: #f0f0f0;
+
+  & .MuiButtonBase-root {
+    justify-content: center;
+    align-items: center;
+    height: 120px;
+  }
+
+  &.MuiAccordion-rounded {
+    border-radius: 22px;
+    border: 1px solid #000000;
+  }
+`
+const StyledArrowDropDownIcon = styled(ArrowDropDownIcon)`
+  &.MuiSvgIcon-root {
+    font-size: 50px;
+  }
+`
 
 const NewsItem = styled(Stack)`
   justify-content: center;
+  font-size: 25px;
   height: 60px;
-  margin-left: 2px;
-  font-size: 16px;
+  margin-left: 15px;
   font-weight: 700;
+`
+const ChipWrapper = styled(Stack)`
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
 `
 
 const NewInfoDataWrapper = styled(Typography)`
