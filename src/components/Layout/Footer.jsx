@@ -19,8 +19,8 @@ const FooterWrapper = styled(Stack)`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 70px;
-  background-color: #f4f1e9;
+  height: 100px;
+  background-color: #fffcf6;
 `
 
 const FooterTitleWrapper = styled(Typography)`

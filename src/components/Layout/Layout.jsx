@@ -25,7 +25,7 @@ const ContentWrapper = styled(Stack)`
   justify-content: center;
   align-items: center;
   width: 100vw;
-  height: calc(100dvh - 120px);
+  height: calc(100dvh - 200px);
 `
 
 export default Layout
