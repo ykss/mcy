@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react"
+import dayjs from "dayjs"
+import "dayjs/locale/ko"
+dayjs.locale("ko")
 import styled from "@emotion/styled"
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
@@ -31,34 +34,21 @@ const News = () => {
     fetchData()
   }, [])
 
-  const currentDate = new Date()
-  const currentYear = currentDate.getFullYear()
-  const currentMonth = currentDate.getMonth() + 1
-
-  const [selectedYear, setSelectedYear] = useState(currentYear)
-  const [selectedMonth, setSelectedMonth] = useState(currentMonth)
+  const currentDate = dayjs()
+  const [selectedDate, setSelectedDate] = useState(currentDate)
 
   const handlePreviousMonth = () => {
-    let newYear = selectedYear
-    let newMonth = selectedMonth - 1
-    if (newMonth === 0) {
-      newMonth = 12
-      newYear--
-    }
-    setSelectedYear(newYear)
-    setSelectedMonth(newMonth)
+    const newDate = selectedDate.subtract(1, "month")
+    setSelectedDate(newDate)
   }
 
   const handleNextMonth = () => {
-    let newYear = selectedYear
-    let newMonth = selectedMonth + 1
-    if (newMonth === 13) {
-      newMonth = 1
-      newYear++
-    }
-    setSelectedYear(newYear)
-    setSelectedMonth(newMonth)
+    const newDate = selectedDate.add(1, "month")
+    setSelectedDate(newDate)
   }
+
+  const selectedYear = selectedDate.year()
+  const selectedMonth = selectedDate.month() + 1 // Day.js의 month()는 0부터 시작하므로 1을 더합니다.
 
   return (
     <Layout>
@@ -135,7 +125,7 @@ const DateWrapper = styled(Typography)`
 const RenderingArea = styled(Stack)`
   align-items: center;
   width: 100%;
-  height: 500px;
+  height: 600px;
   margin-top: 15px;
   overflow-y: auto; /* 스크롤이 있는 경우만 스크롤바를 표시 */
   &::-webkit-scrollbar {
