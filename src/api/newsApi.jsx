@@ -10,7 +10,6 @@ const getMcyNewsApi = async () => {
       ...doc.data(),
       id: doc.id,
     }))
-    console.log(membersList)
     return membersList
   } catch (error) {
     console.error("Error getting documents: ", error)
