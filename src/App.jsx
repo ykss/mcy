@@ -10,6 +10,7 @@ import News from "./pages/News"
 // import MemberAdmin from "./pages/MemberAdmin.jsx";
 import theme from "./assets/theme/theme.js"
 import NewsAdd from "./pages/NewsAdd.jsx"
+import NewsRevise from "./pages/NewsRevise.jsx"
 
 import "./App.css"
 
@@ -19,8 +20,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Main />} />
-          <Route path="/birthDay" element={<BirthDay />} />
-          <Route path="/attendance" element={<Attendance />} />
+          <Route path="/birthDay" element={<NewsRevise />} />
+          <Route path="/attendance" element={<News />} />
           <Route path="/news" element={<NewsAdd />} />
           {/* 셀 관리 페이지 */}
           {/* <Route path="/reader-admin" element={<ReaderAdmin />} /> */}
