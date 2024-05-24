@@ -12,6 +12,7 @@ import Login from "./pages/Login"
 // import MemberAdmin from "./pages/MemberAdmin.jsx";
 import theme from "./assets/theme/theme.js"
 import NewsAdd from "./pages/NewsAdd.jsx"
+import NewsRevise from "./pages/NewsRevise.jsx"
 
 import "./App.css"
 
