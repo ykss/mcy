@@ -46,6 +46,7 @@ const NewsAdd = () => {
         content: textValue,
       })
       alert("Data saved successfully!")
+      setTextValue("")
     } catch (e) {
       console.error("Error adding document: ", e)
       alert("Error saving data.")

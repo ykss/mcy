@@ -17,11 +17,13 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import Layout from "../components/Layout/Layout"
 import { PlusButton } from "../components/shared/PlusButton"
 import { getMcyNewsApi } from "../api/newsApi"
+import { collection, deleteDoc, getDocs } from "firebase/firestore"
+import { db } from "../firebase" // firebase 설정 파일을 임포트
 
 const News = () => {
   const [newsData, setNewsData] = useState([])
   useEffect(() => {
-    // Firebase Firestore를 사용하여 데이터를 가져오는 예시
+    // 파이어베이스에서 News 콜레션에 있는 데이터를 가져옴.
     const fetchData = async () => {
       try {
         const data = await getMcyNewsApi()
@@ -36,6 +38,8 @@ const News = () => {
 
   const currentDate = dayjs()
   const [selectedDate, setSelectedDate] = useState(currentDate)
+  const selectedYear = selectedDate.year()
+  const selectedMonth = selectedDate.month() + 1 // Day.js의 month()는 0부터 시작하므로 1을 더합니다.
 
   const handlePreviousMonth = () => {
     const newDate = selectedDate.subtract(1, "month")
@@ -46,9 +50,26 @@ const News = () => {
     const newDate = selectedDate.add(1, "month")
     setSelectedDate(newDate)
   }
+  const handleDelete = async (itemId, itemYear, itemMonth, itemDay) => {
+    try {
+      // 클라이언트 측 데이터 삭제
+      setNewsData(prevData => prevData.filter(item => item.id !== itemId))
 
-  const selectedYear = selectedDate.year()
-  const selectedMonth = selectedDate.month() + 1 // Day.js의 month()는 0부터 시작하므로 1을 더합니다.
+      // 파이어베이스에서 해당 날짜와 일치하는 문서 삭제
+      const querySnapshot = await getDocs(collection(db, "news"))
+      querySnapshot.forEach(async doc => {
+        const data = doc.data()
+        if (data.year === itemYear && data.month === itemMonth && data.day === itemDay) {
+          await deleteDoc(doc.ref)
+        }
+      })
+
+      alert("Data deleted successfully!")
+    } catch (error) {
+      console.error("Error deleting data: ", error)
+      alert("Error deleting data.")
+    }
+  }
 
   return (
     <Layout>
@@ -80,8 +101,8 @@ const News = () => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <ChipWrapper>
-                      <Chip label="수정" variant="outlined" />
-                      <Chip label="삭제" variant="outlined" />
+                      <StyledChip label="수정" variant="outlined" />
+                      <StyledChip label="삭제" variant="outlined" onClick={() => handleDelete(item.id, item.year, item.month, item.day)} />
                     </ChipWrapper>
                     <NewInfoDataWrapper key={item}>{item.content}</NewInfoDataWrapper>
                   </AccordionDetails>
@@ -164,6 +185,12 @@ const ChipWrapper = styled(Stack)`
   align-items: center;
   gap: 15px;
   margin-bottom: 20px;
+`
+const StyledChip = styled(Chip)`
+  &.MuiChip-root {
+    width: 73px;
+    height: 30px;
+  }
 `
 
 const NewInfoDataWrapper = styled(Typography)`
