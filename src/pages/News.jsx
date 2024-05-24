@@ -83,13 +83,7 @@ const News = () => {
                       <Chip label="수정" variant="outlined" />
                       <Chip label="삭제" variant="outlined" />
                     </ChipWrapper>
-                    {item.content.map((news, index) => {
-                      return (
-                        <NewInfoDataWrapper key={item}>
-                          {index + 1}. {news}
-                        </NewInfoDataWrapper>
-                      )
-                    })}
+                    <NewInfoDataWrapper key={item}>{item.content}</NewInfoDataWrapper>
                   </AccordionDetails>
                 </StyledAccordion>
               </NewsListWrapper>
@@ -115,7 +109,6 @@ const SelectWrapper = styled(Stack)`
 `
 const StyledIconButton = styled(IconButton)`
   position: absolute;
-
   right: 1%;
 `
 const DateWrapper = styled(Typography)`
@@ -174,6 +167,7 @@ const ChipWrapper = styled(Stack)`
 `
 
 const NewInfoDataWrapper = styled(Typography)`
+  white-space: pre-wrap; // 파이어베이스에서 데이터를 가져올때 줄 바꿈을 적용하기 위해
   padding: 2px;
   font-size: 14px;
 `
