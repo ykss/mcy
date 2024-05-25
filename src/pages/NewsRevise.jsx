@@ -83,41 +83,41 @@ const NewsRevise = () => {
   return (
     <Layout>
       <NewsReviseWrapper>
-        <RenderingArea>
-          <DateRenderingArea>
-            <DateWrapper>
-              <IconButton onClick={handlePreviousWeek}>
-                <StyledArrowLeftIcon />
-              </IconButton>
-              <Typography fontSize={28}>{selectedDateInfo.format("M월 D일")}</Typography>
-              <IconButton onClick={handleNextWeek}>
-                <StyledArrowRightIcon />
-              </IconButton>
-            </DateWrapper>
-          </DateRenderingArea>
-          <TextFiledArea>
-            <StyledTextField
-              id="outlined-textarea"
-              label="Multiline"
-              multiline
-              rows={4}
-              value={textValue} // 상태 값으로 설정
-              onChange={handleTextChange} // onChange 핸들러 추가
-            />
-          </TextFiledArea>
-          <SaveChipWrapper>
-            <StyledSaveChip label="저장" onClick={handleUpdate} />
-          </SaveChipWrapper>
-        </RenderingArea>
+        <DateRenderingArea>
+          <DateWrapper>
+            <IconButton onClick={handlePreviousWeek}>
+              <StyledArrowLeftIcon />
+            </IconButton>
+            <Typography fontSize={28}>{selectedDateInfo.format("M월 D일")}</Typography>
+            <IconButton onClick={handleNextWeek}>
+              <StyledArrowRightIcon />
+            </IconButton>
+          </DateWrapper>
+        </DateRenderingArea>
+        <TextFiledArea>
+          <StyledTextField
+            id="outlined-textarea"
+            label="Multiline"
+            multiline
+            rows={4}
+            value={textValue} // 상태 값으로 설정
+            onChange={handleTextChange} // onChange 핸들러 추가
+          />
+        </TextFiledArea>
+        <SaveChipWrapper>
+          <StyledSaveChip label="수정" onClick={handleUpdate} />
+        </SaveChipWrapper>
       </NewsReviseWrapper>
     </Layout>
   )
 }
 
 const NewsReviseWrapper = styled(Stack)`
-  width: 100vw;
-  height: calc(100dvh - 180px);
-  align-items: center;
+  width: 90vw;
+  height: 90%;
+  background-color: #b4dfc3;
+  border: 1px solid #000000;
+  border-radius: 13px;
 `
 
 const StyledArrowLeftIcon = styled(ArrowLeftIcon)`
@@ -149,13 +149,13 @@ const TextFiledArea = styled(Stack)`
   flex-direction: center;
   align-items: center;
   width: 100%;
-  height: 75%;
+  height: 70%;
 `
 const StyledTextField = styled(TextField)`
   background-color: #fffcf6;
   border: 1px solid #000000;
   width: 80%;
-  height: 40%;
+  height: 95%;
   font-size: 35px;
 `
 
