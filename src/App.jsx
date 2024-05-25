@@ -20,9 +20,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Main />} />
-          <Route path="/birthDay" element={<NewsRevise />} />
-          <Route path="/attendance" element={<News />} />
-          <Route path="/news" element={<NewsAdd />} />
+          <Route path="/birthDay" element={<BirthDay />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/attendance" element={<Attendance />} />
+          <Route path="/newsAdd" element={<NewsAdd />} />
+          <Route path="/newsRevise" element={<NewsRevise />} />
           {/* 셀 관리 페이지 */}
           {/* <Route path="/reader-admin" element={<ReaderAdmin />} /> */}
           {/* <Route path="/member-admin" element={<MemberAdmin />} /> */}

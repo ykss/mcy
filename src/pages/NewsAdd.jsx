@@ -59,27 +59,27 @@ const NewsAdd = () => {
         <PlusIcon>
           <AddIcon />
         </PlusIcon>
-        <DateWrapper>
-          <IconButton onClick={handlePreviousMonth}>
-            <StyledArrowLeftIcon />
-          </IconButton>
-          <Typography fontSize={28}>{selectedDateInfo.format("M월 D일")}</Typography>
-          <IconButton onClick={handleNextMonth}>
-            <StyledArrowRightIcon />
-          </IconButton>
-        </DateWrapper>
-        <RenderingAreaLayout>
-          <RenderingArea>
-            <StyledTextField
-              id="outlined-textarea"
-              label="Multiline"
-              multiline
-              rows={4}
-              value={textValue} // 상태 값으로 설정
-              onChange={handleTextChange} // onChange 핸들러 추가
-            />
-          </RenderingArea>
-        </RenderingAreaLayout>
+        <DateRenderingArea>
+          <DateWrapper>
+            <IconButton onClick={handlePreviousMonth}>
+              <StyledArrowLeftIcon />
+            </IconButton>
+            <Typography fontSize={28}>{selectedDateInfo.format("M월 D일")}</Typography>
+            <IconButton onClick={handleNextMonth}>
+              <StyledArrowRightIcon />
+            </IconButton>
+          </DateWrapper>
+        </DateRenderingArea>
+        <TextFiledArea>
+          <StyledTextField
+            id="outlined-textarea"
+            label="Multiline"
+            multiline
+            rows={4}
+            value={textValue} // 상태 값으로 설정
+            onChange={handleTextChange} // onChange 핸들러 추가
+          />
+        </TextFiledArea>
         <SaveChipWrapper>
           <StyledSaveChip label="저장" onClick={handleSave} />
         </SaveChipWrapper>
@@ -104,12 +104,20 @@ const PlusIcon = styled(Stack)`
   align-items: center;
   height: 4%;
 `
+const DateRenderingArea = styled(Stack)`
+  width: 100%;
+  height: 20%;
+`
 const DateWrapper = styled(Stack)`
   flex-direction: row;
   align-items: center;
-  height: 5%;
 `
-
+const TextFiledArea = styled(Stack)`
+  flex-direction: center;
+  align-items: center;
+  width: 100%;
+  height: 70%;
+`
 const StyledArrowLeftIcon = styled(ArrowLeftIcon)`
   &.MuiSvgIcon-root {
     font-size: 60px;
@@ -131,22 +139,8 @@ const StyledTextField = styled(TextField)`
   background-color: #fffcf6;
   border: 1px solid #000000;
   width: 80%;
-  height: 40%;
+  height: 95%;
   font-size: 35px;
-`
-const RenderingArea = styled(Stack)`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 95%;
-  height: 550px;
-  overflow-y: auto; /* 스크롤이 있는 경우만 스크롤바를 표시 */
-  &::-webkit-scrollbar {
-    width: 0;
-  }
-  background-color: #f0f0f0;
-  border: 1px solid #000000;
-  border-radius: 22px;
 `
 
 const SaveChipWrapper = styled(Stack)`
