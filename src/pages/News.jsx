@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import dayjs from "dayjs"
 import "dayjs/locale/ko"
 dayjs.locale("ko")
@@ -21,6 +22,7 @@ import { collection, deleteDoc, getDocs } from "firebase/firestore"
 import { db } from "../firebase" // firebase 설정 파일을 임포트
 
 const News = () => {
+  // 첫 렌더링시 파이어베이스에서 데이터 가져오기
   const [newsData, setNewsData] = useState([])
   useEffect(() => {
     // 파이어베이스에서 News 콜레션에 있는 데이터를 가져옴.
@@ -35,7 +37,7 @@ const News = () => {
 
     fetchData()
   }, [])
-
+  // 날짜 이동
   const currentDate = dayjs()
   const [selectedDate, setSelectedDate] = useState(currentDate)
   const selectedYear = selectedDate.year()
@@ -50,6 +52,8 @@ const News = () => {
     const newDate = selectedDate.add(1, "month")
     setSelectedDate(newDate)
   }
+
+  // 파이어베이스 및 페이지 소식 데이터 삭제
   const handleDelete = async (itemId, itemYear, itemMonth, itemDay) => {
     try {
       // 클라이언트 측 데이터 삭제
@@ -70,6 +74,14 @@ const News = () => {
       alert("Error deleting data.")
     }
   }
+  // 추가 페이지 이동
+  const navigate = useNavigate()
+  const handleGoToAdd = () => {
+    navigate("/newsAdd") // NewsAdd 페이지로 이동
+  }
+  const handleGoToRevise = () => {
+    navigate("/newsRevise") // NewsAdd 페이지로 이동
+  }
 
   return (
     <Layout>
@@ -84,7 +96,7 @@ const News = () => {
           <IconButton onClick={handleNextMonth}>
             <ArrowRightIcon fontSize="large" />
           </IconButton>
-          <StyledIconButton>
+          <StyledIconButton onClick={handleGoToAdd}>
             <PlusButton />
           </StyledIconButton>
         </SelectWrapper>
@@ -101,7 +113,7 @@ const News = () => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <ChipWrapper>
-                      <StyledChip label="수정" variant="outlined" />
+                      <StyledChip label="수정" variant="outlined" onClick={handleGoToRevise} />
                       <StyledChip label="삭제" variant="outlined" onClick={() => handleDelete(item.id, item.year, item.month, item.day)} />
                     </ChipWrapper>
                     <NewInfoDataWrapper key={item}>{item.content}</NewInfoDataWrapper>
