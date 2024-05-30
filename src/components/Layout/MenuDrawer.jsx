@@ -2,14 +2,14 @@ import { useNavigate } from "react-router-dom"
 
 import Stack from "@mui/material/Stack"
 import { styled } from "@mui/material"
+import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 import Drawer from "@mui/material/Drawer"
 import List from "@mui/material/List"
+import Button from "@mui/material/Button"
 import ListItemText from "@mui/material/ListItem"
 import ListItemButton from "@mui/material/ListItemButton"
-import ListItemIcon from "@mui/material/ListItemIcon"
 import ClearIcon from "@mui/icons-material/Clear"
-import CheckIcon from "@mui/icons-material/Check"
 
 const MenuDrawer = ({ open, setOpen }) => {
   const Navigate = useNavigate()
@@ -26,36 +26,72 @@ const MenuDrawer = ({ open, setOpen }) => {
     Navigate("/attendance")
   }
 
+  const handleGoToMypage = () => {
+    Navigate("/mypage")
+  }
+
   const handleGoToBirthday = () => {
     Navigate("/birthday")
   }
 
+  const handleGoToLogin = () => {
+    Navigate("/login")
+  }
+
+  const handleGoToLogout = () => {
+    Navigate("/")
+    setOpen(false)
+  }
+
   const DrawerList = (
-    <Box rol="presentation">
+    <BoxWrapper rol="presentation">
       <DrawerTop>
         <ExitIcon onClick={toggleDrawer} />
       </DrawerTop>
-      <List>
-        <ListButton>
-          <ListIcon>
-            <ListCheckIcon />
-          </ListIcon>
-          <ListText onClick={handleGoToNews}>소식</ListText>
+      <UserAreaWrapper onClick={handleGoToMypage}>
+        <UserProfileWrapper />
+        <UserInfoWrapper>
+          <UserWrapper>계정이름</UserWrapper>
+          <IdWrapper>아이디@naver.com</IdWrapper>
+        </UserInfoWrapper>
+      </UserAreaWrapper>
+      <ListAreaWrapper>
+        <ListButton onClick={handleGoToNews}>
+          <MenuListWrapper>
+            <SquareWrapper>
+              <SquarePurpleWrapper />
+            </SquareWrapper>
+            <ListWrapper>
+              <ListText>소식</ListText>
+            </ListWrapper>
+          </MenuListWrapper>
         </ListButton>
-        <ListButton>
-          <ListIcon>
-            <ListCheckIcon />
-          </ListIcon>
-          <ListText onClick={handleGoToAttendance}>출석</ListText>
+        <ListButton onClick={handleGoToAttendance}>
+          <MenuListWrapper>
+            <SquareWrapper>
+              <SquareGreenWrapper />
+            </SquareWrapper>
+            <ListWrapper>
+              <ListText>출석</ListText>
+            </ListWrapper>
+          </MenuListWrapper>
         </ListButton>
-        <ListButton>
-          <ListIcon>
-            <ListCheckIcon />
-          </ListIcon>
-          <ListText onClick={handleGoToBirthday}>생일</ListText>
+        <ListButton onClick={handleGoToBirthday}>
+          <MenuListWrapper>
+            <SquareWrapper>
+              <SquarePinkWrapper />
+            </SquareWrapper>
+            <ListWrapper>
+              <ListText>생일</ListText>
+            </ListWrapper>
+          </MenuListWrapper>
         </ListButton>
-      </List>
-    </Box>
+      </ListAreaWrapper>
+      <ButtonWrapper>
+        <LoginButton onClick={handleGoToLogin}>로그인</LoginButton>
+        <LogoutButton onClick={handleGoToLogout}>로그아웃</LogoutButton>
+      </ButtonWrapper>
+    </BoxWrapper>
   )
 
   return (
@@ -67,47 +103,147 @@ const MenuDrawer = ({ open, setOpen }) => {
   )
 }
 
+const BoxWrapper = styled(Box)`
+  height: 100%;
+  background-color: #fffcf6;
+`
+
 const DrawerTop = styled(Stack)`
+  display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  height: 48px;
-  margin-bottom: 12px;
-  background-color: #fffcf6;
-  box-sizing: border-box;
-  box-shadow: 0px 5px 5px -1px rgba(0, 0, 0, 0.1);
+  gap: 12px;
+  height: 8%;
 `
 
 const ExitIcon = styled(ClearIcon)`
   margin: auto 10px;
-  font-size: 25px;
+  font-size: 15px;
+`
+
+const UserAreaWrapper = styled(Stack)`
+  display: flex;
+  flex-direction: row;
+  gap: 17px;
+  margin-left: 32px;
+`
+
+const UserProfileWrapper = styled(Stack)`
+  width: 71px;
+  height: 71px;
+  background-color: #d9d9d9;
+  border: 1px solid black;
+  border-radius: 25px;
+`
+
+const UserInfoWrapper = styled(Stack)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+
+const UserWrapper = styled(Typography)`
+  font-family: "noto Sans";
+  font-size: 16px;
+  font-weight: 600;
+`
+
+const IdWrapper = styled(Typography)`
+  font-family: "noto Sans";
+  font-size: 14px;
+  font-weight: 600;
+  color: #7c7c7c;
+`
+
+const ListAreaWrapper = styled(List)`
+  width: 100%;
+  margin-top: 63px;
 `
 
 const ListButton = styled(ListItemButton)`
   margin-left: 10px;
 `
 
-const ListIcon = styled(ListItemIcon)`
-  min-width: 30px;
+const MenuListWrapper = styled(Stack)`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
 `
 
-const ListCheckIcon = styled(CheckIcon)`
-  font-weight: 900;
-  color: black;
+const SquareWrapper = styled(Stack)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30%;
+`
+
+const SquarePurpleWrapper = styled(Stack)`
+  width: 90%;
+  height: 45%;
+  background-color: #c7bdeb;
+  border: 1px solid black;
+  border-radius: 22px;
+`
+
+const SquareGreenWrapper = styled(Stack)`
+  width: 90%;
+  height: 45%;
+  background-color: #b4dfc3;
+  border: 1px solid black;
+  border-radius: 22px;
+`
+
+const SquarePinkWrapper = styled(Stack)`
+  width: 90%;
+  height: 45%;
+  background-color: #f3c5c5;
+  border: 1px solid black;
+  border-radius: 22px;
+`
+
+const ListWrapper = styled(Stack)`
+  width: 70%;
 `
 
 const ListText = styled(ListItemText)`
-  display: flex;
+  width: 75%;
   margin: 5px;
-  font-family: Inter;
-  font-weight: 700;
-  font-size: 20px;
+  font-family: "Noto Sans";
+  font-weight: 600;
+  font-size: 24px;
 `
 
 const DrawerWrapper = styled(Drawer)`
   .MuiDrawer-paper {
-    width: 70%;
+    width: 80%;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
   }
+`
+
+const ButtonWrapper = styled(Stack)`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-right: 23px;
+  margin-top: 160px;
+`
+
+const LoginButton = styled(Button)`
+  font-family: "Noto Sans";
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
+`
+
+const LogoutButton = styled(Button)`
+  font-family: "Noto Sans";
+  font-weight: 600;
+  font-size: 16px;
+  color: #000;
 `
 
 export default MenuDrawer

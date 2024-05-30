@@ -52,7 +52,7 @@ const CarouselWrapper = styled(Carousel)`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 80%;
+  width: 90%;
   height: 100%;
   .MuiSvgIcon-root {
     font-size: 12px;
@@ -62,7 +62,7 @@ const CarouselWrapper = styled(Carousel)`
 const ImgWrapper = styled("img")`
   display: flex;
   justify-content: center;
-  height: 200px;
+  height: 223px;
   background-repeat: no-repeat;
   border-radius: 20px;
 `
