@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom"
-
 import Stack from "@mui/material/Stack"
 import { styled } from "@mui/material"
 import Typography from "@mui/material/Typography"
@@ -11,36 +9,13 @@ import ListItemText from "@mui/material/ListItem"
 import ListItemButton from "@mui/material/ListItemButton"
 import ClearIcon from "@mui/icons-material/Clear"
 
-const MenuDrawer = ({ open, setOpen }) => {
-  const Navigate = useNavigate()
-
+const MenuDrawer = ({ open, setOpen, navigate }) => {
   const toggleDrawer = () => {
     setOpen(false)
   }
 
-  const handleGoToNews = () => {
-    Navigate("/news")
-  }
-
-  const handleGoToAttendance = () => {
-    Navigate("/attendance")
-  }
-
-  const handleGoToMypage = () => {
-    Navigate("/mypage")
-  }
-
-  const handleGoToBirthday = () => {
-    Navigate("/birthday")
-  }
-
-  const handleGoToLogin = () => {
-    Navigate("/login")
-  }
-
-  const handleGoToLogout = () => {
-    Navigate("/")
-    setOpen(false)
+  const handleNavigate = destination => {
+    navigate(`/${destination}`)
   }
 
   const DrawerList = (
@@ -48,7 +23,7 @@ const MenuDrawer = ({ open, setOpen }) => {
       <DrawerTop>
         <ExitIcon onClick={toggleDrawer} />
       </DrawerTop>
-      <UserAreaWrapper onClick={handleGoToMypage}>
+      <UserAreaWrapper onClick={() => handleNavigate("mypage")}>
         <UserProfileWrapper />
         <UserInfoWrapper>
           <UserWrapper>계정이름</UserWrapper>
@@ -56,7 +31,7 @@ const MenuDrawer = ({ open, setOpen }) => {
         </UserInfoWrapper>
       </UserAreaWrapper>
       <ListAreaWrapper>
-        <ListButton onClick={handleGoToNews}>
+        <ListButton onClick={() => handleNavigate("news")}>
           <MenuListWrapper>
             <SquareWrapper>
               <SquarePurpleWrapper />
@@ -66,7 +41,7 @@ const MenuDrawer = ({ open, setOpen }) => {
             </ListWrapper>
           </MenuListWrapper>
         </ListButton>
-        <ListButton onClick={handleGoToAttendance}>
+        <ListButton onClick={() => handleNavigate("attendance")}>
           <MenuListWrapper>
             <SquareWrapper>
               <SquareGreenWrapper />
@@ -76,7 +51,7 @@ const MenuDrawer = ({ open, setOpen }) => {
             </ListWrapper>
           </MenuListWrapper>
         </ListButton>
-        <ListButton onClick={handleGoToBirthday}>
+        <ListButton onClick={() => handleNavigate("birthday")}>
           <MenuListWrapper>
             <SquareWrapper>
               <SquarePinkWrapper />
@@ -88,8 +63,14 @@ const MenuDrawer = ({ open, setOpen }) => {
         </ListButton>
       </ListAreaWrapper>
       <ButtonWrapper>
-        <LoginButton onClick={handleGoToLogin}>로그인</LoginButton>
-        <LogoutButton onClick={handleGoToLogout}>로그아웃</LogoutButton>
+        <LoginButton onClick={() => handleNavigate("login")}>로그인</LoginButton>
+        <LogoutButton
+          onClick={() => {
+            handleNavigate("")
+            setOpen(false)
+          }}>
+          로그아웃
+        </LogoutButton>
       </ButtonWrapper>
     </BoxWrapper>
   )
@@ -109,10 +90,8 @@ const BoxWrapper = styled(Box)`
 `
 
 const DrawerTop = styled(Stack)`
-  display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  align-items: center;
   gap: 12px;
   height: 8%;
 `
@@ -138,8 +117,6 @@ const UserProfileWrapper = styled(Stack)`
 `
 
 const UserInfoWrapper = styled(Stack)`
-  display: flex;
-  flex-direction: column;
   justify-content: center;
 `
 

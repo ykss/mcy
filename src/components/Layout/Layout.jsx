@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 import Stack from "@mui/material/Stack"
 import { styled } from "@mui/material"
@@ -9,11 +10,12 @@ import Footer from "./Footer"
 
 const Layout = ({ children }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const navigate = useNavigate()
 
   return (
     <>
       <Header setIsDrawerOpen={setIsDrawerOpen} />
-      <MenuDrawer open={isDrawerOpen} setOpen={setIsDrawerOpen} />
+      <MenuDrawer open={isDrawerOpen} setOpen={setIsDrawerOpen} navigate={navigate} />
       <ContentWrapper>{children}</ContentWrapper>
       <Footer />
     </>
