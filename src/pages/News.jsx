@@ -2,7 +2,6 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import dayjs from "dayjs"
 import "dayjs/locale/ko"
-dayjs.locale("ko")
 import styled from "@emotion/styled"
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
@@ -74,13 +73,22 @@ const News = () => {
       alert("Error deleting data.")
     }
   }
-  // 추가 페이지 이동
+  // 페이지 이동
   const navigate = useNavigate()
+
+  // NewsAdd 페이지로
   const handleGoToAdd = () => {
     navigate("/newsAdd") // NewsAdd 페이지로 이동
   }
-  const handleGoToRevise = () => {
-    navigate("/newsRevise") // NewsAdd 페이지로 이동
+
+  // NewsRevise 페이지
+  const handleGoToRevise = (itemYear, itemMonth, itemDay) => {
+    const date = dayjs()
+      .year(itemYear)
+      .month(itemMonth - 1)
+      .date(itemDay)
+      .format() // dayjs 형식으로 변환하여 문자열로 전달
+    navigate("/newsRevise", { state: { date } }) // NewsRevise 페이지로 이동
   }
 
   return (
@@ -113,7 +121,7 @@ const News = () => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <ChipWrapper>
-                      <StyledChip label="수정" variant="outlined" onClick={handleGoToRevise} />
+                      <StyledChip label="수정" variant="outlined" onClick={() => handleGoToRevise(item.year, item.month, item.day)} />
                       <StyledChip label="삭제" variant="outlined" onClick={() => handleDelete(item.id, item.year, item.month, item.day)} />
                     </ChipWrapper>
                     <NewInfoDataWrapper key={item}>{item.content}</NewInfoDataWrapper>
