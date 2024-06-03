@@ -128,13 +128,6 @@ const StyledArrowRightIcon = styled(ArrowRightIcon)`
     font-size: 60px;
   }
 `
-const RenderingAreaLayout = styled(Stack)`
-  flex-direction: center;
-  align-items: center;
-  width: 100%;
-  height: 75%;
-  margin-top: 25px;
-`
 const StyledTextField = styled(TextField)`
   background-color: #fffcf6;
   border: 1px solid #000000;

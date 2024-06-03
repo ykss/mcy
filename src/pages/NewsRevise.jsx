@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
+import { useLocation } from "react-router-dom"
 import dayjs from "dayjs"
 import "dayjs/locale/ko"
-dayjs.locale("ko")
 import { Stack, styled } from "@mui/system"
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
@@ -17,10 +17,10 @@ import { db } from "../firebase" // firebase 설정 파일을 임포트
 const NewsRevise = () => {
   const [newsData, setNewsData] = useState([])
   const [selectedDocId, setSelectedDocId] = useState(null) // 선택된 문서 ID 상태 추가
-  const today = dayjs()
-  const dayOfWeek = today.day() // 0은 일요일, 6은 토요일
-  const lastSunday = today.subtract(dayOfWeek, "day")
-  const [selectedDateInfo, setSelectedDateInfo] = useState(lastSunday)
+  const location = useLocation()
+  const { date } = location.state
+  const selectedDate = dayjs(date)
+  const [selectedDateInfo, setSelectedDateInfo] = useState(selectedDate)
   const [textValue, setTextValue] = useState("") // 텍스트 상태 추가
 
   useEffect(() => {
@@ -129,13 +129,6 @@ const StyledArrowRightIcon = styled(ArrowRightIcon)`
   &.MuiSvgIcon-root {
     font-size: 60px;
   }
-`
-const RenderingArea = styled(Stack)`
-  width: 90%;
-  height: 80%;
-  background-color: #b4dfc3;
-  border: 1px solid #000000;
-  border-radius: 22px;
 `
 const DateRenderingArea = styled(Stack)`
   width: 100%;
