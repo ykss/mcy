@@ -21,9 +21,10 @@ import IndeterminateCheckBoxOutlinedIcon from "@mui/icons-material/Indeterminate
 
 import Layout from "../components/Layout/Layout"
 import Title from "../components/shared/Title"
-import { mcyMember } from "../data/mcyMember"
+import { getMcyMemberApi } from "../api/mcyMemberApi"
 
 const Attendance = () => {
+  const [members, setMembers] = useState([])
   const [state, setState] = useState({
     isOpenCalendar: false,
     selectedLeader: null,
@@ -35,15 +36,24 @@ const Attendance = () => {
   })
 
   useEffect(() => {
+    const fetchData = async () => {
+      const membersList = await getMcyMemberApi()
+      setMembers(membersList)
+    }
+    fetchData()
+  }, [])
+
+  useEffect(() => {
     const initialCheckedState = {}
     const currentDayOfWeek = dayjs().day()
     const daysToLastSunday = currentDayOfWeek === 0 ? 7 : currentDayOfWeek
     const lastSunday = dayjs().subtract(daysToLastSunday, "day")
-    mcyMember.forEach(leader => {
+    members.forEach(leader => {
       leader.cellMember.forEach(member => {
         initialCheckedState[member] = leader.isChecked
       })
     })
+
     setState(prevState => ({
       ...prevState,
       isChecked: initialCheckedState,
@@ -69,7 +79,7 @@ const Attendance = () => {
           }
         }
 
-        const leaderCellMembers = mcyMember.find(item => item.cell === leader)?.cellMember || []
+        const leaderCellMembers = members.find(item => item.cell === leader)?.cellMember || []
         const checkedMembers = leaderCellMembers.filter(member => state.isChecked[member])
 
         if (leader) {
@@ -216,7 +226,7 @@ const Attendance = () => {
           <SettingsIcon />
         </CalendarWrapper>
         <LeaderInfoWrapper>
-          {mcyMember.map(item => {
+          {members.map(item => {
             return (
               <ChipItem key={item.id} onClick={() => handleLeaderClick(item.cell)}>
                 <LeaderWrapper label={item.cell} isSelected={state.selectedLeader === item.cell} />
@@ -241,7 +251,7 @@ const Attendance = () => {
           </AttendanceTotalDataWrapper>
         </CounterWrapper>
         <DataWrapper isSelected={state.selectedLeader === null}>
-          {mcyMember.map(leader => {
+          {members.map(leader => {
             if (leader.cell === state.selectedLeader) {
               return leader.cellMember.map(member => (
                 <MemberDataWrapper key={member}>
