@@ -2,18 +2,16 @@ import { useState } from "react"
 import dayjs from "dayjs"
 import "dayjs/locale/ko"
 dayjs.locale("ko")
-
 import { Stack, styled } from "@mui/system"
 import AddIcon from "@mui/icons-material/Add"
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import Chip from "@mui/material/Chip"
 import TextField from "@mui/material/TextField"
-
 import Layout from "../components/Layout/Layout"
 import { IconButton, Typography } from "@mui/material"
-
 import { collection, addDoc } from "firebase/firestore"
+
 import { db } from "../firebase" // firebase 설정 파일을 임포트
 
 const NewsAdd = () => {

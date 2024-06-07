@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 import dayjs from "dayjs"
 import "dayjs/locale/ko"
 import styled from "@emotion/styled"
@@ -17,25 +16,31 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import Layout from "../components/Layout/Layout"
 import { PlusButton } from "../components/shared/PlusButton"
 import { getMcyNewsApi } from "../api/newsApi"
-import { collection, deleteDoc, getDocs } from "firebase/firestore"
 import { db } from "../firebase" // firebase 설정 파일을 임포트
+import NewsDrawer from "../components/shared/NewsDrawer"
+
+import { collection, deleteDoc, getDocs } from "firebase/firestore"
 
 const News = () => {
-  // 첫 렌더링시 파이어베이스에서 데이터 가져오기
   const [newsData, setNewsData] = useState([])
-  useEffect(() => {
-    // 파이어베이스에서 News 콜레션에 있는 데이터를 가져옴.
-    const fetchData = async () => {
-      try {
-        const data = await getMcyNewsApi()
-        setNewsData(data)
-      } catch (error) {
-        console.error("Error fetching data: ", error)
-      }
-    }
+  const [isNewsDrawerOpen, setIsNewsDrawerOpen] = useState(false)
+  const [drawerMode, setDrawerMode] = useState("add") // "add" 또는 "modify"
 
+  // 파이어베이스에서 News 콜렉션에 있는 데이터를 가져옴.
+  const fetchData = async () => {
+    try {
+      const data = await getMcyNewsApi()
+      setNewsData(data)
+    } catch (error) {
+      console.error("Error fetching data: ", error)
+    }
+  }
+
+  // 첫 렌더링시 파이어베이스에서 데이터 가져오기
+  useEffect(() => {
     fetchData()
   }, [])
+
   // 날짜 이동
   const currentDate = dayjs()
   const [selectedDate, setSelectedDate] = useState(currentDate)
@@ -53,44 +58,37 @@ const News = () => {
   }
 
   // 파이어베이스 및 페이지 소식 데이터 삭제
-  const handleDelete = async (itemId, itemYear, itemMonth, itemDay) => {
+  const handleDelete = async targetId => {
     try {
       // 클라이언트 측 데이터 삭제
-      setNewsData(prevData => prevData.filter(item => item.id !== itemId))
+      setNewsData(prevData => prevData.filter(item => item.id !== targetId))
 
       // 파이어베이스에서 해당 날짜와 일치하는 문서 삭제
       const querySnapshot = await getDocs(collection(db, "news"))
       querySnapshot.forEach(async doc => {
         const data = doc.data()
-        if (data.year === itemYear && data.month === itemMonth && data.day === itemDay) {
+        if (data.id === targetId) {
           await deleteDoc(doc.ref)
         }
       })
-
       alert("Data deleted successfully!")
+      // fetchData()
     } catch (error) {
       console.error("Error deleting data: ", error)
       alert("Error deleting data.")
     }
   }
-  // 페이지 이동
-  const navigate = useNavigate()
 
-  // NewsAdd 페이지로
-  const handleGoToAdd = () => {
-    navigate("/newsAdd") // NewsAdd 페이지로 이동
+  // 추가 및 수정 컴포넌트 오픈
+  const toggleNewsDrawer = mode => {
+    setDrawerMode(mode)
+    setIsNewsDrawerOpen(!isNewsDrawerOpen)
   }
 
-  // NewsRevise 페이지
-  const handleGoToRevise = (itemYear, itemMonth, itemDay) => {
-    const date = dayjs()
-      .year(itemYear)
-      .month(itemMonth - 1)
-      .date(itemDay)
-      .format() // dayjs 형식으로 변환하여 문자열로 전달
-    navigate("/newsRevise", { state: { date } }) // NewsRevise 페이지로 이동
+  const handleDrawerClose = () => {
+    setIsNewsDrawerOpen(false)
+    fetchData() // 드로어가 닫힐 때 데이터 가져오기
   }
-
   return (
     <Layout>
       <NewsWrapper>
@@ -104,7 +102,7 @@ const News = () => {
           <IconButton onClick={handleNextMonth}>
             <ArrowRightIcon fontSize="large" />
           </IconButton>
-          <StyledIconButton onClick={handleGoToAdd}>
+          <StyledIconButton onClick={() => toggleNewsDrawer("add")}>
             <PlusButton />
           </StyledIconButton>
         </SelectWrapper>
@@ -121,16 +119,17 @@ const News = () => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <ChipWrapper>
-                      <StyledChip label="수정" variant="outlined" onClick={() => handleGoToRevise(item.year, item.month, item.day)} />
-                      <StyledChip label="삭제" variant="outlined" onClick={() => handleDelete(item.id, item.year, item.month, item.day)} />
+                      <StyledChip label="삭제" variant="outlined" onClick={() => handleDelete(item.id)} />
+                      <StyledChip label="수정" variant="outlined" onClick={() => toggleNewsDrawer("modify")} />
                     </ChipWrapper>
-                    <NewInfoDataWrapper key={item}>{item.content}</NewInfoDataWrapper>
+                    <NewInfoDataWrapper>{item.content}</NewInfoDataWrapper>
                   </AccordionDetails>
                 </StyledAccordion>
               </NewsListWrapper>
             ))}
         </RenderingArea>
       </NewsWrapper>
+      <NewsDrawer open={isNewsDrawerOpen} onClose={handleDrawerClose} mode={drawerMode} />
     </Layout>
   )
 }
@@ -191,7 +190,6 @@ const StyledArrowDropDownIcon = styled(ArrowDropDownIcon)`
     font-size: 50px;
   }
 `
-
 const NewsItem = styled(Stack)`
   justify-content: center;
   font-size: 25px;

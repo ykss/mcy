@@ -11,8 +11,9 @@ import Layout from "../components/Layout/Layout"
 import { IconButton, Typography } from "@mui/material"
 
 import { getMcyNewsApi } from "../api/newsApi"
-import { updateDoc, doc } from "firebase/firestore"
 import { db } from "../firebase" // firebase 설정 파일을 임포트
+
+import { updateDoc, doc } from "firebase/firestore"
 
 const NewsRevise = () => {
   const [newsData, setNewsData] = useState([])
