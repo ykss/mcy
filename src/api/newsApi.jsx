@@ -6,11 +6,10 @@ const getMcyNewsApi = async () => {
     const mcyNewsCollection = collection(db, "news")
     const newsSnapShot = await getDocs(mcyNewsCollection)
 
-    const membersList = newsSnapShot.docs.map(doc => ({
+    const newsList = newsSnapShot.docs.map(doc => ({
       ...doc.data(),
-      id: doc.id,
     }))
-    return membersList
+    return newsList
   } catch (error) {
     console.error("Error getting documents: ", error)
   }
