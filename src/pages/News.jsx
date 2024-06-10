@@ -23,6 +23,7 @@ import { collection, deleteDoc, getDocs } from "firebase/firestore"
 
 const News = () => {
   const [newsData, setNewsData] = useState([])
+  const [targetData, setTargetData] = useState([])
   const [isNewsDrawerOpen, setIsNewsDrawerOpen] = useState(false)
   const [drawerMode, setDrawerMode] = useState("add") // "add" 또는 "modify"
 
@@ -44,8 +45,7 @@ const News = () => {
   // 날짜 이동
   const currentDate = dayjs()
   const [selectedDate, setSelectedDate] = useState(currentDate)
-  const selectedYear = selectedDate.year()
-  const selectedMonth = selectedDate.month() + 1 // Day.js의 month()는 0부터 시작하므로 1을 더합니다.
+  const selectedYearMonth = selectedDate.format("YYYY-MM")
 
   const handlePreviousMonth = () => {
     const newDate = selectedDate.subtract(1, "month")
@@ -79,10 +79,11 @@ const News = () => {
     }
   }
 
-  // 추가 및 수정 컴포넌트 오픈
-  const toggleNewsDrawer = mode => {
-    setDrawerMode(mode)
+  // 추가 및 수정 컴포넌트 오픈 및 데이터 전달
+  const toggleNewsDrawer = (mode, targetData) => {
     setIsNewsDrawerOpen(!isNewsDrawerOpen)
+    setTargetData(targetData)
+    setDrawerMode(mode)
   }
 
   const handleDrawerClose = () => {
@@ -96,31 +97,27 @@ const News = () => {
           <IconButton onClick={handlePreviousMonth}>
             <ArrowLeftIcon fontSize="large" />
           </IconButton>
-          <DateWrapper>
-            {selectedYear}년 {selectedMonth}월
-          </DateWrapper>
+          <DateWrapper>{selectedDate.format("YYYY년 MM월")}</DateWrapper>
           <IconButton onClick={handleNextMonth}>
             <ArrowRightIcon fontSize="large" />
           </IconButton>
-          <StyledIconButton onClick={() => toggleNewsDrawer("add")}>
+          <StyledIconButton onClick={() => toggleNewsDrawer("add", null)}>
             <PlusButton />
           </StyledIconButton>
         </SelectWrapper>
         <RenderingArea>
           {newsData
-            .filter(item => Number(item.year) === selectedYear && Number(item.month) === selectedMonth)
+            .filter(item => dayjs(item.date).format("YYYY-MM") === selectedYearMonth) // 'YYYY-MM' 형식으로 필터링
             .map(item => (
               <NewsListWrapper key={item.id}>
                 <StyledAccordion>
                   <AccordionSummary expandIcon={<StyledArrowDropDownIcon />}>
-                    <NewsItem>
-                      {item.month}월 {item.day}일 광고
-                    </NewsItem>
+                    <NewsItem>{dayjs(item.date).format("M월 D일")} 광고</NewsItem>
                   </AccordionSummary>
                   <AccordionDetails>
                     <ChipWrapper>
                       <StyledChip label="삭제" variant="outlined" onClick={() => handleDelete(item.id)} />
-                      <StyledChip label="수정" variant="outlined" onClick={() => toggleNewsDrawer("modify")} />
+                      <StyledChip label="수정" variant="outlined" onClick={() => toggleNewsDrawer("modify", item)} />
                     </ChipWrapper>
                     <NewInfoDataWrapper>{item.content}</NewInfoDataWrapper>
                   </AccordionDetails>
@@ -129,7 +126,7 @@ const News = () => {
             ))}
         </RenderingArea>
       </NewsWrapper>
-      <NewsDrawer open={isNewsDrawerOpen} onClose={handleDrawerClose} mode={drawerMode} />
+      <NewsDrawer open={isNewsDrawerOpen} onClose={handleDrawerClose} mode={drawerMode} targetData={targetData} />
     </Layout>
   )
 }
