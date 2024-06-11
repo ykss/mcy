@@ -6,6 +6,7 @@ import Main from "./pages/Main"
 import MyPage from "./pages/MyPage"
 import BirthDay from "./pages/BirthDay"
 import Attendance from "./pages/Attendance"
+import AttendanceStatus from "./pages/AttendanceStatus"
 import News from "./pages/News"
 import Login from "./pages/Login"
 // import ReaderAdmin from "./pages/ReaderAdmin.jsx";
@@ -23,6 +24,7 @@ function App() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/birthDay" element={<BirthDay />} />
           <Route path="/attendance" element={<Attendance />} />
+          <Route path="/attendancestatus" element={<AttendanceStatus />} />
           <Route path="/news" element={<News />} />
           <Route path="/login" element={<Login />} />
           {/* 셀 관리 페이지 */}

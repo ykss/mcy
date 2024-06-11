@@ -28,30 +28,24 @@ const Main = () => {
           <CarouselSlider imageArray={McyImgs} />
         </CarouselWrapper>
         <McyContentWrapper>
-          <TitleAreaWrapper>
-            <SquarePurpleWrapper />
-            <TitleContentWrapper>
-              <TitleWrapper>목천교회 청년부</TitleWrapper>
-            </TitleContentWrapper>
-          </TitleAreaWrapper>
+          <SquarePurpleWrapper />
+          <TitleContentWrapper>
+            <TitleWrapper>목천교회 청년부</TitleWrapper>
+          </TitleContentWrapper>
         </McyContentWrapper>
         <EduGoalSloganWrapper>
-          <EducationSloganAreaWrapper>
-            <EducationSloganContentWrapper>
-              <EducationSloganWrapper>예수그리스도의 영이 다시 살아나게 하소서</EducationSloganWrapper>
-              <EducationSloganWrapper>시 51:10, 출 23:25, 슥 4:6</EducationSloganWrapper>
-            </EducationSloganContentWrapper>
-          </EducationSloganAreaWrapper>
+          <EducationSloganContentWrapper>
+            <EducationSloganWrapper>예수그리스도의 영이 다시 살아나게 하소서</EducationSloganWrapper>
+            <EducationSloganWrapper>시 51:10, 출 23:25, 슥 4:6</EducationSloganWrapper>
+          </EducationSloganContentWrapper>
         </EduGoalSloganWrapper>
         <GoalAreaWrapper>
-          <GoalContentAreaWrapper>
-            <GoalContentWrapper>
-              <GoalsWrapper>1.예배로 온전한 신앙을 회복하자</GoalsWrapper>
-              <GoalsWrapper>2.기도로 상한 마음을 회복하자</GoalsWrapper>
-              <GoalsWrapper>3.교제와 셀 모임을 통해 관계 회복하자.</GoalsWrapper>
-            </GoalContentWrapper>
-            <SquareGreenWrapper />
-          </GoalContentAreaWrapper>
+          <GoalContentWrapper>
+            <GoalsWrapper>1.예배로 온전한 신앙을 회복하자</GoalsWrapper>
+            <GoalsWrapper>2.기도로 상한 마음을 회복하자</GoalsWrapper>
+            <GoalsWrapper>3.교제와 셀 모임을 통해 관계 회복하자.</GoalsWrapper>
+          </GoalContentWrapper>
+          <SquareGreenWrapper />
         </GoalAreaWrapper>
       </MainWrapper>
     </Layout>
@@ -62,28 +56,28 @@ const MainWrapper = styled(Stack)`
   align-items: center;
   gap: 10px;
   width: 100vw;
+  height: calc(100dvh - 160px);
 `
 
 const CarouselWrapper = styled(Stack)`
   justify-content: center;
   align-items: center;
   width: 100%;
+  height: 45%;
 `
 
 const McyContentWrapper = styled(Stack)`
-  align-items: center;
-  width: 100%;
-`
-
-const TitleAreaWrapper = styled(Stack)`
-  display: flex;
   flex-direction: row;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
   width: 90%;
+  height: 13%;
+  gap: 10px;
 `
 
 const SquarePurpleWrapper = styled(Stack)`
   width: 20%;
+  height: 90%;
   background-color: #c7bdeb;
   border: 1px solid black;
   border-radius: 18px;
@@ -91,69 +85,71 @@ const SquarePurpleWrapper = styled(Stack)`
 
 const TitleContentWrapper = styled(Stack)`
   width: 80%;
+  height: 90%;
   background-color: #f0f0f0;
   border: 1px solid black;
   border-radius: 17px;
+  justify-content: center;
 `
 
 const TitleWrapper = styled(Typography)`
-  padding: 13px;
   font-family: "Noto Sans";
   font-size: 20px;
   font-weight: 600;
+  margin-left: 20px;
 `
 
 const EduGoalSloganWrapper = styled(Stack)`
   justify-content: space-evenly;
   align-items: center;
-  width: 100%;
-`
-
-const EducationSloganAreaWrapper = styled(Stack)`
   width: 90%;
-  background-color: #f8e6ba;
-  border: 1px solid black;
-  border-radius: 25px;
+  height: 20%;
 `
 
 const EducationSloganContentWrapper = styled(Stack)`
-  padding: 20px;
+  width: 100%;
+  height: 90%;
+  justify-content: center;
+  background-color: #f8e6ba;
+  border: 1px solid black;
+  border-radius: 25px;
 `
 
 const EducationSloganWrapper = styled(Typography)`
   font-family: "Noto Sans";
   font-weight: 700;
   font-size: 14px;
+  margin-left: 20px;
 `
 
 const GoalAreaWrapper = styled(Stack)`
-  align-items: center;
-  width: 100%;
-`
-
-const GoalContentAreaWrapper = styled(Stack)`
-  display: flex;
   flex-direction: row;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
   width: 90%;
+  height: 20%;
+  gap: 15px;
 `
 
 const GoalContentWrapper = styled(Stack)`
   width: 75%;
-  padding: 15px;
+  height: 90%;
   background-color: #f3c5c5;
   border: 1px solid black;
   border-radius: 25px;
+  justify-content: center;
 `
 
 const GoalsWrapper = styled(Typography)`
   font-family: "Noto Sans";
   font-weight: 700;
   font-size: 12px;
+  margin-left: 20px;
 `
 
 const SquareGreenWrapper = styled(Stack)`
   width: 25%;
+  height: 90%;
   background-color: #b4dfc3;
   border: 1px solid black;
   border-radius: 25px;

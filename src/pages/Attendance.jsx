@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+
+import { addDoc, collection, getFirestore } from "firebase/firestore"
 
 import dayjs from "dayjs"
 import "dayjs/locale/ko"
@@ -6,34 +9,42 @@ import "dayjs/locale/ko"
 import Stack from "@mui/material/Stack"
 import { styled } from "@mui/material"
 import Typography from "@mui/material/Typography"
-import Chip from "@mui/material/Chip"
 import Checkbox from "@mui/material/Checkbox"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker"
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth"
-import ChurchIcon from "@mui/icons-material/Church"
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import SettingsIcon from "@mui/icons-material/Settings"
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined"
 import IndeterminateCheckBoxOutlinedIcon from "@mui/icons-material/IndeterminateCheckBoxOutlined"
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt"
+import AddIcon from "@mui/icons-material/Add"
+import MenuItem from "@mui/material/MenuItem"
+import Select from "@mui/material/Select"
 
 import Layout from "../components/Layout/Layout"
-import Title from "../components/shared/Title"
 import { getMcyMemberApi } from "../api/mcyMemberApi"
+import { getAttendanceApi } from "../api/attendanceDataApi"
 
 const Attendance = () => {
   const [members, setMembers] = useState([])
+  const [attendance, setAttendance] = useState([])
+  const navigate = useNavigate()
   const [state, setState] = useState({
-    isOpenCalendar: false,
-    selectedLeader: null,
+    selectedLeader: "대예배",
     adultCount: 0,
     memberCount: 0,
     attendanceAllData: {},
     isChecked: {},
     value: dayjs().subtract(dayjs().day() === 0 ? 7 : dayjs().day(), "day"),
+    isBoxExpanded: false,
   })
+  const db = getFirestore()
+
+  const handleNavigate = () => {
+    navigate("/attendancestatus")
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,6 +54,19 @@ const Attendance = () => {
     fetchData()
   }, [])
 
+  const AttendancefetchData = async () => {
+    try {
+      const data = await getAttendanceApi()
+      setAttendance(data)
+    } catch (error) {
+      console.error("Error fetching data: ", error)
+    }
+  }
+
+  useEffect(() => {
+    AttendancefetchData()
+  }, [attendance])
+
   useEffect(() => {
     const initialCheckedState = {}
     const currentDayOfWeek = dayjs().day()
@@ -50,21 +74,21 @@ const Attendance = () => {
     const lastSunday = dayjs().subtract(daysToLastSunday, "day")
     members.forEach(leader => {
       leader.cellMember.forEach(member => {
-        initialCheckedState[member] = leader.isChecked
+        initialCheckedState[member] = leader.isChecked || false
       })
     })
 
     setState(prevState => ({
       ...prevState,
       isChecked: initialCheckedState,
-      selectedLeader: null,
+      selectedLeader: "",
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
       attendanceAllData: {},
       value: dayjs(lastSunday),
     }))
-  }, [])
+  }, [members])
 
   useEffect(() => {
     const updateAttendanceData = (date, leader) => {
@@ -90,6 +114,18 @@ const Attendance = () => {
         updatedData[date].memberAttendance = Object.values(updatedData[date].cellData).reduce((acc, curr) => acc + curr.length, 0)
         updatedData[date].totalAttendance = updatedData[date].adultAttendance + updatedData[date].memberAttendance
 
+        try {
+          addDoc(collection(db, "attendanceData"), {
+            date: date,
+            adultCount: state.adultCount,
+            memberCount: state.memberCount,
+            totalCount: updatedData[date].totalAttendance,
+            cellData: updatedData[date].cellData,
+          })
+          console.log("Data saved successfully!")
+        } catch (e) {
+          console.error("Error adding document: ", e)
+        }
         console.log("출석 데이터 업데이트:", updatedData)
 
         return {
@@ -99,24 +135,16 @@ const Attendance = () => {
       })
     }
 
-    if (state.selectedLeader !== null || state.adultCount !== 0) {
+    if (state.selectedLeader !== "" || state.adultCount !== 0) {
       updateAttendanceData(state.value.format("YYYY-MM-DD"), state.selectedLeader)
     }
-  }, [state.adultCount, state.isChecked])
-
-  const handleChange = newData => {
-    setState(prevState => ({
-      ...prevState,
-      value: newData,
-      isOpenCalendar: false,
-    }))
-  }
+  }, [state.adultCount, state.isChecked, state.selectedLeader, members, state.value])
 
   const handlePrevDayClick = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).subtract(7, "day"),
-      selectedLeader: null,
+      selectedLeader: "",
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
@@ -129,7 +157,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).add(7, "day"),
-      selectedLeader: null,
+      selectedLeader: "",
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
@@ -149,7 +177,6 @@ const Attendance = () => {
     setState(prevState => {
       const isChecked = { ...prevState.isChecked }
       isChecked[member] = !isChecked[member]
-
       let memberCount = prevState.memberCount
       if (isChecked[member]) memberCount++
       else memberCount--
@@ -165,16 +192,10 @@ const Attendance = () => {
     })
   }
 
-  const handleCalendarClick = () => {
+  const handleAdultDataWrapperClick = () => {
     setState(prevState => ({
       ...prevState,
-      isOpenCalendar: true,
-      selectedLeader: null,
-      adultCount: 0,
-      memberCount: 0,
-      totalCount: 0,
-      isChecked: {},
-      attendanceAllData: {},
+      isBoxExpanded: !prevState.isBoxExpanded,
     }))
   }
 
@@ -183,6 +204,7 @@ const Attendance = () => {
       ...prevState,
       adultCount: prevState.adultCount + 1,
       totalCount: prevState.totalCount + 1,
+      isBoxExpanded: !prevState,
     }))
   }
 
@@ -191,57 +213,82 @@ const Attendance = () => {
       ...prevState,
       adultCount: prevState.adultCount > 0 ? prevState.adultCount - 1 : 0,
       totalCount: prevState.totalCount > 0 ? prevState.totalCount - 1 : 0,
+      isBoxExpanded: !prevState,
     }))
   }
 
   return (
     <Layout>
       <AttendanceWrapper>
-        <TitleWrapper>
-          <ChurchIconWrapper />
-          <Title>출석</Title>
-        </TitleWrapper>
         <CalendarWrapper>
           <DateWrapper>
             <ArrowIconWrapper onClick={handlePrevDayClick} icon={ArrowLeftIcon} />
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-              <CalendarMonthIcon onClick={handleCalendarClick} onChange={handleChange} />
-              <MobileDateWrapper
-                value={state.value}
-                onChange={handleChange}
-                format="YYYY.MM.DD"
-                open={state.isOpenCalendar}
-                onClose={() => setState(prevState => ({ ...prevState, isOpenCalendar: false }))}
-                shouldDisableDate={date => date.day() !== 0}
-                minDate={dayjs("2024-01-01")}
-                views={["month", "year", "day"]}
-                slots={{
-                  toolbar: "none",
-                  actionBar: "none",
-                }}
-              />
+              <MobileDateWrapper value={state.value} format="YYYY.MM.DD" shouldDisableDate={date => date.day() !== 0} />
             </LocalizationProvider>
             <ArrowIconWrapper onClick={handleNextDayClick} icon={ArrowRightIcon} />
           </DateWrapper>
           <SettingsIcon />
         </CalendarWrapper>
         <LeaderInfoWrapper>
-          {members.map(item => {
-            return (
-              <ChipItem key={item.id} onClick={() => handleLeaderClick(item.cell)}>
-                <LeaderWrapper label={item.cell} isSelected={state.selectedLeader === item.cell} />
-              </ChipItem>
-            )
-          })}
+          <SelectWrapper
+            value={state.selectedLeader ? state.selectedLeader : "대예배"}
+            onChange={e => handleLeaderClick(e.target.value)}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  backgroundColor: "#DDD6f9",
+                  borderRadius: "20px",
+                },
+              },
+            }}>
+            {members.map(item => (
+              <MenuItemWrapper key={item.id} value={item.cell || ""}>
+                {item.cell}
+              </MenuItemWrapper>
+            ))}
+          </SelectWrapper>
+          <StatusWrapper onClick={handleNavigate}>
+            <PeopleAltIconWrapper />
+          </StatusWrapper>
         </LeaderInfoWrapper>
+        <DataWrapper>
+          <DataAreaWrapper>
+            <MemberDataAreaWrapper>
+              {members.length > 0 &&
+                (state.selectedLeader
+                  ? members
+                      .find(leader => leader.cell === state.selectedLeader)
+                      ?.cellMember.map(member => (
+                        <MemberDataWrapper key={member}>
+                          <CheckBoxWrapper checked={!!state.isChecked[member]} onChange={() => handleCheck(member)} />
+                          <CheckMemberWrapper checked={state.isChecked[member]} onClick={() => handleCheck(member)}>
+                            {member}
+                          </CheckMemberWrapper>
+                        </MemberDataWrapper>
+                      ))
+                  : members[0].cellMember.map(member => (
+                      <MemberDataWrapper key={member}>
+                        <CheckBoxWrapper checked={!!state.isChecked[member]} onChange={() => handleCheck(member)} />
+                        <CheckMemberWrapper checked={state.isChecked[member]} onClick={() => handleCheck(member)}>
+                          {member}
+                        </CheckMemberWrapper>
+                      </MemberDataWrapper>
+                    )))}
+            </MemberDataAreaWrapper>
+          </DataAreaWrapper>
+        </DataWrapper>
         <CounterWrapper>
-          <AdultDataWrapper>
-            <AdultWrapper>어른 :</AdultWrapper>
-            <ButtonWrapper>
-              <AddBoxOutlinedIconWrapper onClick={handleAdultPlus} />
-              <AdultCountWrapper>{state.adultCount}</AdultCountWrapper>
-              <IndeterminateCheckBoxOutlinedIconWrapper onClick={handleAdultMinus} />
-            </ButtonWrapper>
+          <AdultDataWrapper onClick={handleAdultDataWrapperClick}>
+            <AddIconWrapper />
+            {state.isBoxExpanded && (
+              <ButtonWrapper>
+                기타인원 :
+                <AddBoxOutlinedIconWrapper onClick={handleAdultPlus} />
+                <AdultCountWrapper>{state.adultCount}</AdultCountWrapper>
+                <IndeterminateCheckBoxOutlinedIconWrapper onClick={handleAdultMinus} />
+              </ButtonWrapper>
+            )}
           </AdultDataWrapper>
           <AttendanceTotalDataWrapper>
             <AttendanceTextWrapper>출석 :</AttendanceTextWrapper>
@@ -250,21 +297,6 @@ const Attendance = () => {
             <TotalCountWrapper>{state.totalCount}</TotalCountWrapper>
           </AttendanceTotalDataWrapper>
         </CounterWrapper>
-        <DataWrapper isSelected={state.selectedLeader === null}>
-          {members.map(leader => {
-            if (leader.cell === state.selectedLeader) {
-              return leader.cellMember.map(member => (
-                <MemberDataWrapper key={member}>
-                  <CheckBoxWrapper checked={state.isChecked[member]} onChange={() => handleCheck(member)} />
-                  <CheckMemberWrapper checked={state.isChecked[member]} onClick={() => handleCheck(member)}>
-                    {member}
-                  </CheckMemberWrapper>
-                </MemberDataWrapper>
-              ))
-            }
-            return null
-          })}
-        </DataWrapper>
       </AttendanceWrapper>
     </Layout>
   )
@@ -272,19 +304,7 @@ const Attendance = () => {
 
 const AttendanceWrapper = styled(Stack)`
   width: 100vw;
-  height: calc(100dvh - 120px);
-`
-
-const TitleWrapper = styled(Stack)`
-  flex-direction: row;
-  align-items: center;
-  gap: 15px;
-  height: 10%;
-  padding: 0 10px;
-`
-
-const ChurchIconWrapper = styled(ChurchIcon)`
-  font-size: 40px;
+  height: calc(100dvh - 160px);
 `
 
 const CalendarWrapper = styled(Stack)`
@@ -311,6 +331,7 @@ const ArrowIconWrapper = styled(({ icon: IconComponent, ...props }) => <IconComp
 
 const MobileDateWrapper = styled(MobileDatePicker)`
   width: 40%;
+  pointer-events: none;
   & .MuiInputBase-root {
     justify-content: center;
     align-items: center;
@@ -334,27 +355,105 @@ const LeaderInfoWrapper = styled(Stack)`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
   width: 90%;
-  height: 20%;
+  height: 15%;
   margin: 0 auto;
-  list-style: none;
+  gap: 13px;
 `
 
-const ChipItem = styled(Stack)`
-  width: 30%;
-  height: 25%;
-  margin-left: 10px;
-`
-
-const LeaderWrapper = styled(Chip)`
-  width: 100%;
+const SelectWrapper = styled(Select)`
+  font-family: "Noto Sans";
+  font-weight: 600;
+  font-size: 24px;
+  background: #c7bdeb;
+  border-radius: 22px;
+  width: 80%;
   height: 80%;
-  background-color: ${props => (props.isSelected ? "#c27979" : "transparent")};
-  border: ${props => (props.isSelected ? "none" : "2px solid #c27979")};
-  font-weight: 700;
-  font-size: 10px;
-  color: ${props => (props.isSelected ? "#fff" : "#000")};
+  border: 1px solid black;
+  color: #404040;
+  text-align: center;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  &.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border: none;
+  }
+`
+
+const MenuItemWrapper = styled(MenuItem)`
+  font-weight: 500;
+  &.Mui-selected {
+    font-weight: 700;
+    font-size: 15px;
+  }
+`
+
+const StatusWrapper = styled(Stack)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #d9e8ea;
+  width: 20%;
+  height: 80%;
+  border-radius: 22px;
+  border: 1px solid black;
+`
+
+const PeopleAltIconWrapper = styled(PeopleAltIcon)`
+  width: 80%;
+  height: 70%;
+`
+
+const DataWrapper = styled(Stack)`
+  display: flex;
+  width: 90%;
+  height: 60%;
+  margin: 0 auto;
+  border: 1px solid #000000;
+  background-color: #f8e6ba;
+  border-radius: 25px;
+`
+const DataAreaWrapper = styled(Stack)`
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+`
+const MemberDataAreaWrapper = styled(Stack)`
+  width: 90%;
+  height: 90%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  overflow-y: auto;
+  align-items: center;
+  gap: 10px;
+`
+const MemberDataWrapper = styled(Stack)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid black;
+  background-color: #f0f0f0;
+  border-radius: 16px;
+  width: 85%;
+  height: 95%;
+  margin: 0px auto;
+`
+
+const CheckBoxWrapper = styled(Checkbox)`
+  & .MuiSvgIcon-root {
+    font-weight: ${props => (props.checked ? 700 : 500)};
+    color: #000;
+    font-size: 25px;
+  }
+`
+
+const CheckMemberWrapper = styled(Typography)`
+  font-size: 20px;
+  font-weight: ${props => (props.checked ? 700 : 500)};
+  color: #000;
 `
 
 const CounterWrapper = styled(Stack)`
@@ -362,93 +461,90 @@ const CounterWrapper = styled(Stack)`
   justify-content: center;
   align-items: center;
   width: 90%;
-  height: 10%;
+  height: 20%;
   margin: 0 auto;
+  gap: 10px;
 `
 
 const AdultDataWrapper = styled(Stack)`
-  gap: 10px;
-  flex: 1;
-  flex-direction: row;
+  width: 20%;
+  height: 70%;
+  background-color: #b4dfc3;
+  border: 1px solid #000;
+  border-radius: 25px;
+  justify-content: center;
+  align-items: center;
 `
-
-const AdultWrapper = styled(Typography)`
-  font-size: 15px;
+const AddIconWrapper = styled(AddIcon)`
+  font-size: 50px;
   font-weight: 700;
 `
 
 const ButtonWrapper = styled(Stack)`
   flex-direction: row;
   gap: 10px;
+  background: #d7f0e0;
+  position: absolute;
+  top: 430px;
+  width: 90%;
+  left: 20px;
+  height: 15%;
+  font-family: "Noto Sans";
+  font-weight: 600;
+  font-size: 24px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
 `
 
 const AddBoxOutlinedIconWrapper = styled(AddBoxOutlinedIcon)`
-  fill: #69535f;
+  fill: #404040;
+  font-size: 30px;
 `
 
 const AdultCountWrapper = styled(Typography)`
-  font-size: 15px;
+  font-size: 30px;
   font-weight: 700;
 `
 
 const IndeterminateCheckBoxOutlinedIconWrapper = styled(IndeterminateCheckBoxOutlinedIcon)`
-  fill: #69535f;
+  fill: #404040;
+  font-size: 30px;
 `
 
 const AttendanceTotalDataWrapper = styled(Stack)`
+  background-color: #f3c5c5;
+  width: 80%;
+  height: 70%;
   flex-direction: row;
   gap: 10px;
-`
-
-const AttendanceTextWrapper = styled(Typography)`
-  font-size: 15px;
-  font-weight: 700;
-`
-
-const MemberCountWrapper = styled(Typography)`
-  font-size: 15px;
-  font-weight: 700;
-`
-
-const SlashWrapper = styled(Typography)`
-  font-size: 15px;
-  font-weight: 700;
-`
-
-const TotalCountWrapper = styled(Typography)`
-  font-size: 15px;
-  font-weight: 700;
-`
-
-const DataWrapper = styled(Stack)`
-  display: ${props => (props.isSelected ? "none" : "grid")};
-  grid-template-columns: repeat(3, 1fr);
-  overflow-y: auto;
-  gap: 10px;
-  width: 90%;
-  height: 45%;
-  margin: 0 auto;
-  border: 2px solid #986c6c;
-  border-radius: 8px;
-`
-
-const MemberDataWrapper = styled(Stack)`
-  flex-direction: row;
+  border-radius: 25px;
   justify-content: center;
   align-items: center;
 `
 
-const CheckBoxWrapper = styled(Checkbox)`
-  & .MuiSvgIcon-root {
-    color: ${props => (props.checked ? "#3F805D" : "#000")};
-  }
+const AttendanceTextWrapper = styled(Typography)`
+  font-size: 24px;
+  font-weight: 700;
+  font-family: "Noto Sans";
 `
 
-const CheckMemberWrapper = styled(Typography)`
-  width: 100%;
-  font-size: 14px;
+const MemberCountWrapper = styled(Typography)`
+  font-size: 24px;
   font-weight: 700;
-  color: ${props => (props.checked ? "#3F805D" : "#000")};
+  font-family: "Noto Sans";
+`
+
+const SlashWrapper = styled(Typography)`
+  font-size: 24px;
+  font-weight: 700;
+  font-family: "Noto Sans";
+`
+
+const TotalCountWrapper = styled(Typography)`
+  font-size: 24px;
+  font-weight: 700;
+  font-family: "Noto Sans";
 `
 
 export default Attendance

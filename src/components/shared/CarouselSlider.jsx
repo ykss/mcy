@@ -49,9 +49,9 @@ const CarouselSlider = ({ imageArray }) => {
 
 const CarouselWrapper = styled(Carousel)`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
   width: 90%;
   height: 100%;
   .MuiSvgIcon-root {
@@ -62,7 +62,7 @@ const CarouselWrapper = styled(Carousel)`
 const ImgWrapper = styled("img")`
   display: flex;
   justify-content: center;
-  height: 223px;
+  height: 210px;
   background-repeat: no-repeat;
   border-radius: 20px;
 `
