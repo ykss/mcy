@@ -27,7 +27,7 @@ const ContentWrapper = styled(Stack)`
   justify-content: center;
   align-items: center;
   width: 100vw;
-  height: calc(100dvh - 180px);
+  height: calc(100dvh - 160px);
   background-color: #fffcf6;
 `
 
