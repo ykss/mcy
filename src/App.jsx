@@ -11,8 +11,6 @@ import Login from "./pages/Login"
 // import ReaderAdmin from "./pages/ReaderAdmin.jsx";
 // import MemberAdmin from "./pages/MemberAdmin.jsx";
 import theme from "./assets/theme/theme.js"
-import NewsAdd from "./pages/NewsAdd.jsx"
-import NewsRevise from "./pages/NewsRevise.jsx"
 
 import "./App.css"
 
@@ -25,11 +23,7 @@ function App() {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/birthDay" element={<BirthDay />} />
           <Route path="/news" element={<News />} />
-
           <Route path="/attendance" element={<Attendance />} />
-          <Route path="/newsAdd" element={<NewsAdd />} />
-          <Route path="/newsRevise" element={<NewsRevise />} />
-
           <Route path="/login" element={<Login />} />
 
           {/* 셀 관리 페이지 */}

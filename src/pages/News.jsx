@@ -15,11 +15,11 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 
 import Layout from "../components/Layout/Layout"
 import { PlusButton } from "../components/shared/PlusButton"
-import { getMcyNewsApi } from "../api/newsApi"
+import { McyNewsApi } from "../api/mcyNewsApi"
 import { db } from "../firebase" // firebase 설정 파일을 임포트
 import NewsDrawer from "../components/shared/NewsDrawer"
 
-import { collection, deleteDoc, getDocs } from "firebase/firestore"
+import { doc, collection, deleteDoc, getDocs } from "firebase/firestore"
 
 const News = () => {
   const [newsData, setNewsData] = useState([])
@@ -30,7 +30,7 @@ const News = () => {
   // 파이어베이스에서 News 콜렉션에 있는 데이터를 가져옴.
   const fetchData = async () => {
     try {
-      const data = await getMcyNewsApi()
+      const data = await McyNewsApi()
       setNewsData(data)
     } catch (error) {
       console.error("Error fetching data: ", error)
@@ -63,16 +63,21 @@ const News = () => {
       // 클라이언트 측 데이터 삭제
       setNewsData(prevData => prevData.filter(item => item.id !== targetId))
 
-      // 파이어베이스에서 해당 날짜와 일치하는 문서 삭제
+      // 파이어베이스에서 해당 문서 삭제
       const querySnapshot = await getDocs(collection(db, "news"))
-      querySnapshot.forEach(async doc => {
-        const data = doc.data()
-        if (data.id === targetId) {
-          await deleteDoc(doc.ref)
-        }
-      })
-      alert("Data deleted successfully!")
-      // fetchData()
+      const newsList = querySnapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
+
+      const targetDoc = newsList.find(item => item.id === targetId)
+      if (targetDoc) {
+        await deleteDoc(doc(db, "news", targetDoc.id))
+        alert("Data deleted successfully!")
+      } else {
+        console.log("Document with the given ID not found.")
+        alert("Document not found.")
+      }
     } catch (error) {
       console.error("Error deleting data: ", error)
       alert("Error deleting data.")
@@ -126,7 +131,7 @@ const News = () => {
             ))}
         </RenderingArea>
       </NewsWrapper>
-      <NewsDrawer open={isNewsDrawerOpen} onClose={handleDrawerClose} mode={drawerMode} targetData={targetData} />
+      <NewsDrawer fetchData={fetchData} open={isNewsDrawerOpen} onClose={handleDrawerClose} mode={drawerMode} targetData={targetData} />
     </Layout>
   )
 }
