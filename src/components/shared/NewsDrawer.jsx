@@ -10,16 +10,16 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import Chip from "@mui/material/Chip"
 import TextField from "@mui/material/TextField"
 import { IconButton, Typography } from "@mui/material"
-import { nanoid } from "nanoid"
 
-import { db } from "../../firebase" // firebase 설정 파일
+import { handlePreviousWeek } from "../../utils/handlePreviousWeek"
+import { handleNextWeek } from "../../utils/handleNextWeek"
+import { handleSave, handleUpdate } from "../../api/mcyNewsApi"
 
-import { collection, addDoc, updateDoc, query, where, getDocs } from "firebase/firestore"
-
-const NewsDrawer = ({ open, onClose, mode, targetData }) => {
+const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
   const toggleDrawer = () => {
     onClose(false)
   }
+
   const [textValue, setTextValue] = useState("") // 텍스트 상태 추가
   const today = dayjs()
   const dayOfWeek = today.day() // 0은 일요일, 6은 토요일
@@ -41,66 +41,9 @@ const NewsDrawer = ({ open, onClose, mode, targetData }) => {
     }
   }, [targetData])
 
-  // 저번주 일요일 날짜 변경
-  const handlePreviousWeek = () => {
-    const newDateInfo = dayjs(selectedDateInfo).subtract(7, "day").format("YYYY-MM-DD")
-    setSelectedDateInfo(newDateInfo)
-  }
-
-  // 다음주 일요일 날짜 변경
-  const handleNextWeek = () => {
-    const newDateInfo = dayjs(selectedDateInfo).add(7, "day").format("YYYY-MM-DD")
-    setSelectedDateInfo(newDateInfo)
-  }
-
   // 텍스트 필드에서 타이핑 할때 마다 TextValue 값 선언
   const handleTextChange = event => {
     setTextValue(event.target.value)
-  }
-  // 파이어 베이스 저장
-  const handleSave = async () => {
-    try {
-      const dateString = selectedDateInfo // 날짜를 문자열로 변환
-      await addDoc(collection(db, "news"), {
-        date: dateString,
-        content: textValue,
-        id: nanoid(10),
-      })
-      alert("Data saved successfully!")
-      setTextValue("")
-    } catch (e) {
-      console.error("Error adding document: ", e)
-      alert("Error saving data.")
-    }
-  }
-
-  // 파이어 베이스 수정
-  const handleUpdate = async () => {
-    try {
-      const collectionRef = collection(db, "news")
-      const q = query(collectionRef, where("id", "==", selectedDocId))
-      /* 필드 값으로 쿼리 정의 
-      id 필드가 selectedDocId와 일치하는 문서를 찾기 위한 조건문 
-      where 함수는 필드 이름, 비교 연산자, 값을 인자로 받아 조건을 설정한다.
-      */
-      const querySnapshot = await getDocs(q)
-      //위에서 정의한 쿼리를 실행하여 해당 조건을 만족하는 모든 문서를 가져온다.
-      if (!querySnapshot.empty) {
-        querySnapshot.forEach(async docSnapshot => {
-          const docRef = docSnapshot.ref
-          await updateDoc(docRef, {
-            content: textValue, // 새로운 값으로 업데이트
-          })
-          alert("Data updated successfully!")
-          //   fetchData() // 업데이트 후 데이터 새로 가져오기
-        })
-      } else {
-        alert("No document found to update.")
-      }
-    } catch (e) {
-      console.error("Error updating document: ", e)
-      alert("Error updating data.")
-    }
   }
 
   const DrawerList = (
@@ -109,11 +52,11 @@ const NewsDrawer = ({ open, onClose, mode, targetData }) => {
       <DateRenderingArea>
         {mode === "add" ? (
           <DateWrapper>
-            <IconButton onClick={handlePreviousWeek}>
+            <IconButton onClick={() => handlePreviousWeek(selectedDateInfo, setSelectedDateInfo)}>
               <StyledArrowLeftIcon />
             </IconButton>
             <Typography fontSize={28}>{dayjs(selectedDateInfo).format("M월 D일")}</Typography>
-            <IconButton onClick={handleNextWeek}>
+            <IconButton onClick={() => handleNextWeek(selectedDateInfo, setSelectedDateInfo)}>
               <StyledArrowRightIcon />
             </IconButton>
           </DateWrapper>
@@ -131,7 +74,13 @@ const NewsDrawer = ({ open, onClose, mode, targetData }) => {
           onChange={handleTextChange} // onChange 핸들러 추가
         />
       </TextFiledArea>
-      <SaveChipWrapper>{mode === "add" ? <StyledSaveChip label="저장" onClick={handleSave} /> : <StyledSaveChip label="수정" onClick={handleUpdate} />}</SaveChipWrapper>
+      <SaveChipWrapper>
+        {mode === "add" ? (
+          <StyledSaveChip label="저장" onClick={() => handleSave(selectedDateInfo, setTextValue, textValue, fetchData)} />
+        ) : (
+          <StyledSaveChip label="수정" onClick={() => handleUpdate(selectedDocId, textValue, fetchData)} />
+        )}
+      </SaveChipWrapper>
     </NewsAddWrapper>
   )
 
