@@ -97,11 +97,17 @@ const ExitIcon = styled(ClearIcon)`
   margin: auto 10px;
   font-size: 25px;
 `
-
+const Wrapper = styled(Stack)`
+  width: 100%;
+  height: 10%;
+  justify-content: center;
+  align-items: center;
+`
 const DrawerWrapper = styled(Drawer)`
   .MuiDrawer-paper {
-    width: 100%;
+    width: 99%;
     height: 60%;
+    margin: auto;
     background-color: #b4dfc3;
     border: 1px solid #000000;
     border-top-left-radius: 20px;
@@ -145,6 +151,14 @@ const StyledTextField = styled(TextField)`
   height: 100%;
   & .MuiInputBase-root {
     font-size: 20px;
+    border: none;
+  }
+
+  /* 텍스트 필드 활성화될 때 윤곽선 제거 */
+  & .MuiOutlinedInput-root {
+    & fieldset {
+      border: none;
+    }
   }
 `
 
