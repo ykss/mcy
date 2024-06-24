@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-
 import { addDoc, collection, getFirestore } from "firebase/firestore"
-
 import dayjs from "dayjs"
 import "dayjs/locale/ko"
-
 import Stack from "@mui/material/Stack"
 import { styled } from "@mui/material"
 import Typography from "@mui/material/Typography"
@@ -25,22 +22,19 @@ import Select from "@mui/material/Select"
 
 import Layout from "../components/Layout/Layout"
 import { getMcyMemberApi } from "../api/mcyMemberApi"
-import { getAttendanceApi } from "../api/attendanceDataApi"
+import { db } from "../firebase"
 
 const Attendance = () => {
   const [members, setMembers] = useState([])
-  const [attendance, setAttendance] = useState([])
   const navigate = useNavigate()
-  const [state, setState] = useState({
-    selectedLeader: "대예배",
-    adultCount: 0,
-    memberCount: 0,
-    attendanceAllData: {},
-    isChecked: {},
-    value: dayjs().subtract(dayjs().day() === 0 ? 7 : dayjs().day(), "day"),
-    isBoxExpanded: false,
-  })
-  const db = getFirestore()
+  const [selectedLeader, setSelectedLeader] = useState("대예배")
+  const [adultCount, setAdultCount] = useState(0)
+  const [memberCount, setMemberCount] = useState(0)
+  const [totalCount, setTotalCount] = useState(0)
+  const [isChecked, setIsChecked] = useState({})
+  const [value, setValue] = useState(dayjs().subtract(dayjs().day() === 0 ? 7 : dayjs().day(), "day"))
+  const [isBoxExpanded, setIsBoxExpanded] = useState(false)
+  const [checkedMembers, setCheckedMembers] = useState([])
 
   const handleNavigate = () => {
     navigate("/attendancestatus")
@@ -50,171 +44,104 @@ const Attendance = () => {
     const fetchData = async () => {
       const membersList = await getMcyMemberApi()
       setMembers(membersList)
+      const initialCheckedMembers = membersList.map(item => ({
+        leader: item.cell,
+        members: [],
+      }))
+      setCheckedMembers(initialCheckedMembers)
     }
     fetchData()
   }, [])
 
-  const AttendancefetchData = async () => {
-    try {
-      const data = await getAttendanceApi()
-      setAttendance(data)
-    } catch (error) {
-      console.error("Error fetching data: ", error)
-    }
-  }
-
-  useEffect(() => {
-    AttendancefetchData()
-  }, [attendance])
-
-  useEffect(() => {
-    const initialCheckedState = {}
-    const currentDayOfWeek = dayjs().day()
-    const daysToLastSunday = currentDayOfWeek === 0 ? 7 : currentDayOfWeek
-    const lastSunday = dayjs().subtract(daysToLastSunday, "day")
-    members.forEach(leader => {
-      leader.cellMember.forEach(member => {
-        initialCheckedState[member] = leader.isChecked || false
-      })
-    })
-
-    setState(prevState => ({
-      ...prevState,
-      isChecked: initialCheckedState,
-      selectedLeader: "",
-      adultCount: 0,
-      memberCount: 0,
-      totalCount: 0,
-      attendanceAllData: {},
-      value: dayjs(lastSunday),
-    }))
-  }, [members])
-
-  useEffect(() => {
-    const updateAttendanceData = (date, leader) => {
-      setState(prevState => {
-        const updatedData = { ...prevState.attendanceAllData }
-
-        if (!updatedData[date]) {
-          updatedData[date] = {
-            adultAttendance: 0,
-            memberAttendance: 0,
-            cellData: {},
-          }
-        }
-
-        const leaderCellMembers = members.find(item => item.cell === leader)?.cellMember || []
-        const checkedMembers = leaderCellMembers.filter(member => state.isChecked[member])
-
-        if (leader) {
-          updatedData[date].cellData[leader] = checkedMembers
-        }
-
-        updatedData[date].adultAttendance = state.adultCount
-        updatedData[date].memberAttendance = Object.values(updatedData[date].cellData).reduce((acc, curr) => acc + curr.length, 0)
-        updatedData[date].totalAttendance = updatedData[date].adultAttendance + updatedData[date].memberAttendance
-
-        try {
-          addDoc(collection(db, "attendanceData"), {
-            date: date,
-            adultCount: state.adultCount,
-            memberCount: state.memberCount,
-            totalCount: updatedData[date].totalAttendance,
-            cellData: updatedData[date].cellData,
-          })
-          console.log("Data saved successfully!")
-        } catch (e) {
-          console.error("Error adding document: ", e)
-        }
-        console.log("출석 데이터 업데이트:", updatedData)
-
-        return {
-          ...prevState,
-          attendanceAllData: updatedData,
-        }
-      })
-    }
-
-    if (state.selectedLeader !== "" || state.adultCount !== 0) {
-      updateAttendanceData(state.value.format("YYYY-MM-DD"), state.selectedLeader)
-    }
-  }, [state.adultCount, state.isChecked, state.selectedLeader, members, state.value])
-
+  // 날짜 변경
   const handlePrevDayClick = () => {
-    setState(prevState => ({
-      ...prevState,
-      value: dayjs(prevState.value).subtract(7, "day"),
-      selectedLeader: "",
-      adultCount: 0,
-      memberCount: 0,
-      totalCount: 0,
-      isChecked: {},
-      attendanceAllData: {},
-    }))
+    reset()
+    setValue(dayjs(value).subtract(7, "day"))
   }
 
   const handleNextDayClick = () => {
-    setState(prevState => ({
-      ...prevState,
-      value: dayjs(prevState.value).add(7, "day"),
-      selectedLeader: "",
-      adultCount: 0,
-      memberCount: 0,
-      totalCount: 0,
-      isChecked: {},
-      attendanceAllData: {},
+    reset()
+    setValue(dayjs(value).add(7, "day"))
+  }
+
+  // 체크박스, 출석 수, 저장된 데이터 초기화
+  const reset = () => {
+    const initialCheckedMembers = members.map(item => ({
+      leader: item.cell,
+      members: [],
     }))
+    setCheckedMembers(initialCheckedMembers)
+    setIsChecked({})
+    setMemberCount(0)
+    setTotalCount(0)
   }
 
   const handleLeaderClick = cell => {
-    setState(prevState => ({
-      ...prevState,
-      selectedLeader: cell,
-    }))
+    setSelectedLeader(cell)
   }
 
+  // 츨석체크
   const handleCheck = member => {
-    setState(prevState => {
-      const isChecked = { ...prevState.isChecked }
-      isChecked[member] = !isChecked[member]
-      let memberCount = prevState.memberCount
-      if (isChecked[member]) memberCount++
-      else memberCount--
+    const updatedIsChecked = { ...isChecked }
+    updatedIsChecked[member] = !updatedIsChecked[member]
 
-      const totalCount = isChecked[member] ? prevState.totalCount + 1 : prevState.totalCount - 1
+    // 출석 체크시 출석 수 증가 및 감소
+    let updatedMemberCount = memberCount
+    if (updatedIsChecked[member]) updatedMemberCount++
+    else updatedMemberCount--
 
-      return {
-        ...prevState,
-        isChecked,
-        memberCount,
-        totalCount,
+    const updatedTotalCount = updatedIsChecked[member] ? totalCount + 1 : totalCount - 1
+
+    setIsChecked(updatedIsChecked)
+    setMemberCount(updatedMemberCount)
+    setTotalCount(updatedTotalCount)
+
+    // 출석 체크시 객체에서 해당되는 리더가 속한 객체에 값 저장
+    const updatedCheckedMembers = checkedMembers.map(item => {
+      if (item.leader === selectedLeader) {
+        if (updatedIsChecked[member]) {
+          return { ...item, members: [...item.members, member] }
+        } else {
+          return { ...item, members: item.members.filter(m => m !== member) }
+        }
       }
+      return item
     })
+
+    setCheckedMembers(updatedCheckedMembers)
+    console.log(checkedMembers)
+  }
+
+  // 데이터 저장
+  const saveData = async () => {
+    try {
+      await addDoc(collection(db, "attendanceData"), {
+        date: value.format("YYYY-MM-DD"),
+        adultCount: adultCount,
+        memberCount: memberCount,
+        totalCount: totalCount,
+        checkedMembers: checkedMembers,
+      })
+      console.log("Data saved successfully!")
+    } catch (e) {
+      console.error("Error adding document: ", e)
+    }
   }
 
   const handleAdultDataWrapperClick = () => {
-    setState(prevState => ({
-      ...prevState,
-      isBoxExpanded: !prevState.isBoxExpanded,
-    }))
+    setIsBoxExpanded(!isBoxExpanded)
   }
 
   const handleAdultPlus = () => {
-    setState(prevState => ({
-      ...prevState,
-      adultCount: prevState.adultCount + 1,
-      totalCount: prevState.totalCount + 1,
-      isBoxExpanded: !prevState,
-    }))
+    setAdultCount(adultCount + 1)
+    setTotalCount(totalCount + 1)
+    setIsBoxExpanded(!isBoxExpanded)
   }
 
   const handleAdultMinus = () => {
-    setState(prevState => ({
-      ...prevState,
-      adultCount: prevState.adultCount > 0 ? prevState.adultCount - 1 : 0,
-      totalCount: prevState.totalCount > 0 ? prevState.totalCount - 1 : 0,
-      isBoxExpanded: !prevState,
-    }))
+    setAdultCount(adultCount > 0 ? adultCount - 1 : 0)
+    setTotalCount(totalCount > 0 ? totalCount - 1 : 0)
+    setIsBoxExpanded(!isBoxExpanded)
   }
 
   return (
@@ -224,7 +151,7 @@ const Attendance = () => {
           <DateWrapper>
             <ArrowIconWrapper onClick={handlePrevDayClick} icon={ArrowLeftIcon} />
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ko">
-              <MobileDateWrapper value={state.value} format="YYYY.MM.DD" shouldDisableDate={date => date.day() !== 0} />
+              <MobileDateWrapper value={value} format="YYYY.MM.DD" shouldDisableDate={date => date.day() !== 0} />
             </LocalizationProvider>
             <ArrowIconWrapper onClick={handleNextDayClick} icon={ArrowRightIcon} />
           </DateWrapper>
@@ -232,7 +159,7 @@ const Attendance = () => {
         </CalendarWrapper>
         <LeaderInfoWrapper>
           <SelectWrapper
-            value={state.selectedLeader ? state.selectedLeader : "대예배"}
+            value={selectedLeader ? selectedLeader : "대예배"}
             onChange={e => handleLeaderClick(e.target.value)}
             MenuProps={{
               PaperProps: {
@@ -256,21 +183,21 @@ const Attendance = () => {
           <DataAreaWrapper>
             <MemberDataAreaWrapper>
               {members.length > 0 &&
-                (state.selectedLeader
+                (selectedLeader
                   ? members
-                      .find(leader => leader.cell === state.selectedLeader)
+                      .find(leader => leader.cell === selectedLeader)
                       ?.cellMember.map(member => (
                         <MemberDataWrapper key={member}>
-                          <CheckBoxWrapper checked={!!state.isChecked[member]} onChange={() => handleCheck(member)} />
-                          <CheckMemberWrapper checked={state.isChecked[member]} onClick={() => handleCheck(member)}>
+                          <CheckBoxWrapper checked={!!isChecked[member]} onChange={() => handleCheck(member)} />
+                          <CheckMemberWrapper checked={isChecked[member]} onClick={() => handleCheck(member)}>
                             {member}
                           </CheckMemberWrapper>
                         </MemberDataWrapper>
                       ))
                   : members[0].cellMember.map(member => (
                       <MemberDataWrapper key={member}>
-                        <CheckBoxWrapper checked={!!state.isChecked[member]} onChange={() => handleCheck(member)} />
-                        <CheckMemberWrapper checked={state.isChecked[member]} onClick={() => handleCheck(member)}>
+                        <CheckBoxWrapper checked={!!isChecked[member]} onChange={() => handleCheck(member)} />
+                        <CheckMemberWrapper checked={isChecked[member]} onClick={() => handleCheck(member)}>
                           {member}
                         </CheckMemberWrapper>
                       </MemberDataWrapper>
@@ -281,20 +208,20 @@ const Attendance = () => {
         <CounterWrapper>
           <AdultDataWrapper onClick={handleAdultDataWrapperClick}>
             <AddIconWrapper />
-            {state.isBoxExpanded && (
+            {isBoxExpanded && (
               <ButtonWrapper>
                 기타인원 :
                 <AddBoxOutlinedIconWrapper onClick={handleAdultPlus} />
-                <AdultCountWrapper>{state.adultCount}</AdultCountWrapper>
+                <AdultCountWrapper>{adultCount}</AdultCountWrapper>
                 <IndeterminateCheckBoxOutlinedIconWrapper onClick={handleAdultMinus} />
               </ButtonWrapper>
             )}
           </AdultDataWrapper>
           <AttendanceTotalDataWrapper>
             <AttendanceTextWrapper>출석 :</AttendanceTextWrapper>
-            <MemberCountWrapper>{state.memberCount}</MemberCountWrapper>
+            <MemberCountWrapper>{memberCount}</MemberCountWrapper>
             <SlashWrapper>/</SlashWrapper>
-            <TotalCountWrapper>{state.totalCount}</TotalCountWrapper>
+            <TotalCountWrapper>{totalCount}</TotalCountWrapper>
           </AttendanceTotalDataWrapper>
         </CounterWrapper>
       </AttendanceWrapper>
