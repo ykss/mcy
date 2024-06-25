@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import dayjs from "dayjs"
 import "dayjs/locale/ko"
+dayjs.locale("ko")
 import styled from "@emotion/styled"
 import Stack from "@mui/material/Stack"
 import Typography from "@mui/material/Typography"
