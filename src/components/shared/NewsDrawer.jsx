@@ -47,7 +47,6 @@ const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
   }
 
   const DrawerList = (
-
     <NewsDrawerWrapper>
       <StyledExitButton onClick={toggleDrawer}>
         <ExitIcon />
@@ -70,7 +69,6 @@ const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
       <TextFiledArea>
         <StyledTextField
           multiline
-
           value={textValue} // 상태 값으로 설정
           onChange={handleTextChange} // onChange 핸들러 추가
         />
@@ -82,9 +80,7 @@ const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
           <StyledSaveChip label="수정" onClick={() => handleUpdate(selectedDocId, textValue, fetchData)} />
         )}
       </SaveChipWrapper>
-
     </NewsDrawerWrapper>
-
   )
 
   return (
@@ -96,12 +92,10 @@ const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
   )
 }
 
-
 const DrawerWrapper = styled(Drawer)`
   .MuiDrawer-paper {
     width: 99%;
     height: 50%;
-
     margin: auto;
     background-color: #b4dfc3;
     border: 1px solid #000000;
@@ -109,7 +103,6 @@ const DrawerWrapper = styled(Drawer)`
     border-top-right-radius: 20px;
   }
 `
-
 
 const NewsDrawerWrapper = styled(Stack)`
   width: 100%;
@@ -130,7 +123,6 @@ const ExitIcon = styled(ClearIcon)`
 const DateWrapper = styled(Stack)`
   width: 100%;
   height: 12%;
-
   flex-direction: row;
   align-items: center;
 `
@@ -140,7 +132,6 @@ const TextFiledArea = styled(Stack)`
   justify-content: center;
   width: 100%;
   height: 60%;
-
   margin-top: 10px;
 `
 const StyledArrowLeftIcon = styled(ArrowLeftIcon)`
@@ -154,7 +145,6 @@ const StyledArrowRightIcon = styled(ArrowRightIcon)`
   }
 `
 const StyledTextField = styled(TextField)`
-
   width: 90%;
   height: 100%;
   background-color: #f0f0f0;
@@ -165,7 +155,6 @@ const StyledTextField = styled(TextField)`
     font-size: 20px;
     border: none;
     overflow: hidden; // 스크롤바 숨기기
-
   }
 
   /* 텍스트 필드 활성화될 때 윤곽선 제거 */
@@ -182,7 +171,6 @@ const SaveChipWrapper = styled(Stack)`
   margin-right: 10px;
   flex-direction: row;
   justify-content: right;
-=======
 `
 const StyledSaveChip = styled(Chip)`
   width: 80px;
