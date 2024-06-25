@@ -47,29 +47,28 @@ const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
   }
 
   const DrawerList = (
-    <NewsAddWrapper rol="presentation">
-      <ExitIcon onClick={toggleDrawer} />
-      <DateRenderingArea>
-        {mode === "add" ? (
-          <DateWrapper>
-            <IconButton onClick={() => handlePreviousWeek(selectedDateInfo, setSelectedDateInfo)}>
-              <StyledArrowLeftIcon />
-            </IconButton>
-            <Typography fontSize={28}>{dayjs(selectedDateInfo).format("M월 D일")}</Typography>
-            <IconButton onClick={() => handleNextWeek(selectedDateInfo, setSelectedDateInfo)}>
-              <StyledArrowRightIcon />
-            </IconButton>
-          </DateWrapper>
-        ) : (
-          <Typography sx={{ marginLeft: "68px" }} fontSize={28}>
-            {dayjs(selectedDateInfo).format("M월 D일")}
-          </Typography>
-        )}
-      </DateRenderingArea>
+    <NewsDrawerWrapper>
+      <StyledExitButton onClick={toggleDrawer}>
+        <ExitIcon />
+      </StyledExitButton>
+      {mode === "add" ? (
+        <DateWrapper>
+          <IconButton onClick={() => handlePreviousWeek(selectedDateInfo, setSelectedDateInfo)}>
+            <StyledArrowLeftIcon />
+          </IconButton>
+          <Typography fontSize={25}>{dayjs(selectedDateInfo).format("M월 D일")}</Typography>
+          <IconButton onClick={() => handleNextWeek(selectedDateInfo, setSelectedDateInfo)}>
+            <StyledArrowRightIcon />
+          </IconButton>
+        </DateWrapper>
+      ) : (
+        <Typography sx={{ marginLeft: "68px" }} fontSize={25}>
+          {dayjs(selectedDateInfo).format("M월 D일")}
+        </Typography>
+      )}
       <TextFiledArea>
         <StyledTextField
           multiline
-          rows={12}
           value={textValue} // 상태 값으로 설정
           onChange={handleTextChange} // onChange 핸들러 추가
         />
@@ -81,7 +80,7 @@ const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
           <StyledSaveChip label="수정" onClick={() => handleUpdate(selectedDocId, textValue, fetchData)} />
         )}
       </SaveChipWrapper>
-    </NewsAddWrapper>
+    </NewsDrawerWrapper>
   )
 
   return (
@@ -93,20 +92,10 @@ const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
   )
 }
 
-const ExitIcon = styled(ClearIcon)`
-  margin: auto 10px;
-  font-size: 25px;
-`
-const Wrapper = styled(Stack)`
-  width: 100%;
-  height: 10%;
-  justify-content: center;
-  align-items: center;
-`
 const DrawerWrapper = styled(Drawer)`
   .MuiDrawer-paper {
     width: 99%;
-    height: 60%;
+    height: 50%;
     margin: auto;
     background-color: #b4dfc3;
     border: 1px solid #000000;
@@ -114,23 +103,36 @@ const DrawerWrapper = styled(Drawer)`
     border-top-right-radius: 20px;
   }
 `
-const NewsAddWrapper = styled(Stack)`
+
+const NewsDrawerWrapper = styled(Stack)`
   width: 100%;
-  height: 90%;
+  height: 100%;
 `
-const DateRenderingArea = styled(Stack)`
-  width: 100%;
-  height: 13%;
+
+const StyledExitButton = styled(IconButton)`
+  display: flex;
+  flex-direction: row;
+  width: 10%;
+  height: 8%;
 `
+const ExitIcon = styled(ClearIcon)`
+  margin: auto 10px;
+  font-size: 25px;
+`
+
 const DateWrapper = styled(Stack)`
+  width: 100%;
+  height: 12%;
+
   flex-direction: row;
   align-items: center;
 `
 const TextFiledArea = styled(Stack)`
   flex-direction: center;
   align-items: center;
+  justify-content: center;
   width: 100%;
-  height: 77%;
+  height: 60%;
   margin-top: 10px;
 `
 const StyledArrowLeftIcon = styled(ArrowLeftIcon)`
@@ -144,14 +146,16 @@ const StyledArrowRightIcon = styled(ArrowRightIcon)`
   }
 `
 const StyledTextField = styled(TextField)`
+  width: 90%;
+  height: 100%;
   background-color: #f0f0f0;
   border: 1px solid #000000;
   border-radius: 22px;
-  width: 90%;
-  height: 100%;
+
   & .MuiInputBase-root {
     font-size: 20px;
     border: none;
+    overflow: hidden; // 스크롤바 숨기기
   }
 
   /* 텍스트 필드 활성화될 때 윤곽선 제거 */
@@ -163,13 +167,11 @@ const StyledTextField = styled(TextField)`
 `
 
 const SaveChipWrapper = styled(Stack)`
+  height: 10%;
+  margin-top: 10px;
+  margin-right: 10px;
   flex-direction: row;
-  position: absolute;
-  bottom: 10px;
-  right: 5%;
   justify-content: right;
-  align-items: center;
-  gap: 13px;
 `
 const StyledSaveChip = styled(Chip)`
   width: 80px;
