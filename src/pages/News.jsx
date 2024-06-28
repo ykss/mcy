@@ -109,11 +109,9 @@ const News = () => {
           <IconButton onClick={handleNextMonth}>
             <ArrowRightIcon fontSize="large" />
           </IconButton>
-          {admin ? (
-            <StyledIconButton onClick={() => toggleNewsDrawer("add", null)}>
-              <NewsPlusButton />
-            </StyledIconButton>
-          ) : null}
+          <StyledIconButton onClick={() => toggleNewsDrawer("add", null)}>
+            <NewsPlusButton />
+          </StyledIconButton>
         </SelectWrapper>
         <RenderingArea>
           {newsData
