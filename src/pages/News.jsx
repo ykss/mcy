@@ -15,7 +15,7 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 
 import Layout from "../components/Layout/Layout"
-import { PlusButton } from "../components/shared/PlusButton"
+import { NewsPlusButton } from "../components/shared/PlusButton"
 import { McyNewsApi } from "../api/mcyNewsApi"
 import { db } from "../firebase" // firebase 설정 파일을 임포트
 import NewsDrawer from "../components/shared/NewsDrawer"
@@ -108,7 +108,7 @@ const News = () => {
             <ArrowRightIcon fontSize="large" />
           </IconButton>
           <StyledIconButton onClick={() => toggleNewsDrawer("add", null)}>
-            <PlusButton />
+            <NewsPlusButton />
           </StyledIconButton>
         </SelectWrapper>
         <RenderingArea>
