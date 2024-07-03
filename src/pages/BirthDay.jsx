@@ -104,7 +104,7 @@ const BirthDay = () => {
             </ListWrapper>
             <PaginationWrapper>
               <PaginationWrapper>
-                <Pagination count={selectedData.length > 0 ? Math.ceil(selectedData.length / itemsPerPage) : 1} page={page} onChange={handlePageChange} />
+                <Pagination count={monthChipId === 0 ? null : Math.ceil(selectedData.length / itemsPerPage)} page={page} onChange={handlePageChange} />
               </PaginationWrapper>
             </PaginationWrapper>
           </ListArea>
