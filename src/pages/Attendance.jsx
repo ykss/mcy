@@ -47,8 +47,12 @@ const Attendance = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const membersList = await getMcyMemberApi()
-      setMembers(membersList)
+      try {
+        const membersList = await getMcyMemberApi()
+        setMembers(membersList)
+      } catch (error) {
+        console.log("Error fetching members:", error)
+      }
     }
     fetchData()
   }, [])
@@ -72,21 +76,25 @@ const Attendance = () => {
     const daysToLastSunday = currentDayOfWeek === 0 ? 7 : currentDayOfWeek
     const lastSunday = dayjs().subtract(daysToLastSunday, "day")
     members.forEach(leader => {
-      leader.cellMember.forEach(member => {
-        initialCheckedState[member] = leader.isChecked || false
-      })
+      if (leader && leader.cellMember) {
+        leader.cellMember.forEach(member => {
+          initialCheckedState[member] = leader.isChecked || false
+        })
+      }
     })
 
-    setState(prevState => ({
-      ...prevState,
-      isChecked: initialCheckedState,
-      selectedLeader: "대예배",
-      adultCount: 0,
-      memberCount: 0,
-      totalCount: 0,
-      attendanceAllData: {},
-      value: dayjs(lastSunday),
-    }))
+    if (members.length > 0) {
+      setState(prevState => ({
+        ...prevState,
+        isChecked: initialCheckedState,
+        selectedLeader: "대예배",
+        adultCount: 0,
+        memberCount: 0,
+        totalCount: 0,
+        attendanceAllData: {},
+        value: dayjs(lastSunday),
+      }))
+    }
   }, [members])
 
   // 지난주 날짜 변경
@@ -94,7 +102,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).subtract(7, "day"),
-      selectedLeader: "",
+      selectedLeader: "대예배",
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
@@ -108,7 +116,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).add(7, "day"),
-      selectedLeader: "",
+      selectedLeader: "대예배",
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
@@ -159,7 +167,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       adultCount: prevState.adultCount > 0 ? prevState.adultCount - 1 : 0,
-      totalCount: prevState.totalCount > 0 ? prevState.totalCount - 1 : 0,
+      totalCount: prevState.adultCount > 0 ? prevState.totalCount - 1 : state.totalCount,
     }))
   }
 
@@ -172,7 +180,7 @@ const Attendance = () => {
         memberCount: state.memberCount,
         totalCount: state.totalCount,
         cellData: members.reduce((acc, leader) => {
-          acc[leader.cell] = leader.cellMember.filter(member => state.isChecked[member])
+          acc[leader.cell] = leader?.cellMember?.filter(member => state.isChecked[member])
           return acc
         }, {}),
       })
@@ -463,6 +471,7 @@ const CheckBoxWrapper = styled(Checkbox)`
 `
 
 const CheckMemberWrapper = styled(Typography)`
+  width: 50%;
   font-size: 20px;
   font-weight: ${props => (props.checked ? 700 : 500)};
   color: #000;
