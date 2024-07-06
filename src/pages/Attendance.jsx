@@ -16,12 +16,12 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker"
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import SettingsIcon from "@mui/icons-material/Settings"
-import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined"
-import IndeterminateCheckBoxOutlinedIcon from "@mui/icons-material/IndeterminateCheckBoxOutlined"
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt"
-import AddIcon from "@mui/icons-material/Add"
+import SaveIcon from "@mui/icons-material/Save"
 import MenuItem from "@mui/material/MenuItem"
 import Select from "@mui/material/Select"
+import ButtonGroup from "@mui/material/ButtonGroup"
+import Button from "@mui/material/Button"
 
 import Layout from "../components/Layout/Layout"
 import { getMcyMemberApi } from "../api/mcyMemberApi"
@@ -38,7 +38,6 @@ const Attendance = () => {
     attendanceAllData: {},
     isChecked: {},
     value: dayjs().subtract(dayjs().day() === 0 ? 7 : dayjs().day(), "day"),
-    isBoxExpanded: false,
   })
   const db = getFirestore()
 
@@ -81,7 +80,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       isChecked: initialCheckedState,
-      selectedLeader: "",
+      selectedLeader: "대예배",
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
@@ -90,56 +89,7 @@ const Attendance = () => {
     }))
   }, [members])
 
-  useEffect(() => {
-    const updateAttendanceData = (date, leader) => {
-      setState(prevState => {
-        const updatedData = { ...prevState.attendanceAllData }
-
-        if (!updatedData[date]) {
-          updatedData[date] = {
-            adultAttendance: 0,
-            memberAttendance: 0,
-            cellData: {},
-          }
-        }
-
-        const leaderCellMembers = members.find(item => item.cell === leader)?.cellMember || []
-        const checkedMembers = leaderCellMembers.filter(member => state.isChecked[member])
-
-        if (leader) {
-          updatedData[date].cellData[leader] = checkedMembers
-        }
-
-        updatedData[date].adultAttendance = state.adultCount
-        updatedData[date].memberAttendance = Object.values(updatedData[date].cellData).reduce((acc, curr) => acc + curr.length, 0)
-        updatedData[date].totalAttendance = updatedData[date].adultAttendance + updatedData[date].memberAttendance
-
-        try {
-          addDoc(collection(db, "attendanceData"), {
-            date: date,
-            adultCount: state.adultCount,
-            memberCount: state.memberCount,
-            totalCount: updatedData[date].totalAttendance,
-            cellData: updatedData[date].cellData,
-          })
-          console.log("Data saved successfully!")
-        } catch (e) {
-          console.error("Error adding document: ", e)
-        }
-        console.log("출석 데이터 업데이트:", updatedData)
-
-        return {
-          ...prevState,
-          attendanceAllData: updatedData,
-        }
-      })
-    }
-
-    if (state.selectedLeader !== "" || state.adultCount !== 0) {
-      updateAttendanceData(state.value.format("YYYY-MM-DD"), state.selectedLeader)
-    }
-  }, [state.adultCount, state.isChecked, state.selectedLeader, members, state.value])
-
+  // 지난주 날짜 변경
   const handlePrevDayClick = () => {
     setState(prevState => ({
       ...prevState,
@@ -153,6 +103,7 @@ const Attendance = () => {
     }))
   }
 
+  // 다음주 날짜 변경
   const handleNextDayClick = () => {
     setState(prevState => ({
       ...prevState,
@@ -166,6 +117,7 @@ const Attendance = () => {
     }))
   }
 
+  // 리더 선택
   const handleLeaderClick = cell => {
     setState(prevState => ({
       ...prevState,
@@ -173,6 +125,7 @@ const Attendance = () => {
     }))
   }
 
+  // 셀원 체크
   const handleCheck = member => {
     setState(prevState => {
       const isChecked = { ...prevState.isChecked }
@@ -192,29 +145,41 @@ const Attendance = () => {
     })
   }
 
-  const handleAdultDataWrapperClick = () => {
-    setState(prevState => ({
-      ...prevState,
-      isBoxExpanded: !prevState.isBoxExpanded,
-    }))
-  }
-
+  // 어른 출석 체크 증가
   const handleAdultPlus = () => {
     setState(prevState => ({
       ...prevState,
       adultCount: prevState.adultCount + 1,
       totalCount: prevState.totalCount + 1,
-      isBoxExpanded: !prevState,
     }))
   }
 
+  // 어른 출석 체크 감소
   const handleAdultMinus = () => {
     setState(prevState => ({
       ...prevState,
       adultCount: prevState.adultCount > 0 ? prevState.adultCount - 1 : 0,
       totalCount: prevState.totalCount > 0 ? prevState.totalCount - 1 : 0,
-      isBoxExpanded: !prevState,
     }))
+  }
+
+  // 출석 데이터 저장하기
+  const handleAttendanceDataSave = () => {
+    try {
+      addDoc(collection(db, "attendanceData"), {
+        date: state.value.format("YYYY-MM-DD"),
+        adultCount: state.adultCount,
+        memberCount: state.memberCount,
+        totalCount: state.totalCount,
+        cellData: members.reduce((acc, leader) => {
+          acc[leader.cell] = leader.cellMember.filter(member => state.isChecked[member])
+          return acc
+        }, {}),
+      })
+      console.log("Data saved successfully!")
+    } catch (e) {
+      console.error("Error adding document: ", e)
+    }
   }
 
   return (
@@ -248,8 +213,13 @@ const Attendance = () => {
               </MenuItemWrapper>
             ))}
           </SelectWrapper>
-          <StatusWrapper onClick={handleNavigate}>
-            <PeopleAltIconWrapper />
+          <StatusWrapper>
+            <SaveIconWapper>
+              <SaveIcon onClick={handleAttendanceDataSave} />
+            </SaveIconWapper>
+            <PeopleAltIconWrapper onClick={handleNavigate}>
+              <PeopleAltIcon />
+            </PeopleAltIconWrapper>
           </StatusWrapper>
         </LeaderInfoWrapper>
         <DataWrapper>
@@ -279,16 +249,9 @@ const Attendance = () => {
           </DataAreaWrapper>
         </DataWrapper>
         <CounterWrapper>
-          <AdultDataWrapper onClick={handleAdultDataWrapperClick}>
-            <AddIconWrapper />
-            {state.isBoxExpanded && (
-              <ButtonWrapper>
-                기타인원 :
-                <AddBoxOutlinedIconWrapper onClick={handleAdultPlus} />
-                <AdultCountWrapper>{state.adultCount}</AdultCountWrapper>
-                <IndeterminateCheckBoxOutlinedIconWrapper onClick={handleAdultMinus} />
-              </ButtonWrapper>
-            )}
+          <AdultDataWrapper variant="outlined">
+            <AddIconWrapper onClick={handleAdultPlus}>+</AddIconWrapper>
+            <MinusIconWrapper onClick={handleAdultMinus}>-</MinusIconWrapper>
           </AdultDataWrapper>
           <AttendanceTotalDataWrapper>
             <AttendanceTextWrapper>출석 :</AttendanceTextWrapper>
@@ -364,10 +327,10 @@ const LeaderInfoWrapper = styled(Stack)`
 const SelectWrapper = styled(Select)`
   font-family: "Noto Sans";
   font-weight: 600;
-  font-size: 24px;
+  font-size: 20px;
   background: #c7bdeb;
   border-radius: 22px;
-  width: 80%;
+  width: 60%;
   height: 80%;
   border: 1px solid black;
   color: #404040;
@@ -389,20 +352,69 @@ const MenuItemWrapper = styled(MenuItem)`
   }
 `
 
-const StatusWrapper = styled(Stack)`
-  display: flex;
+const StatusWrapper = styled(ButtonGroup)`
   justify-content: center;
   align-items: center;
-  background: #d9e8ea;
-  width: 20%;
-  height: 80%;
-  border-radius: 22px;
-  border: 1px solid black;
+  width: 40%;
+  height: 100%;
 `
 
-const PeopleAltIconWrapper = styled(PeopleAltIcon)`
-  width: 80%;
-  height: 70%;
+const SaveIconWapper = styled(Button)`
+  width: 50%;
+  height: 80%;
+  border: 1px solid #000;
+  border-radius: 22px;
+  background-color: #d9e8ea;
+  font-size: 30px;
+  font-weight: 700;
+  color: #000;
+  :active {
+    border: 1px solid #000;
+    border-bottom-left-radius: 22px;
+    border-top-left-radius: 22px;
+    background-color: #d9e8ea;
+    font-size: 30px;
+    font-weight: 700;
+    color: #000;
+  }
+  :hover {
+    border: 1px solid #000;
+    border-bottom-left-radius: 22px;
+    border-top-left-radius: 22px;
+    background-color: #d9e8ea;
+    font-size: 30px;
+    font-weight: 700;
+    color: #000;
+  }
+`
+
+const PeopleAltIconWrapper = styled(Button)`
+  width: 50%;
+  height: 80%;
+  border: 1px solid #000;
+  border-radius: 25px;
+  background-color: #d9e8ea;
+  font-size: 30px;
+  font-weight: 700;
+  color: #000;
+  :active {
+    border: 1px solid #000;
+    border-bottom-right-radius: 22px;
+    border-top-right-radius: 22px;
+    background-color: #d9e8ea;
+    font-size: 30px;
+    font-weight: 700;
+    color: #000;
+  }
+  :hover {
+    border: 1px solid #000;
+    border-bottom-right-radius: 22px;
+    border-top-right-radius: 22px;
+    background-color: #d9e8ea;
+    font-size: 30px;
+    font-weight: 700;
+    color: #000;
+  }
 `
 
 const DataWrapper = styled(Stack)`
@@ -466,56 +478,74 @@ const CounterWrapper = styled(Stack)`
   gap: 10px;
 `
 
-const AdultDataWrapper = styled(Stack)`
-  width: 20%;
+const AdultDataWrapper = styled(ButtonGroup)`
+  width: 40%;
   height: 70%;
-  background-color: #b4dfc3;
+  justify-content: center;
+  align-items: center;
+`
+
+const AddIconWrapper = styled(Button)`
+  width: 50%;
   border: 1px solid #000;
   border-radius: 25px;
-  justify-content: center;
-  align-items: center;
-`
-const AddIconWrapper = styled(AddIcon)`
-  font-size: 50px;
+  background-color: #b4dfc3;
+  font-size: 30px;
   font-weight: 700;
+  color: #000;
+  :active {
+    border: 1px solid #000;
+    border-bottom-left-radius: 22px;
+    border-top-left-radius: 22px;
+    background-color: #b4dfc3;
+    font-size: 30px;
+    font-weight: 700;
+    color: #000;
+  }
+  :hover {
+    border: 1px solid #000;
+    border-bottom-left-radius: 25px;
+    border-top-left-radius: 25px;
+    background-color: #b4dfc3;
+    font-size: 30px;
+    font-weight: 700;
+    color: #000;
+  }
 `
 
-const ButtonWrapper = styled(Stack)`
-  flex-direction: row;
-  gap: 10px;
-  background: #d7f0e0;
-  position: absolute;
-  top: 430px;
-  width: 90%;
-  left: 20px;
-  height: 15%;
-  font-family: "Noto Sans";
-  font-weight: 600;
-  font-size: 24px;
-  justify-content: center;
-  align-items: center;
+const MinusIconWrapper = styled(Button)`
+  width: 50%;
+  border: 1px solid #000;
   border-radius: 25px;
-`
-
-const AddBoxOutlinedIconWrapper = styled(AddBoxOutlinedIcon)`
-  fill: #404040;
-  font-size: 30px;
-`
-
-const AdultCountWrapper = styled(Typography)`
+  background-color: #b4dfc3;
   font-size: 30px;
   font-weight: 700;
-`
-
-const IndeterminateCheckBoxOutlinedIconWrapper = styled(IndeterminateCheckBoxOutlinedIcon)`
-  fill: #404040;
-  font-size: 30px;
+  color: #000;
+  :active {
+    border: 1px solid #000;
+    border-bottom-right-radius: 22px;
+    border-top-right-radius: 22px;
+    background-color: #b4dfc3;
+    font-size: 30px;
+    font-weight: 700;
+    color: #000;
+  }
+  :hover {
+    border: 1px solid #000;
+    border-bottom-right-radius: 25px;
+    border-top-right-radius: 25px;
+    background-color: #b4dfc3;
+    font-size: 30px;
+    font-weight: 700;
+    color: #000;
+  }
 `
 
 const AttendanceTotalDataWrapper = styled(Stack)`
   background-color: #f3c5c5;
-  width: 80%;
+  width: 60%;
   height: 70%;
+  border: 1px solid black;
   flex-direction: row;
   gap: 10px;
   border-radius: 25px;
