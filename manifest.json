@@ -10,22 +10,22 @@
   "theme_color": "#ffffff",
   "icons": [
     {
-      "src": "src/assets/images/icon.png",
+      "src": "/assets/images/icon.png",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any"
     }
   ],
-  "description": "하나님 안에서 세워나가는 목천교회 청년부의 다양한 콘텐츠를 확인하고, 청년들을 위해 기도는 믿음의 공동체가 되길 바랍니다.",
+  "description": "하나님 안에서 세워나가는 목천교회 청년부의 다양한 콘텐츠를 확인하고, 믿음의 공동체가 되도록 기도합시다.",
   "lang": "ko",
   "screenshots": [
     {
-      "src": "src/assets/images/icon.png",
+      "src": "/assets/images/icon.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "src/assets/images/icon.png",
+      "src": "/assets/images/icon.png",
       "sizes": "512x512",
       "form_factor": "wide",
       "type": "image/png"
