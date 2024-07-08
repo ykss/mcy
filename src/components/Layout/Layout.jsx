@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 
 import Stack from "@mui/material/Stack"
 import { styled } from "@mui/material"
@@ -11,24 +11,27 @@ import Footer from "./Footer"
 const Layout = ({ children }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const isUserSelectPage = location.pathname === "/" || location.pathname === "/login"
 
   return (
     <>
       <Header setIsDrawerOpen={setIsDrawerOpen} />
       <MenuDrawer open={isDrawerOpen} setOpen={setIsDrawerOpen} navigate={navigate} />
-      <ContentWrapper>{children}</ContentWrapper>
+      <ContentWrapper isUserSelectPage={isUserSelectPage}>{children}</ContentWrapper>
       <Footer />
     </>
   )
 }
 
-const ContentWrapper = styled(Stack)`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: calc(100dvh - 180px);
-  background-color: #fffcf6;
-`
+const ContentWrapper = styled(Stack)(({ isUserSelectPage }) => ({
+  flexDirection: "row",
+  justifyContent: "center",
+  alignItems: "center",
+  width: "100vw",
+  height: isUserSelectPage ? "calc(100dvh - 80px)" : "calc(100dvh - 160px)",
+  backgroundColor: "#fffcf6",
+}))
 
 export default Layout
