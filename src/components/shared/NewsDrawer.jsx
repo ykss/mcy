@@ -25,19 +25,16 @@ const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
   const dayOfWeek = today.day() // 0은 일요일, 6은 토요일
   const lastSunday = today.subtract(dayOfWeek, "day")
   const [selectedDateInfo, setSelectedDateInfo] = useState(lastSunday.format("YYYY-MM-DD"))
-  const [selectedDocId, setSelectedDocId] = useState(null) // 선택된 문서 ID 상태 추가
 
   useEffect(() => {
     // targetData 있을 경우 (mode = 추가) 해당 리스트의 데이터를 찾습니다.
     if (targetData) {
       setTextValue(targetData.content)
       setSelectedDateInfo(targetData.date)
-      setSelectedDocId(targetData.id) // selectedData.id로 수정
     } else {
       // targetData가 null일 경우 (mode = 추가) 초기값으로 설정합니다.
       setSelectedDateInfo(lastSunday.format("YYYY-MM-DD"))
       setTextValue("")
-      setSelectedDocId(null)
     }
   }, [targetData])
 
@@ -77,7 +74,7 @@ const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
         {mode === "add" ? (
           <StyledSaveChip label="저장" onClick={() => handleSave(selectedDateInfo, setTextValue, textValue, fetchData)} />
         ) : (
-          <StyledSaveChip label="수정" onClick={() => handleUpdate(selectedDocId, textValue, fetchData)} />
+          <StyledSaveChip label="수정" onClick={() => handleUpdate(selectedDateInfo, textValue, fetchData)} />
         )}
       </SaveChipWrapper>
     </NewsDrawerWrapper>
