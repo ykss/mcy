@@ -1,4 +1,3 @@
-
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../firebase"
 
@@ -10,8 +9,8 @@ const McyBirthdayApi = async () => {
 
     if (docSnap.exists()) {
       // 문서에서 birthDayInfo 배열을 가져오기
-      const newsList = docSnap.data().birthDayInfo
-      return newsList ? newsList : []
+      const birthdayList = docSnap.data().birthDayInfo
+      return birthdayList ? birthdayList : []
     } else {
       console.log("No such document!")
       return []
