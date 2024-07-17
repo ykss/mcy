@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
-import { addDoc, collection, getFirestore } from "firebase/firestore"
-
 import dayjs from "dayjs"
 import "dayjs/locale/ko"
+import { v4 as uuidv4 } from "uuid" // uuid import
 
 import Stack from "@mui/material/Stack"
 import { styled } from "@mui/material"
@@ -17,7 +16,6 @@ import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import SettingsIcon from "@mui/icons-material/Settings"
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt"
-import SaveIcon from "@mui/icons-material/Save"
 import MenuItem from "@mui/material/MenuItem"
 import Select from "@mui/material/Select"
 import ButtonGroup from "@mui/material/ButtonGroup"
@@ -25,7 +23,7 @@ import Button from "@mui/material/Button"
 
 import Layout from "../components/Layout/Layout"
 import { getMcyMemberApi } from "../api/mcyMemberApi"
-import { getAttendanceApi } from "../api/attendanceDataApi"
+import { getAttendanceApi, updateAttendanceApi } from "../api/attendanceDataApi"
 
 const Attendance = () => {
   const [members, setMembers] = useState([])
@@ -35,11 +33,12 @@ const Attendance = () => {
     selectedLeader: "대예배",
     adultCount: 0,
     memberCount: 0,
+    totalCount: 0,
     attendanceAllData: {},
     isChecked: {},
     value: dayjs().subtract(dayjs().day() === 0 ? 7 : dayjs().day(), "day"),
+    id: uuidv4(),
   })
-  const db = getFirestore()
 
   const handleNavigate = () => {
     navigate("/attendancestatus")
@@ -57,18 +56,39 @@ const Attendance = () => {
     fetchData()
   }, [])
 
-  const AttendancefetchData = async () => {
-    try {
-      const data = await getAttendanceApi()
-      setAttendance(data)
-    } catch (error) {
-      console.error("Error fetching data: ", error)
-    }
-  }
-
   useEffect(() => {
+    const AttendancefetchData = async () => {
+      try {
+        const data = await getAttendanceApi()
+        setAttendance(data)
+      } catch (error) {
+        console.error("Error fetching data: ", error)
+      }
+    }
     AttendancefetchData()
   }, [attendance])
+
+  // 출석 데이터 저장
+  const handleUpdateAttendance = async (isChecked, adultCount, totalCount) => {
+    try {
+      const { id } = state
+      const attendanceData = {
+        date: state.value.format("YYYY-MM-DD"),
+        adultCount,
+        memberCount: Object.values(isChecked).filter(Boolean).length,
+        totalCount,
+        cellData: members.reduce((acc, leader) => {
+          acc[leader.cell] = leader?.cellMember?.filter(member => isChecked[member])
+          return acc
+        }, {}),
+      }
+
+      await updateAttendanceApi(id, attendanceData)
+      console.log("Attendance data updated successfully!")
+    } catch (error) {
+      console.error("Error updating attendance data: ", error)
+    }
+  }
 
   useEffect(() => {
     const initialCheckedState = {}
@@ -141,7 +161,6 @@ const Attendance = () => {
       let memberCount = prevState.memberCount
       if (isChecked[member]) memberCount++
       else memberCount--
-
       const totalCount = isChecked[member] ? prevState.totalCount + 1 : prevState.totalCount - 1
 
       return {
@@ -155,40 +174,38 @@ const Attendance = () => {
 
   // 어른 출석 체크 증가
   const handleAdultPlus = () => {
-    setState(prevState => ({
-      ...prevState,
-      adultCount: prevState.adultCount + 1,
-      totalCount: prevState.totalCount + 1,
-    }))
+    setState(prevState => {
+      const newAdultCount = prevState.adultCount + 1
+      const newTotalCount = prevState.totalCount + 1
+
+      return {
+        ...prevState,
+        adultCount: newAdultCount,
+        totalCount: newTotalCount,
+      }
+    })
   }
 
   // 어른 출석 체크 감소
   const handleAdultMinus = () => {
-    setState(prevState => ({
-      ...prevState,
-      adultCount: prevState.adultCount > 0 ? prevState.adultCount - 1 : 0,
-      totalCount: prevState.adultCount > 0 ? prevState.totalCount - 1 : state.totalCount,
-    }))
+    setState(prevState => {
+      const newAdultCount = prevState.adultCount > 0 ? prevState.adultCount - 1 : 0
+      const newTotalCount = prevState.adultCount > 0 ? prevState.totalCount - 1 : prevState.totalCount
+
+      return {
+        ...prevState,
+        adultCount: newAdultCount,
+        totalCount: newTotalCount,
+      }
+    })
   }
 
-  // 출석 데이터 저장하기
-  const handleAttendanceDataSave = () => {
-    try {
-      addDoc(collection(db, "attendanceData"), {
-        date: state.value.format("YYYY-MM-DD"),
-        adultCount: state.adultCount,
-        memberCount: state.memberCount,
-        totalCount: state.totalCount,
-        cellData: members.reduce((acc, leader) => {
-          acc[leader.cell] = leader?.cellMember?.filter(member => state.isChecked[member])
-          return acc
-        }, {}),
-      })
-      console.log("Data saved successfully!")
-    } catch (e) {
-      console.error("Error adding document: ", e)
-    }
-  }
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      handleUpdateAttendance(state.isChecked, state.adultCount, state.totalCount)
+    }, 300)
+    return () => clearTimeout(delay) // 이펙트 정리
+  }, [state.isChecked, state.adultCount, state.totalCount, state])
 
   return (
     <Layout>
@@ -215,19 +232,16 @@ const Attendance = () => {
                 },
               },
             }}>
-            {members.map(item => (
-              <MenuItemWrapper key={item.id} value={item.cell || ""}>
-                {item.cell}
-              </MenuItemWrapper>
-            ))}
+            {members
+              .sort((a, b) => a.cellNumber - b.cellNumber) // Sort by cellNumber
+              .map(item => (
+                <MenuItemWrapper key={item.id} value={item.cell || ""}>
+                  {item.cell}
+                </MenuItemWrapper>
+              ))}
           </SelectWrapper>
-          <StatusWrapper>
-            <SaveIconWapper>
-              <SaveIcon onClick={handleAttendanceDataSave} />
-            </SaveIconWapper>
-            <PeopleAltIconWrapper onClick={handleNavigate}>
-              <PeopleAltIcon />
-            </PeopleAltIconWrapper>
+          <StatusWrapper onClick={handleNavigate}>
+            <PeopleAltIconWrapper />
           </StatusWrapper>
         </LeaderInfoWrapper>
         <DataWrapper>
@@ -245,7 +259,7 @@ const Attendance = () => {
                           </CheckMemberWrapper>
                         </MemberDataWrapper>
                       ))
-                  : members[0].cellMember.map(member => (
+                  : members[0]?.cellMember.map(member => (
                       <MemberDataWrapper key={member}>
                         <CheckBoxWrapper checked={!!state.isChecked[member]} onChange={() => handleCheck(member)} />
                         <CheckMemberWrapper checked={state.isChecked[member]} onClick={() => handleCheck(member)}>
@@ -338,7 +352,8 @@ const SelectWrapper = styled(Select)`
   font-size: 20px;
   background: #c7bdeb;
   border-radius: 22px;
-  width: 60%;
+  border: 1px solid red;
+  width: 85%;
   height: 80%;
   border: 1px solid black;
   color: #404040;
@@ -360,69 +375,20 @@ const MenuItemWrapper = styled(MenuItem)`
   }
 `
 
-const StatusWrapper = styled(ButtonGroup)`
+const StatusWrapper = styled(Stack)`
+  display: flex;
   justify-content: center;
   align-items: center;
-  width: 40%;
-  height: 100%;
-`
-
-const SaveIconWapper = styled(Button)`
-  width: 50%;
+  background: #d9e8ea;
+  width: 25%;
   height: 80%;
-  border: 1px solid #000;
   border-radius: 22px;
-  background-color: #d9e8ea;
-  font-size: 30px;
-  font-weight: 700;
-  color: #000;
-  :active {
-    border: 1px solid #000;
-    border-bottom-left-radius: 22px;
-    border-top-left-radius: 22px;
-    background-color: #d9e8ea;
-    font-size: 30px;
-    font-weight: 700;
-    color: #000;
-  }
-  :hover {
-    border: 1px solid #000;
-    border-bottom-left-radius: 22px;
-    border-top-left-radius: 22px;
-    background-color: #d9e8ea;
-    font-size: 30px;
-    font-weight: 700;
-    color: #000;
-  }
+  border: 1px solid black;
 `
 
-const PeopleAltIconWrapper = styled(Button)`
-  width: 50%;
-  height: 80%;
-  border: 1px solid #000;
-  border-radius: 25px;
-  background-color: #d9e8ea;
-  font-size: 30px;
-  font-weight: 700;
-  color: #000;
-  :active {
-    border: 1px solid #000;
-    border-bottom-right-radius: 22px;
-    border-top-right-radius: 22px;
-    background-color: #d9e8ea;
-    font-size: 30px;
-    font-weight: 700;
-    color: #000;
-  }
-  :hover {
-    border: 1px solid #000;
-    border-bottom-right-radius: 22px;
-    border-top-right-radius: 22px;
-    background-color: #d9e8ea;
-    font-size: 30px;
-    font-weight: 700;
-    color: #000;
-  }
+const PeopleAltIconWrapper = styled(PeopleAltIcon)`
+  width: 80%;
+  height: 70%;
 `
 
 const DataWrapper = styled(Stack)`
@@ -496,6 +462,7 @@ const AdultDataWrapper = styled(ButtonGroup)`
 
 const AddIconWrapper = styled(Button)`
   width: 50%;
+  height: 100%;
   border: 1px solid #000;
   border-radius: 25px;
   background-color: #b4dfc3;
@@ -524,6 +491,7 @@ const AddIconWrapper = styled(Button)`
 
 const MinusIconWrapper = styled(Button)`
   width: 50%;
+  height: 100%;
   border: 1px solid #000;
   border-radius: 25px;
   background-color: #b4dfc3;
