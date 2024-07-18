@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 
 import Stack from "@mui/material/Stack"
 import { styled } from "@mui/material"
@@ -7,15 +7,18 @@ import IconButton from "@mui/material/IconButton"
 import MenuIcon from "@mui/icons-material/Menu"
 
 const Header = ({ setIsDrawerOpen }) => {
-  const Navigate = useNavigate()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const handleDrawerOpen = () => {
     setIsDrawerOpen(true)
   }
 
   const handleGoMain = () => {
-    Navigate("/")
+    navigate("/main")
   }
+
+  if (location.pathname === "/" || location.pathname === "/login") return null
 
   return (
     <>
@@ -34,6 +37,7 @@ const Header = ({ setIsDrawerOpen }) => {
     </>
   )
 }
+
 const HeaderWrapper = styled(Stack)`
   flex-direction: row;
   align-items: center;

@@ -8,6 +8,7 @@ import BirthDay from "./pages/BirthDay"
 import Attendance from "./pages/Attendance"
 import AttendanceStatus from "./pages/AttendanceStatus"
 import News from "./pages/News"
+import UserSelect from "./pages/UserSelect"
 import Login from "./pages/Login"
 // import ReaderAdmin from "./pages/ReaderAdmin.jsx";
 // import MemberAdmin from "./pages/MemberAdmin.jsx";
@@ -20,7 +21,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Main />} />
+          <Route path="/" element={<UserSelect />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/main" element={<Main />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/birthDay" element={<BirthDay />} />
           <Route path="/attendance" element={<Attendance />} />

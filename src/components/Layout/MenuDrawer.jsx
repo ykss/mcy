@@ -63,7 +63,6 @@ const MenuDrawer = ({ open, setOpen, navigate }) => {
         </ListButton>
       </ListAreaWrapper>
       <ButtonWrapper>
-        <LoginButton onClick={() => handleNavigate("login")}>로그인</LoginButton>
         <LogoutButton
           onClick={() => {
             handleNavigate("")
@@ -207,13 +206,6 @@ const ButtonWrapper = styled(Stack)`
   gap: 8px;
   margin-right: 23px;
   margin-top: 160px;
-`
-
-const LoginButton = styled(Button)`
-  font-family: "Noto Sans";
-  font-weight: 600;
-  font-size: 16px;
-  color: #000;
 `
 
 const LogoutButton = styled(Button)`
