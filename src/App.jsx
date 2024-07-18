@@ -20,13 +20,11 @@ function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Main />} />
+          <Route path="/main" element={<Main />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/birthDay" element={<BirthDay />} />
           <Route path="/attendance" element={<Attendance />} />
-          <Route path="/attendancestatus" element={<AttendanceStatus />} />
-          <Route path="/news" element={<News />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           {/* 셀 관리 페이지 */}
           {/* <Route path="/reader-admin" element={<ReaderAdmin />} /> */}
           {/* <Route path="/member-admin" element={<MemberAdmin />} /> */}
