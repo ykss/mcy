@@ -20,7 +20,7 @@ import { McyNewsApi } from "../api/mcyNewsApi"
 import { db } from "../firebase" // firebase 설정 파일을 임포트
 import NewsDrawer from "../components/shared/NewsDrawer"
 
-import { doc, collection, deleteDoc, getDocs } from "firebase/firestore"
+import { doc, updateDoc, getDoc } from "firebase/firestore"
 
 const News = () => {
   const [newsData, setNewsData] = useState([])
@@ -62,18 +62,21 @@ const News = () => {
   const handleDelete = async targetId => {
     try {
       // 클라이언트 측 데이터 삭제
-      setNewsData(prevData => prevData.filter(item => item.id !== targetId))
+      setNewsData(prevData => prevData.filter(item => item.date !== targetId))
 
       // 파이어베이스에서 해당 문서 삭제
-      const querySnapshot = await getDocs(collection(db, "news"))
-      const newsList = querySnapshot.docs.map(doc => ({
-        ...doc.data(),
-        id: doc.id,
-      }))
+      const docRef = doc(db, "news", "NewsList")
+      const docSnap = await getDoc(docRef)
 
-      const targetDoc = newsList.find(item => item.id === targetId)
-      if (targetDoc) {
-        await deleteDoc(doc(db, "news", targetDoc.id))
+      if (docSnap.exists()) {
+        let list = docSnap.data().list || []
+
+        // targetId와 일치하는 항목을 제외한 새로운 배열 생성
+        list = list.filter(item => item.date !== targetId)
+
+        // 새로운 배열을 문서에 업데이트
+        await updateDoc(docRef, { list })
+
         alert("Data deleted successfully!")
       } else {
         console.log("Document with the given ID not found.")
@@ -122,7 +125,7 @@ const News = () => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <ChipWrapper>
-                      <StyledChip label="삭제" variant="outlined" onClick={() => handleDelete(item.id)} />
+                      <StyledChip label="삭제" variant="outlined" onClick={() => handleDelete(item.date)} />
                       <StyledChip label="수정" variant="outlined" onClick={() => toggleNewsDrawer("modify", item)} />
                     </ChipWrapper>
                     <NewInfoDataWrapper>{item.content}</NewInfoDataWrapper>
