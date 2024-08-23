@@ -1,53 +1,82 @@
 import { styled, Stack, Button } from "@mui/material"
 import TextField from "@mui/material/TextField"
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google"
-import { jwtDecode } from "jwt-decode" //토큰의 페이로드(payload) 부분에 포함된 정보를 읽을 수 있게 해준다
+import { useState } from "react"
+import { auth, provider, signInWithPopup } from "../firebase"
 
 import { McyIcon } from "../components/shared/McyIcon"
 import Footer from "../components/Layout/Footer"
+import { getMcyMasterIdApi } from "../api/mcyMasterIdApi"
 const Login = () => {
-  const clientId = "11557743503-tdft29ievm0nab6bljjchlf2eicrjjno.apps.googleusercontent.com"
+  const [currentId, setCurrentId] = useState("")
+  const [currentPassword, setCurrentPassword] = useState("")
 
-  const onSuccess = response => {
-    /* response는 유저 인증에 관한 다양한 정보를 담고 있고 credential이라는 JWT 토큰을 포함하고 있습니다. 
-       이 토큰을 디코딩하여 유저의 이메일, 이름, 프로필 이미지 등의 정보를 추출할 수 있습니다.
-    */
-    console.log("로그인 성공:", response)
+  // 로그인 성공시 main 페이지 이동 및 localStorage에 유저 정보 저장
+  const onSuccess = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider)
+      const userInfo = result.user
+      localStorage.setItem("userInfo", JSON.stringify({ email: userInfo.email, name: userInfo.displayName, picture: userInfo.photoURL, admin: false }))
 
-    // window.location.href = "http://localhost:5173/main" // 로그인 성공 시 리디렉션 URI로 이동
-    const userInfo = jwtDecode(response.credential)
-    const email = userInfo.email // 유저 이메일 정보
-    const name = userInfo.name // 유저 이름
-    const picture = userInfo.picture // 유저 프로필 사진
-
-    console.log("Email:", email)
-    console.log("Name:", name)
-    console.log("Picture:", picture)
+      window.location.href = "/main" // 로그인 성공 시 리디렉션 URI로 이동
+    } catch (error) {
+      console.error("로그인 실패:", error)
+      alert("로그인에 실패했습니다. 다시 시도해주세요.")
+    }
   }
 
-  const onError = () => {
-    console.log("로그인 실패")
-    alert("로그인에 실패했습니다. 다시 시도해주세요.")
+  const CurrentId = event => {
+    setCurrentId(event.target.value)
   }
+
+  const CurrentPassword = event => {
+    setCurrentPassword(event.target.value)
+  }
+
+  //마스터 로그인
+  const masterLogin = async () => {
+    try {
+      // 저장된 계정 정보 가져오기
+      const storedData = await getMcyMasterIdApi()
+
+      // // 아이디 확인
+      if (storedData.id !== currentId) {
+        alert("아이디를 다시 확인해주세요")
+        return
+      }
+      // 비밀번호 확인
+      if (storedData.password !== currentPassword) {
+        alert("비밀번호를 다시 확인해주세요")
+        return
+      }
+      // 아이디와 비밀번호가 모두 일치하는 경우
+
+      localStorage.setItem("userInfo", JSON.stringify({ name: "master", admin: true }))
+      window.location.href = "/main" // 로그인 성공 시 리디렉션 URI로 이동
+    } catch (error) {
+      console.error("Error fetching data: ", error)
+    }
+  }
+
   return (
     <>
       <LoginWrapper>
         <IconWrapper>
           <McyIcon />
         </IconWrapper>
-        <IdTextField placeholder="아이디" variant="outlined" />
-        <PasswordTextField placeholder="비밀번호" variant="outlined" type="password" />
-        <LoginButton variant="contained">로그인</LoginButton>
-        <GoogleLoginWrapper>
-          <GoogleOAuthProvider clientId={clientId} scope="profile email">
-            <GoogleLogin width="255" height="55" type="standard" shape="pill" onSuccess={onSuccess} onError={onError} />
-          </GoogleOAuthProvider>
-        </GoogleLoginWrapper>
+        <IdTextField placeholder="아이디" variant="outlined" onChange={CurrentId} />
+        <PasswordTextField placeholder="비밀번호" variant="outlined" type="password" onChange={CurrentPassword} />
+        <LoginButton variant="contained" onClick={masterLogin}>
+          로그인
+        </LoginButton>
+        <StyledGoogleButton onClick={onSuccess} variant="contained">
+          Sign in with Google
+        </StyledGoogleButton>
         <Footer />
       </LoginWrapper>
     </>
   )
 }
+
 const LoginWrapper = styled(Stack)`
   width: 100vw;
   height: calc(100dvh - 100px);
@@ -77,6 +106,7 @@ const IdTextField = styled(TextField)`
   & .MuiOutlinedInput-root {
     & fieldset {
       border: none;
+      background-color: none;
     }
   }
   & .MuiInputBase-input {
@@ -114,10 +144,15 @@ const LoginButton = styled(Button)`
   margin: 20px 0 0;
   font-size: 16px;
 `
-const GoogleLoginWrapper = styled(Stack)`
-  margin: 16px 0; // 원하는 margin 값 설정
-  align-items: center;
-  justify-content: center;
+
+const StyledGoogleButton = styled(Button)`
+  width: 255px;
+  height: 55px;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  border-radius: 17px;
+  margin: 20px 0 0;
+  font-weight: 600;
 `
 
 export default Login

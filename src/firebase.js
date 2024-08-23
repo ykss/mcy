@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
-import { getAuth } from "firebase/auth"
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import { getStorage } from "firebase/storage"
 
 const firebaseConfig = {
@@ -18,5 +18,6 @@ const app = initializeApp(firebaseConfig)
 const auth = getAuth(app) // 인증
 const db = getFirestore(app) // 파이어스토어
 const storage = getStorage(app) // 스토리지
+const provider = new GoogleAuthProvider()
 
-export { auth, db, storage, app }
+export { auth, db, storage, app, signInWithPopup, provider }
