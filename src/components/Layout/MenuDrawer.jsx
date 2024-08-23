@@ -8,9 +8,20 @@ import Button from "@mui/material/Button"
 import ListItemText from "@mui/material/ListItem"
 import ListItemButton from "@mui/material/ListItemButton"
 import ClearIcon from "@mui/icons-material/Clear"
+import { useEffect, useState } from "react"
+// import { useState } from "react"
 
 const MenuDrawer = ({ open, setOpen, navigate }) => {
+  const [userInfo, setUserInfo] = useState([])
+  useEffect(() => {
+    const localData = localStorage.getItem("userInfo")
+    if (localData) {
+      setUserInfo(JSON.parse(localData))
+    }
+    console.log(userInfo)
+  }, [])
   const toggleDrawer = () => {
+    console.log(userInfo)
     setOpen(false)
   }
 
@@ -24,10 +35,12 @@ const MenuDrawer = ({ open, setOpen, navigate }) => {
         <ExitIcon onClick={toggleDrawer} />
       </DrawerTop>
       <UserAreaWrapper onClick={() => handleNavigate("mypage")}>
-        <UserProfileWrapper />
+        <UserProfileWrapper>
+          <ProfileImage component="img" src={userInfo.picture} />
+        </UserProfileWrapper>
         <UserInfoWrapper>
-          <UserWrapper>계정이름</UserWrapper>
-          <IdWrapper>아이디@naver.com</IdWrapper>
+          <UserWrapper>{userInfo.name}</UserWrapper>
+          <IdWrapper>{userInfo.email}</IdWrapper>
         </UserInfoWrapper>
       </UserAreaWrapper>
       <ListAreaWrapper>
@@ -63,7 +76,7 @@ const MenuDrawer = ({ open, setOpen, navigate }) => {
         </ListButton>
       </ListAreaWrapper>
       <ButtonWrapper>
-        <LoginButton onClick={() => handleNavigate("login")}>로그인</LoginButton>
+        {/* <LoginButton onClick={() => handleNavigate("login")}>로그인</LoginButton> */}
         <LogoutButton
           onClick={() => {
             handleNavigate("")
@@ -111,9 +124,13 @@ const UserAreaWrapper = styled(Stack)`
 const UserProfileWrapper = styled(Stack)`
   width: 71px;
   height: 71px;
-  background-color: #d9d9d9;
   border: 1px solid black;
   border-radius: 25px;
+  overflow: hidden; // 이 부분을 추가하면 자식 요소가 부모의 border-radius를 따름.
+`
+const ProfileImage = styled(Box)`
+  width: 100%;
+  height: 100%;
 `
 
 const UserInfoWrapper = styled(Stack)`
@@ -207,13 +224,6 @@ const ButtonWrapper = styled(Stack)`
   gap: 8px;
   margin-right: 23px;
   margin-top: 160px;
-`
-
-const LoginButton = styled(Button)`
-  font-family: "Noto Sans";
-  font-weight: 600;
-  font-size: 16px;
-  color: #000;
 `
 
 const LogoutButton = styled(Button)`

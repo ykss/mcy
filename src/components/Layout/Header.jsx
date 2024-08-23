@@ -14,7 +14,7 @@ const Header = ({ setIsDrawerOpen }) => {
   }
 
   const handleGoMain = () => {
-    Navigate("/")
+    Navigate("/main")
   }
 
   return (
