@@ -47,9 +47,6 @@ const BirthDay = () => {
       <BirthdayWrapper>
         <SelectWrapper>
           <Typography fontSize={20}>월 선택</Typography>
-          <IconButton>
-            <BirthdayPlusButton />
-          </IconButton>
         </SelectWrapper>
         <ChipWrapper>
           {Array.from(

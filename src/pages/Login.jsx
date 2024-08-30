@@ -13,8 +13,7 @@ const Login = () => {
   // 일반 유저 로그인 성공시 main 페이지 이동
   const onSuccess = async () => {
     try {
-      localStorage.setItem("userInfo", JSON.stringify({ admin: false }))
-
+      localStorage.setItem("admin", false)
       window.location.href = "/main" // 로그인 성공 시 리디렉션 URI로 이동
     } catch (error) {
       console.error("로그인 실패:", error)
@@ -47,8 +46,7 @@ const Login = () => {
         return
       }
       // 아이디와 비밀번호가 모두 일치하는 경우
-
-      localStorage.setItem("userInfo", JSON.stringify({ name: "master", admin: true }))
+      localStorage.setItem("admin", true)
       window.location.href = "/main" // 로그인 성공 시 리디렉션 URI로 이동
     } catch (error) {
       console.error("Error fetching data: ", error)

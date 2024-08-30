@@ -25,6 +25,7 @@ import { doc, collection, deleteDoc, getDocs } from "firebase/firestore"
 const News = () => {
   const [newsData, setNewsData] = useState([])
   const [targetData, setTargetData] = useState([])
+  const [admin, setAdmin] = useState(false) // 초기 값 설정
   const [isNewsDrawerOpen, setIsNewsDrawerOpen] = useState(false)
   const [drawerMode, setDrawerMode] = useState("add") // "add" 또는 "modify"
 
@@ -41,6 +42,7 @@ const News = () => {
   // 첫 렌더링시 파이어베이스에서 데이터 가져오기
   useEffect(() => {
     fetchData()
+    setAdmin(localStorage.getItem("admin") === "true")
   }, [])
 
   // 날짜 이동
@@ -107,9 +109,11 @@ const News = () => {
           <IconButton onClick={handleNextMonth}>
             <ArrowRightIcon fontSize="large" />
           </IconButton>
-          <StyledIconButton onClick={() => toggleNewsDrawer("add", null)}>
-            <NewsPlusButton />
-          </StyledIconButton>
+          {admin ? (
+            <StyledIconButton onClick={() => toggleNewsDrawer("add", null)}>
+              <NewsPlusButton />
+            </StyledIconButton>
+          ) : null}
         </SelectWrapper>
         <RenderingArea>
           {newsData
