@@ -1,6 +1,7 @@
 import { styled, Stack, Button } from "@mui/material"
 import TextField from "@mui/material/TextField"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 import { McyIcon } from "../components/shared/McyIcon"
 import Footer from "../components/Layout/Footer"
@@ -9,12 +10,13 @@ import { getMcyMasterIdApi } from "../api/mcyMasterIdApi"
 const Login = () => {
   const [currentId, setCurrentId] = useState("")
   const [currentPassword, setCurrentPassword] = useState("")
-
+  const navigate = useNavigate()
   // 일반 유저 로그인 성공시 main 페이지 이동
   const onSuccess = async () => {
     try {
       localStorage.setItem("admin", false)
-      window.location.href = "/main" // 로그인 성공 시 리디렉션 URI로 이동
+      // window.location.href = "/main" // 로그인 성공 시 리디렉션 URI로 이동
+      navigate("/main") // 로그인 성공 시 리디렉션 URI로 이동
     } catch (error) {
       console.error("로그인 실패:", error)
       alert("로그인에 실패했습니다. 다시 시도해주세요.")
@@ -47,7 +49,7 @@ const Login = () => {
       }
       // 아이디와 비밀번호가 모두 일치하는 경우
       localStorage.setItem("admin", true)
-      window.location.href = "/main" // 로그인 성공 시 리디렉션 URI로 이동
+      navigate("/main") // 로그인 성공 시 리디렉션 URI로 이동// 로그인 성공 시 리디렉션 URI로 이동
     } catch (error) {
       console.error("Error fetching data: ", error)
     }
@@ -67,8 +69,8 @@ const Login = () => {
         <StyledGoogleButton onClick={onSuccess} variant="contained">
           Go to MCY
         </StyledGoogleButton>
-        <Footer />
       </LoginWrapper>
+      <Footer />
     </>
   )
 }
