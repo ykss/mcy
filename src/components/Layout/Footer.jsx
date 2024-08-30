@@ -14,8 +14,6 @@ const Footer = () => {
 }
 
 const FooterWrapper = styled(Stack)`
-  position: fixed;
-  bottom: 0;
   align-items: center;
   justify-content: center;
   width: 100%;
