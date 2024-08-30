@@ -7,8 +7,14 @@ import Button from "@mui/material/Button"
 import ListItemText from "@mui/material/ListItem"
 import ListItemButton from "@mui/material/ListItemButton"
 import ClearIcon from "@mui/icons-material/Clear"
+import { useEffect, useState } from "react"
 
 const MenuDrawer = ({ open, setOpen, navigate }) => {
+  const [admin, setAdmin] = useState(false) // 초기 값 설정
+  useEffect(() => {
+    setAdmin(localStorage.getItem("admin") === "true")
+  }, [])
+
   const toggleDrawer = () => {
     setOpen(false)
   }
@@ -60,7 +66,7 @@ const MenuDrawer = ({ open, setOpen, navigate }) => {
             handleNavigate("")
             setOpen(false)
           }}>
-          로그인
+          {admin ? "로그아웃" : "로그인"}
         </LogoutButton>
       </ButtonWrapper>
     </BoxWrapper>
