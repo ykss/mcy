@@ -1,6 +1,5 @@
 import Stack from "@mui/material/Stack"
 import { styled } from "@mui/material"
-import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 import Drawer from "@mui/material/Drawer"
 import List from "@mui/material/List"
@@ -8,20 +7,9 @@ import Button from "@mui/material/Button"
 import ListItemText from "@mui/material/ListItem"
 import ListItemButton from "@mui/material/ListItemButton"
 import ClearIcon from "@mui/icons-material/Clear"
-import { useEffect, useState } from "react"
-// import { useState } from "react"
 
 const MenuDrawer = ({ open, setOpen, navigate }) => {
-  const [userInfo, setUserInfo] = useState([])
-  useEffect(() => {
-    const localData = localStorage.getItem("userInfo")
-    if (localData) {
-      setUserInfo(JSON.parse(localData))
-    }
-    console.log(userInfo)
-  }, [])
   const toggleDrawer = () => {
-    console.log(userInfo)
     setOpen(false)
   }
 
@@ -34,15 +22,6 @@ const MenuDrawer = ({ open, setOpen, navigate }) => {
       <DrawerTop>
         <ExitIcon onClick={toggleDrawer} />
       </DrawerTop>
-      <UserAreaWrapper onClick={() => handleNavigate("mypage")}>
-        <UserProfileWrapper>
-          <ProfileImage component="img" src={userInfo.picture} />
-        </UserProfileWrapper>
-        <UserInfoWrapper>
-          <UserWrapper>{userInfo.name}</UserWrapper>
-          <IdWrapper>{userInfo.email}</IdWrapper>
-        </UserInfoWrapper>
-      </UserAreaWrapper>
       <ListAreaWrapper>
         <ListButton onClick={() => handleNavigate("news")}>
           <MenuListWrapper>
@@ -76,13 +55,12 @@ const MenuDrawer = ({ open, setOpen, navigate }) => {
         </ListButton>
       </ListAreaWrapper>
       <ButtonWrapper>
-        {/* <LoginButton onClick={() => handleNavigate("login")}>로그인</LoginButton> */}
         <LogoutButton
           onClick={() => {
             handleNavigate("")
             setOpen(false)
           }}>
-          로그아웃
+          로그인
         </LogoutButton>
       </ButtonWrapper>
     </BoxWrapper>
@@ -114,45 +92,9 @@ const ExitIcon = styled(ClearIcon)`
   font-size: 15px;
 `
 
-const UserAreaWrapper = styled(Stack)`
-  display: flex;
-  flex-direction: row;
-  gap: 17px;
-  margin-left: 32px;
-`
-
-const UserProfileWrapper = styled(Stack)`
-  width: 71px;
-  height: 71px;
-  border: 1px solid black;
-  border-radius: 25px;
-  overflow: hidden; // 이 부분을 추가하면 자식 요소가 부모의 border-radius를 따름.
-`
-const ProfileImage = styled(Box)`
-  width: 100%;
-  height: 100%;
-`
-
-const UserInfoWrapper = styled(Stack)`
-  justify-content: center;
-`
-
-const UserWrapper = styled(Typography)`
-  font-family: "noto Sans";
-  font-size: 16px;
-  font-weight: 600;
-`
-
-const IdWrapper = styled(Typography)`
-  font-family: "noto Sans";
-  font-size: 14px;
-  font-weight: 600;
-  color: #7c7c7c;
-`
-
 const ListAreaWrapper = styled(List)`
   width: 100%;
-  margin-top: 63px;
+  margin-top: 45px;
 `
 
 const ListButton = styled(ListItemButton)`

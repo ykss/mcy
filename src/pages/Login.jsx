@@ -1,21 +1,19 @@
 import { styled, Stack, Button } from "@mui/material"
 import TextField from "@mui/material/TextField"
 import { useState } from "react"
-import { auth, provider, signInWithPopup } from "../firebase"
 
 import { McyIcon } from "../components/shared/McyIcon"
 import Footer from "../components/Layout/Footer"
 import { getMcyMasterIdApi } from "../api/mcyMasterIdApi"
+
 const Login = () => {
   const [currentId, setCurrentId] = useState("")
   const [currentPassword, setCurrentPassword] = useState("")
 
-  // 로그인 성공시 main 페이지 이동 및 localStorage에 유저 정보 저장
+  // 일반 유저 로그인 성공시 main 페이지 이동
   const onSuccess = async () => {
     try {
-      const result = await signInWithPopup(auth, provider)
-      const userInfo = result.user
-      localStorage.setItem("userInfo", JSON.stringify({ email: userInfo.email, name: userInfo.displayName, picture: userInfo.photoURL, admin: false }))
+      localStorage.setItem("userInfo", JSON.stringify({ admin: false }))
 
       window.location.href = "/main" // 로그인 성공 시 리디렉션 URI로 이동
     } catch (error) {
@@ -38,7 +36,7 @@ const Login = () => {
       // 저장된 계정 정보 가져오기
       const storedData = await getMcyMasterIdApi()
 
-      // // 아이디 확인
+      // 아이디 확인
       if (storedData.id !== currentId) {
         alert("아이디를 다시 확인해주세요")
         return
@@ -69,7 +67,7 @@ const Login = () => {
           로그인
         </LoginButton>
         <StyledGoogleButton onClick={onSuccess} variant="contained">
-          Sign in with Google
+          Go to MCY
         </StyledGoogleButton>
         <Footer />
       </LoginWrapper>
