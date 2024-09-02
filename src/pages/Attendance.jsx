@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom"
 
 import dayjs from "dayjs"
 import "dayjs/locale/ko"
-import { v4 as uuidv4 } from "uuid" // uuid import
 
 import Stack from "@mui/material/Stack"
 import { styled } from "@mui/material"
@@ -27,7 +26,6 @@ import { getAttendanceApi, updateAttendanceApi } from "../api/attendanceDataApi"
 
 const Attendance = () => {
   const [members, setMembers] = useState([])
-  const [attendance, setAttendance] = useState([])
   const navigate = useNavigate()
   const [state, setState] = useState({
     selectedLeader: "대예배",
@@ -37,7 +35,6 @@ const Attendance = () => {
     attendanceAllData: {},
     isChecked: {},
     value: dayjs().subtract(dayjs().day() === 0 ? 7 : dayjs().day(), "day"),
-    id: uuidv4(),
   })
 
   const handleNavigate = () => {
@@ -57,23 +54,42 @@ const Attendance = () => {
   }, [])
 
   useEffect(() => {
-    const AttendancefetchData = async () => {
+    const fetchAttendanceData = async () => {
       try {
-        const data = await getAttendanceApi()
-        setAttendance(data)
+        const date = state.value.format("YYYY-MM-DD")
+        const getData = await getAttendanceApi(date)
+        if (getData) {
+          setState(prevState => ({
+            ...prevState,
+            isChecked: getData.cellData
+              ? Object.assign(
+                  {},
+                  ...Object.values(getData.cellData).map(members =>
+                    members.reduce((acc, member) => {
+                      acc[member] = true
+                      return acc
+                    }, {}),
+                  ),
+                )
+              : {},
+            adultCount: getData.adultCount || 0,
+            memberCount: getData.memberCount || 0,
+            totalCount: getData.totalCount || 0,
+          }))
+        }
       } catch (error) {
-        console.error("Error fetching data: ", error)
+        console.error("Error fetching attendance data: ", error)
       }
     }
-    AttendancefetchData()
-  }, [attendance])
+    fetchAttendanceData()
+  }, [state.value])
 
   // 출석 데이터 저장
   const handleUpdateAttendance = async (isChecked, adultCount, totalCount) => {
     try {
-      const { id } = state
+      const date = state.value.format("YYYY-MM-DD")
       const attendanceData = {
-        date: state.value.format("YYYY-MM-DD"),
+        date,
         adultCount,
         memberCount: Object.values(isChecked).filter(Boolean).length,
         totalCount,
@@ -83,7 +99,7 @@ const Attendance = () => {
         }, {}),
       }
 
-      await updateAttendanceApi(id, attendanceData)
+      await updateAttendanceApi(date, attendanceData)
       console.log("Attendance data updated successfully!")
     } catch (error) {
       console.error("Error updating attendance data: ", error)
@@ -205,7 +221,7 @@ const Attendance = () => {
       handleUpdateAttendance(state.isChecked, state.adultCount, state.totalCount)
     }, 300)
     return () => clearTimeout(delay) // 이펙트 정리
-  }, [state.isChecked, state.adultCount, state.totalCount, state])
+  }, [state.isChecked, state.adultCount, state.totalCount])
 
   return (
     <Layout>
@@ -218,7 +234,7 @@ const Attendance = () => {
             </LocalizationProvider>
             <ArrowIconWrapper onClick={handleNextDayClick} icon={ArrowRightIcon} />
           </DateWrapper>
-          <SettingsIcon />
+          <SettingsIconWrapper />
         </CalendarWrapper>
         <LeaderInfoWrapper>
           <SelectWrapper
@@ -233,7 +249,7 @@ const Attendance = () => {
               },
             }}>
             {members
-              .sort((a, b) => a.cellNumber - b.cellNumber) // Sort by cellNumber
+              .sort((a, b) => a.cellNumber - b.cellNumber)
               .map(item => (
                 <MenuItemWrapper key={item.id} value={item.cell || ""}>
                   {item.cell}
@@ -271,16 +287,16 @@ const Attendance = () => {
           </DataAreaWrapper>
         </DataWrapper>
         <CounterWrapper>
-          <AdultDataWrapper variant="outlined">
-            <AddIconWrapper onClick={handleAdultPlus}>+</AddIconWrapper>
-            <MinusIconWrapper onClick={handleAdultMinus}>-</MinusIconWrapper>
-          </AdultDataWrapper>
           <AttendanceTotalDataWrapper>
             <AttendanceTextWrapper>출석 :</AttendanceTextWrapper>
             <MemberCountWrapper>{state.memberCount}</MemberCountWrapper>
             <SlashWrapper>/</SlashWrapper>
             <TotalCountWrapper>{state.totalCount}</TotalCountWrapper>
           </AttendanceTotalDataWrapper>
+          <AdultDataWrapper variant="outlined">
+            <AddIconWrapper onClick={handleAdultPlus}>+</AddIconWrapper>
+            <MinusIconWrapper onClick={handleAdultMinus}>-</MinusIconWrapper>
+          </AdultDataWrapper>
         </CounterWrapper>
       </AttendanceWrapper>
     </Layout>
@@ -310,7 +326,12 @@ const DateWrapper = styled(Stack)`
 
 const ArrowIconWrapper = styled(({ icon: IconComponent, ...props }) => <IconComponent {...props} />)`
   color: #69535f;
-  font-size: 35px;
+  font-size: 40px;
+  font-weight: 700;
+`
+
+const SettingsIconWrapper = styled(SettingsIcon)`
+  font-size: 30px;
   font-weight: 700;
 `
 
@@ -323,7 +344,7 @@ const MobileDateWrapper = styled(MobileDatePicker)`
     padding: 0px;
     font-family: "Inter";
     font-weight: 600;
-    font-size: 15px;
+    font-size: 25px;
   }
   & .MuiInputBase-input {
     justify-content: center;
@@ -349,7 +370,7 @@ const LeaderInfoWrapper = styled(Stack)`
 const SelectWrapper = styled(Select)`
   font-family: "Noto Sans";
   font-weight: 600;
-  font-size: 20px;
+  font-size: 30px;
   background: #c7bdeb;
   border-radius: 22px;
   border: 1px solid red;
@@ -369,9 +390,10 @@ const SelectWrapper = styled(Select)`
 
 const MenuItemWrapper = styled(MenuItem)`
   font-weight: 500;
+  font-size: 20px;
   &.Mui-selected {
     font-weight: 700;
-    font-size: 15px;
+    font-size: 20px;
   }
 `
 
@@ -379,7 +401,7 @@ const StatusWrapper = styled(Stack)`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #d9e8ea;
+  background: #ede8ff;
   width: 25%;
   height: 80%;
   border-radius: 22px;
@@ -389,6 +411,8 @@ const StatusWrapper = styled(Stack)`
 const PeopleAltIconWrapper = styled(PeopleAltIcon)`
   width: 80%;
   height: 70%;
+  opacity: 0.5;
+  fill: black;
 `
 
 const DataWrapper = styled(Stack)`
@@ -424,8 +448,8 @@ const MemberDataWrapper = styled(Stack)`
   background-color: #f0f0f0;
   border-radius: 16px;
   width: 85%;
-  height: 95%;
-  margin: 0px auto;
+  height: 70px;
+  margin: 5px auto;
 `
 
 const CheckBoxWrapper = styled(Checkbox)`
@@ -454,7 +478,7 @@ const CounterWrapper = styled(Stack)`
 `
 
 const AdultDataWrapper = styled(ButtonGroup)`
-  width: 40%;
+  width: 60%;
   height: 70%;
   justify-content: center;
   align-items: center;
@@ -465,16 +489,16 @@ const AddIconWrapper = styled(Button)`
   height: 100%;
   border: 1px solid #000;
   border-radius: 25px;
-  background-color: #b4dfc3;
-  font-size: 30px;
+  background-color: #ede8ff;
+  font-size: 40px;
   font-weight: 700;
   color: #000;
   :active {
     border: 1px solid #000;
     border-bottom-left-radius: 22px;
     border-top-left-radius: 22px;
-    background-color: #b4dfc3;
-    font-size: 30px;
+    background-color: #ede8ff;
+    font-size: 40px;
     font-weight: 700;
     color: #000;
   }
@@ -482,8 +506,8 @@ const AddIconWrapper = styled(Button)`
     border: 1px solid #000;
     border-bottom-left-radius: 25px;
     border-top-left-radius: 25px;
-    background-color: #b4dfc3;
-    font-size: 30px;
+    background-color: #ede8ff;
+    font-size: 40px;
     font-weight: 700;
     color: #000;
   }
@@ -494,16 +518,16 @@ const MinusIconWrapper = styled(Button)`
   height: 100%;
   border: 1px solid #000;
   border-radius: 25px;
-  background-color: #b4dfc3;
-  font-size: 30px;
+  background-color: #ede8ff;
+  font-size: 40px;
   font-weight: 700;
   color: #000;
   :active {
     border: 1px solid #000;
     border-bottom-right-radius: 22px;
     border-top-right-radius: 22px;
-    background-color: #b4dfc3;
-    font-size: 30px;
+    background-color: #ede8ff;
+    font-size: 40px;
     font-weight: 700;
     color: #000;
   }
@@ -511,16 +535,16 @@ const MinusIconWrapper = styled(Button)`
     border: 1px solid #000;
     border-bottom-right-radius: 25px;
     border-top-right-radius: 25px;
-    background-color: #b4dfc3;
-    font-size: 30px;
+    background-color: #ede8ff;
+    font-size: 40px;
     font-weight: 700;
     color: #000;
   }
 `
 
 const AttendanceTotalDataWrapper = styled(Stack)`
-  background-color: #f3c5c5;
-  width: 60%;
+  background-color: #c7bdeb;
+  width: 40%;
   height: 70%;
   border: 1px solid black;
   flex-direction: row;
