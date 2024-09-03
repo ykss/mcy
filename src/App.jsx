@@ -6,11 +6,8 @@ import Main from "./pages/Main"
 import MyPage from "./pages/MyPage"
 import BirthDay from "./pages/BirthDay"
 import Attendance from "./pages/Attendance"
-import AttendanceStatus from "./pages/AttendanceStatus"
 import News from "./pages/News"
 import Login from "./pages/Login"
-// import ReaderAdmin from "./pages/ReaderAdmin.jsx";
-// import MemberAdmin from "./pages/MemberAdmin.jsx";
 import theme from "./assets/theme/theme.js"
 
 import "./App.css"
