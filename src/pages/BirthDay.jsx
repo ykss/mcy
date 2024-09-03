@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import Stack from "@mui/material/Stack"
-import { IconButton, styled } from "@mui/material"
+import { styled } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import Chip from "@mui/material/Chip"
 import Grid from "@mui/material/Grid"
@@ -8,7 +8,6 @@ import dayjs from "dayjs"
 import "dayjs/locale/ko"
 dayjs.locale("ko")
 
-import { BirthdayPlusButton } from "../components/shared/PlusButton"
 import Layout from "../components/Layout/Layout"
 import { McyBirthdayApi } from "../api/mcyBirthdayApi"
 
