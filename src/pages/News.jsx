@@ -112,9 +112,11 @@ const News = () => {
           <IconButton onClick={handleNextMonth}>
             <ArrowRightIcon fontSize="large" />
           </IconButton>
-          <StyledIconButton onClick={() => toggleNewsDrawer("add", null)}>
-            <NewsPlusButton />
-          </StyledIconButton>
+          {admin ? (
+            <StyledIconButton onClick={() => toggleNewsDrawer("add", null)}>
+              <NewsPlusButton />
+            </StyledIconButton>
+          ) : null}
         </SelectWrapper>
         <RenderingArea>
           {newsData
@@ -126,10 +128,12 @@ const News = () => {
                     <NewsItem>{dayjs(item.date).format("M월 D일")} 광고</NewsItem>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <ChipWrapper>
-                      <StyledChip label="삭제" variant="outlined" onClick={() => handleDelete(item.date)} />
-                      <StyledChip label="수정" variant="outlined" onClick={() => toggleNewsDrawer("modify", item)} />
-                    </ChipWrapper>
+                    {admin ? (
+                      <ChipWrapper>
+                        <StyledChip label="삭제" variant="outlined" onClick={() => handleDelete(item.date)} />
+                        <StyledChip label="수정" variant="outlined" onClick={() => toggleNewsDrawer("modify", item)} />
+                      </ChipWrapper>
+                    ) : null}
                     <NewInfoDataWrapper>{item.content}</NewInfoDataWrapper>
                   </AccordionDetails>
                 </StyledAccordion>
