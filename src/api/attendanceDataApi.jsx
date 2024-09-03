@@ -1,16 +1,19 @@
 import { collection, getDocs, getDoc, doc, updateDoc, setDoc } from "firebase/firestore"
 import { db } from "../firebase"
 
-// MCY member 불러오기
-const getAttendanceApi = async () => {
+// 출석 데이터 불러오기
+const getAttendanceApi = async date => {
   try {
     const attendanceCollection = collection(db, "attendanceData")
     const attendanceSnapShot = await getDocs(attendanceCollection)
 
     const attendanceList = attendanceSnapShot.docs.map(doc => ({
+      id: doc.id,
       ...doc.data(),
     }))
-    return attendanceList
+    const specificAttendance = attendanceList.find(att => att.date === date)
+    console.log("MCY member data get successfully!")
+    return specificAttendance
   } catch (error) {
     console.error("Error getting documents: ", error)
   }
@@ -32,7 +35,7 @@ const updateAttendanceApi = async (id, attendanceData) => {
     }
   } catch (error) {
     console.error("Error updating document: ", error)
-    throw error // Optionally rethrow the error for handling in the caller function
+    throw error
   }
 }
 export { getAttendanceApi, updateAttendanceApi }
