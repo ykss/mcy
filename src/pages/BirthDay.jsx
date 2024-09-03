@@ -136,13 +136,16 @@ const ListTitle = styled(Stack)`
 
 const ListArea = styled(Stack)`
   background-color: #f0f0f0;
-  height: 77%;
   width: 90%;
+  height: 77%;
   margin: 0 auto;
   border: 1px solid #000000;
   border-radius: 10px;
   position: relative; /* 부모 요소에 상대적 위치를 설정 */
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
 `
 
 const List = styled(Stack)`
