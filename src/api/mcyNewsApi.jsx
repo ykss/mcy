@@ -21,7 +21,7 @@ const McyNewsApi = async () => {
   }
 }
 // 파이어 베이스 저장
-const handleSave = async (selectedDateInfo, setTextValue, textValue, fetchData) => {
+const handleSave = async (selectedDateInfo, setTextValue, textValue, fetchData, toggleDrawer) => {
   try {
     const dateString = selectedDateInfo // 날짜를 문자열로 변환
     const docRef = doc(db, "news", "NewsList")
@@ -55,6 +55,7 @@ const handleSave = async (selectedDateInfo, setTextValue, textValue, fetchData) 
     alert("Data saved successfully!")
     setTextValue("")
     fetchData()
+    toggleDrawer()
   } catch (e) {
     console.error("Error saving document: ", e)
     alert("Error saving data.")
@@ -62,7 +63,7 @@ const handleSave = async (selectedDateInfo, setTextValue, textValue, fetchData) 
 }
 
 // 파이어 베이스 수정
-const handleUpdate = async (selectedDateInfo, textValue, fetchData) => {
+const handleUpdate = async (selectedDateInfo, textValue, fetchData, toggleDrawer) => {
   try {
     if (selectedDateInfo) {
       // selectedDateInfo가 있으면 기존 문서 가져오기
@@ -90,6 +91,7 @@ const handleUpdate = async (selectedDateInfo, textValue, fetchData) => {
         }
 
         fetchData()
+        toggleDrawer()
       } else {
         alert("Document does not exist.")
       }
