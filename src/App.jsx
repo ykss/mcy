@@ -9,6 +9,7 @@ import Attendance from "./pages/Attendance"
 import News from "./pages/News"
 import Login from "./pages/Login"
 import theme from "./assets/theme/theme.js"
+import AttendanceStatus from "./pages/AttendanceStatus.jsx"
 
 import "./App.css"
 
@@ -23,7 +24,7 @@ function App() {
           <Route path="/attendance" element={<Attendance />} />
           <Route path="/news" element={<News />} />
           <Route path="/" element={<Login />} />
-
+          <Route path="/attendanceStatus" element={<AttendanceStatus />} />
           {/* 셀 관리 페이지 */}
           {/* <Route path="/reader-admin" element={<ReaderAdmin />} /> */}
           {/* <Route path="/member-admin" element={<MemberAdmin />} /> */}

@@ -72,9 +72,9 @@ const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
       </TextFiledArea>
       <SaveChipWrapper>
         {mode === "add" ? (
-          <StyledSaveChip label="저장" onClick={() => handleSave(selectedDateInfo, setTextValue, textValue, fetchData)} />
+          <StyledSaveChip label="저장" onClick={() => handleSave(selectedDateInfo, setTextValue, textValue, fetchData, toggleDrawer)} />
         ) : (
-          <StyledSaveChip label="수정" onClick={() => handleUpdate(selectedDateInfo, textValue, fetchData)} />
+          <StyledSaveChip label="수정" onClick={() => handleUpdate(selectedDateInfo, textValue, fetchData, toggleDrawer)} />
         )}
       </SaveChipWrapper>
     </NewsDrawerWrapper>
@@ -92,7 +92,7 @@ const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
 const DrawerWrapper = styled(Drawer)`
   .MuiDrawer-paper {
     width: 99%;
-    height: 50%;
+    height: 65%;
     margin: auto;
     background-color: #b4dfc3;
     border: 1px solid #000000;
@@ -107,20 +107,20 @@ const NewsDrawerWrapper = styled(Stack)`
 `
 
 const StyledExitButton = styled(IconButton)`
-  display: flex;
-  flex-direction: row;
-  width: 10%;
-  height: 8%;
+  width: 100%;
+  height: 5%;
 `
 const ExitIcon = styled(ClearIcon)`
   margin: auto 10px;
-  font-size: 25px;
+  font-size: 35px;
+  position: absolute;
+  top: 10px;
+  right: 1%;
 `
 
 const DateWrapper = styled(Stack)`
   width: 100%;
-  height: 12%;
-
+  height: 10%;
   flex-direction: row;
   align-items: center;
 `
@@ -129,7 +129,7 @@ const TextFiledArea = styled(Stack)`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 60%;
+  height: 55%;
   margin-top: 10px;
 `
 const StyledArrowLeftIcon = styled(ArrowLeftIcon)`
@@ -165,7 +165,7 @@ const StyledTextField = styled(TextField)`
 
 const SaveChipWrapper = styled(Stack)`
   height: 10%;
-  margin-top: 10px;
+  margin-top: 8px;
   margin-right: 10px;
   flex-direction: row;
   justify-content: right;
