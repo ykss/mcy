@@ -10,6 +10,7 @@ const McyNewsApi = async () => {
     if (docSnap.exists()) {
       // 문서에서 list 배열을 가져오기
       const newsList = docSnap.data().list
+      console.log("파이어베이스에서 가져온 데이터 입니다", newsList)
       // entries 배열을 각 인덱스의 date를 기준으로 내림차순 정렬
       return newsList ? newsList.sort((a, b) => new Date(b.date) - new Date(a.date)) : []
     } else {

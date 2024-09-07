@@ -39,6 +39,7 @@ const BirthDay = () => {
   useEffect(() => {
     const filteredData = birthDayData.filter(item => Number(dayjs(item.date).format("M")) === monthChipId).sort((a, b) => Number(dayjs(a.date).format("DD")) - Number(dayjs(b.date).format("DD")))
     setSelectedData(filteredData)
+    console.log("필터된 데이터 입니다", filteredData)
   }, [monthChipId, birthDayData])
 
   return (
