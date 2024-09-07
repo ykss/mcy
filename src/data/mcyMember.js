@@ -52,8 +52,63 @@ export const mcyMember = [
   {
     id: nanoid(10),
     cell: "이화승 / 류지연 셀",
-    isChecked: false,
-    cellMember: ["이화승", "류지연", "국다혜", "김태경", "서다현", "유지원", "윤동하", "전한나", "최대한", "황윤표", "최현빈"],
+    cellMember: [
+      {
+        id: nanoid(5),
+        isChecked: false,
+        cellMember: "이화승",
+      },
+      {
+        id: nanoid(5),
+        isChecked: false,
+        cellMember: "류지연",
+      },
+      {
+        id: nanoid(5),
+        isChecked: false,
+        cellMember: "국다혜",
+      },
+      {
+        id: nanoid(5),
+        isChecked: false,
+        cellMember: "김태경",
+      },
+      {
+        id: nanoid(5),
+        isChecked: false,
+        cellMember: "서다현",
+      },
+      {
+        id: nanoid(5),
+        isChecked: false,
+        cellMember: "유지원",
+      },
+      {
+        id: nanoid(5),
+        isChecked: false,
+        cellMember: "윤동하",
+      },
+      {
+        id: nanoid(5),
+        isChecked: false,
+        cellMember: "전한나",
+      },
+      {
+        id: nanoid(5),
+        isChecked: false,
+        cellMember: "최대한",
+      },
+      {
+        id: nanoid(5),
+        isChecked: false,
+        cellMember: "황윤표",
+      },
+      {
+        id: nanoid(5),
+        isChecked: false,
+        cellMember: "최현빈",
+      },
+    ],
   },
   {
     id: nanoid(10),
