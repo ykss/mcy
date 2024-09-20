@@ -7,29 +7,13 @@ import Typography from "@mui/material/Typography"
 import IconButton from "@mui/material/IconButton"
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
-import html2canvas from "html2canvas"
 import { Button } from "@mui/material"
 
 import Layout from "../components/Layout/Layout"
+import { shareKakao } from "../utils/kakaoShareButton"
+import { KakaoIcon } from "../components/shared/KakaoIcon"
 
 const AttendanceStatus = () => {
-  // const divRef = useRef < HTMLDivElement > null // 캡처할 영역을 참조
-
-  const handleCapture = async () => {
-    const target = document.getElementById("download")
-    if (!target) {
-      return alert("사진 저장에 실패했습니다.")
-    }
-    html2canvas(target).then(canvas => {
-      const link = document.createElement("a")
-      document.body.appendChild(link)
-      link.href = canvas.toDataURL("image/png")
-      link.download = "Haru4cut.png" // 다운로드 이미지 파일 이름
-      link.click()
-      document.body.removeChild(link)
-    })
-  }
-
   return (
     <div id="download">
       {/* 캡처할 영역 */}
@@ -62,71 +46,44 @@ const AttendanceStatus = () => {
             </RenderingArea>
             <CountWrapper>
               <MemberCountWrapper>
-                <Typography textAlign="center" sx={{ paddingTop: 1, borderRight: 1, borderBottom: 1 }}>
+                <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center", borderRight: 1, borderBottom: 1 }}>
                   신중석
                 </Typography>
-                <Typography textAlign="center" sx={{ paddingTop: 1, borderBottom: 1 }}>
+                <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center", borderBottom: 1 }}>
                   108명
                 </Typography>
-                <Typography textAlign="center" sx={{ paddingTop: 1, borderRight: 1 }}>
+                <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center", borderRight: 1 }}>
                   기타
                 </Typography>
-                <Typography textAlign="center" sx={{ paddingTop: 1 }}>
+                <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center" }}>
                   12명
                 </Typography>
               </MemberCountWrapper>
               <TotalCountWrapper>
-                <Typography textAlign="center" sx={{ borderRight: 1, paddingTop: 3 }}>
+                <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center", borderRight: 1 }}>
                   총인원
                 </Typography>
-                <Typography textAlign="center" sx={{ paddingTop: 3 }}>
+                <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center" }}>
                   12명
                 </Typography>
               </TotalCountWrapper>
             </CountWrapper>
             {/* 캡처 및 콘솔 출력 버튼 */}
-            <Button variant="contained" color="primary" onClick={handleCapture}>
-              캡처 및 콘솔 출력
-            </Button>
+            <SaveWrapper>
+              {/* <SaveButton variant="contained" color="primary" onClick={shareKakao}>
+                <KakaoIcon />
+                공유
+              </SaveButton> */}
+              <IconButton onClick={shareKakao}>
+                <KakaoIcon />
+              </IconButton>
+            </SaveWrapper>
           </StatusPaper>
         </AttendanceStatusWrapper>
       </Layout>
     </div>
   )
 }
-
-const CountWrapper = styled(Stack)`
-  width: 90%;
-  height: 75px;
-  margin: 0 auto;
-  justify-content: space-around;
-  flex-direction: row;
-  align-items: center;
-  // gap: 10px;
-`
-const MemberCountWrapper = styled(Stack)`
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  width: 50%;
-  height: 90%;
-  border: 1px solid #000000;
-`
-const TotalCountWrapper = styled(Stack)`
-  display: grid;
-  grid-template-columns: 2fr 3fr;
-  width: 40%;
-  height: 90%;
-  border: 1px solid #000000;
-`
-
-const RenderingArea = styled(Stack)`
-  width: 100%;
-  height: 55%;
-  overflow-y: auto;
-  &::-webkit-scrollbar {
-    width: 0;
-  }
-`
 
 const AttendanceStatusWrapper = styled(Stack)`
   width: 100vw;
@@ -179,6 +136,53 @@ const MemberBox = styled(Stack)`
 
 const StyledTypography = styled(Typography)`
   width: 20%;
+`
+const RenderingArea = styled(Stack)`
+  width: 100%;
+  height: 55%;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+`
+const CountWrapper = styled(Stack)`
+  width: 90%;
+  height: 14%;
+  margin: 0 auto;
+  justify-content: space-around;
+  flex-direction: row;
+  align-items: center;
+`
+const MemberCountWrapper = styled(Stack)`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  width: 50%;
+  height: 90%;
+  border: 1px solid #000000;
+`
+const TotalCountWrapper = styled(Stack)`
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  width: 40%;
+  height: 90%;
+  border: 1px solid #000000;
+`
+const SaveWrapper = styled(Stack)`
+  width: 90%;
+  height: 15%;
+  margin: 0 auto;
+  align-items: flex-end;
+  justify-content: center;
+`
+
+const SaveButton = styled(Button)`
+  width: 35%;
+  height: 45px;
+  border: 1px solid #000;
+  border-radius: 16px;
+  background-color: #ede8ff;
+  margin-right: 5px;
+  gap: 10px;
 `
 
 export default AttendanceStatus
