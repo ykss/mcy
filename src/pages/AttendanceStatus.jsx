@@ -8,12 +8,19 @@ import IconButton from "@mui/material/IconButton"
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import { Button } from "@mui/material"
+import { useState } from "react"
 
 import Layout from "../components/Layout/Layout"
 import { shareKakao } from "../utils/kakaoShareButton"
 import { KakaoIcon } from "../components/shared/KakaoIcon"
+import { handleNextWeek } from "../utils/handleNextWeek"
+import { handlePreviousWeek } from "../utils/handlePreviousWeek"
 
 const AttendanceStatus = () => {
+  const today = dayjs()
+  const dayOfWeek = today.day() // 0은 일요일, 6은 토요일
+  const lastSunday = today.subtract(dayOfWeek, "day")
+  const [selectedDateInfo, setSelectedDateInfo] = useState(lastSunday.format("YYYY-MM-DD"))
   return (
     <div id="download">
       {/* 캡처할 영역 */}
@@ -21,11 +28,11 @@ const AttendanceStatus = () => {
         <AttendanceStatusWrapper>
           <StatusPaper>
             <SelectWrapper>
-              <IconButton>
+              <IconButton onClick={() => handlePreviousWeek(selectedDateInfo, setSelectedDateInfo)}>
                 <ArrowLeftIcon fontSize="large" />
               </IconButton>
-              <DateWrapper>2024.05.15</DateWrapper>
-              <IconButton>
+              <DateWrapper>{dayjs(selectedDateInfo).format("YYYY.MM.DD")}</DateWrapper>
+              <IconButton onClick={() => handleNextWeek(selectedDateInfo, setSelectedDateInfo)}>
                 <ArrowRightIcon fontSize="large" />
               </IconButton>
             </SelectWrapper>
@@ -70,13 +77,13 @@ const AttendanceStatus = () => {
             </CountWrapper>
             {/* 캡처 및 콘솔 출력 버튼 */}
             <SaveWrapper>
-              {/* <SaveButton variant="contained" color="primary" onClick={shareKakao}>
+              <SaveButton variant="contained" color="primary" onClick={shareKakao}>
+                {/* <KakaoIcon /> */}
+                공유하기
+              </SaveButton>
+              {/* <IconButton onClick={shareKakao}>
                 <KakaoIcon />
-                공유
-              </SaveButton> */}
-              <IconButton onClick={shareKakao}>
-                <KakaoIcon />
-              </IconButton>
+              </IconButton> */}
             </SaveWrapper>
           </StatusPaper>
         </AttendanceStatusWrapper>
@@ -156,8 +163,8 @@ const CountWrapper = styled(Stack)`
 const MemberCountWrapper = styled(Stack)`
   display: grid;
   grid-template-columns: 1fr 2fr;
-  width: 50%;
-  height: 90%;
+  width: 155px;
+  height: 60px;
   border: 1px solid #000000;
 `
 const TotalCountWrapper = styled(Stack)`
@@ -176,7 +183,7 @@ const SaveWrapper = styled(Stack)`
 `
 
 const SaveButton = styled(Button)`
-  width: 35%;
+  width: 30%;
   height: 45px;
   border: 1px solid #000;
   border-radius: 16px;
