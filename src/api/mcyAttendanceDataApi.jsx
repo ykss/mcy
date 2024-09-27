@@ -2,20 +2,23 @@ import { collection, getDocs, getDoc, doc, updateDoc, setDoc } from "firebase/fi
 import { db } from "../firebase"
 
 // 출석 데이터 불러오기
-const getAttendanceApi = async date => {
+const getAttendanceApi = async selectedDateInfo => {
   try {
-    const attendanceCollection = collection(db, "attendanceData")
-    const attendanceSnapShot = await getDocs(attendanceCollection)
+    // 특정 문서(NewsList)를 가져오기
+    const docRef = doc(db, "attendanceData", selectedDateInfo)
+    const docSnap = await getDoc(docRef)
 
-    const attendanceList = attendanceSnapShot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }))
-    const specificAttendance = attendanceList.find(att => att.date === date)
-    console.log("MCY member data get successfully!")
-    return specificAttendance
+    if (docSnap.exists()) {
+      // 문서에서 list 배열을 가져오기
+      const memberList = docSnap.data()
+      // entries 배열을 각 인덱스의 date를 기준으로 내림차순 정렬
+      return memberList
+    } else {
+      console.log("No such document!")
+      return []
+    }
   } catch (error) {
-    console.error("Error getting documents: ", error)
+    console.error("문서 가져오기 에러: ", error)
   }
 }
 

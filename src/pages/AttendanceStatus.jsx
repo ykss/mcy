@@ -14,8 +14,7 @@ import Layout from "../components/Layout/Layout"
 import { shareKakao } from "../utils/shareKakao"
 import { handleNextWeek } from "../utils/handleNextWeek"
 import { handlePreviousWeek } from "../utils/handlePreviousWeek"
-import { getAttendanceApi } from "../api/attendanceDataApi"
-
+import { getAttendanceApi } from "../api/mcyAttendanceDataApi"
 const AttendanceStatus = () => {
   const today = dayjs()
   const dayOfWeek = today.day() // 0은 일요일, 6은 토요일
@@ -56,22 +55,37 @@ const AttendanceStatus = () => {
             </SelectWrapper>
             <RenderingArea>
               {/* 셀 리스트 */}
-              {cellData.map(item => (
-                <BoxWrapper key={item.cell}>
+              {cellData ? (
+                cellData.map(item => (
+                  <BoxWrapper key={item.cell}>
+                    <CellNameBox>
+                      <Typography fontSize={12}>{item.cell}</Typography>
+                    </CellNameBox>
+                    <MemberBox>
+                      {item.checkedMember.map(member => (
+                        <StyledTypography>{member}</StyledTypography>
+                      ))}
+                      {/* 다른 멤버들 */}
+                    </MemberBox>
+                    <CountBox>
+                      <Typography fontSize={12}>{item.checkedMember.length}</Typography>
+                    </CountBox>
+                  </BoxWrapper>
+                ))
+              ) : (
+                <BoxWrapper>
                   <CellNameBox>
-                    <Typography fontSize={12}>{item.cell}</Typography>
+                    <Typography fontSize={12}></Typography>
                   </CellNameBox>
                   <MemberBox>
-                    {item.checkedMember.map(member => (
-                      <StyledTypography>{member}</StyledTypography>
-                    ))}
+                    <StyledTypography></StyledTypography>
                     {/* 다른 멤버들 */}
                   </MemberBox>
                   <CountBox>
-                    <Typography fontSize={12}>{item.checkedMember.length}</Typography>
+                    <Typography fontSize={12}></Typography>
                   </CountBox>
                 </BoxWrapper>
-              ))}
+              )}
             </RenderingArea>
             <CountWrapper>
               <MemberCountWrapper>
