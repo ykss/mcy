@@ -37,7 +37,11 @@ const BirthDay = () => {
 
   // Chip 아이디 값이 변경될때마다 필터를 통해 해당 월의 데이터만 추출
   useEffect(() => {
-    const filteredData = birthDayData.filter(item => Number(dayjs(item.date).format("M")) === monthChipId).sort((a, b) => Number(dayjs(a.date).format("DD")) - Number(dayjs(b.date).format("DD")))
+    const filteredData = birthDayData.filter(item => {
+      const date = dayjs(item.date, "MM-DD") // 날짜 형식에 맞게 수정
+      const month = date.month() + 1 // dayjs는 0부터 시작하므로 +1
+      return month === monthChipId
+    })
     setSelectedData(filteredData)
   }, [monthChipId, birthDayData])
 
@@ -64,7 +68,7 @@ const BirthDay = () => {
             <ListWrapper>
               {selectedData.map(item => (
                 <List key={item.name}>
-                  <Typography fontSize={14}>{dayjs(item.date).format("DD")}일</Typography>
+                  <Typography fontSize={14}>{item.date.substring(3, 5)}일</Typography>
                   <Typography fontSize={14}>{item.name}</Typography>
                 </List>
               ))}

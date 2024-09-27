@@ -1,8 +1,10 @@
 import { getDoc, doc, updateDoc, setDoc } from "firebase/firestore"
 import { db } from "../firebase"
 
+
 // MCY member 불러오기
 const getAttendanceApi = async selectedDateInfo => {
+
   try {
     // 특정 문서를 가져오기
     const docRef = doc(db, "attendanceData", selectedDateInfo)
@@ -12,11 +14,13 @@ const getAttendanceApi = async selectedDateInfo => {
       // 문서에서 list 배열을 가져오기
       const checkList = docSnap.data()
 
+
       return checkList
     } else {
       console.log("No such document!")
       return []
     }
+
   } catch (error) {
     console.error("문서 가져오기 에러: ", error)
   }
@@ -37,7 +41,7 @@ const updateAttendanceApi = async (id, attendanceData) => {
     }
   } catch (error) {
     console.error("Error updating document: ", error)
-    throw error // Optionally rethrow the error for handling in the caller function
+    throw error
   }
 }
 export { getAttendanceApi, updateAttendanceApi }
