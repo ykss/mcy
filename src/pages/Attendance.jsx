@@ -43,7 +43,6 @@ const Attendance = () => {
 
   useEffect(() => {
     setMembers(mcyMembers) // 상태에 바로 저장
-    console.log("memberList", mcyMembers)
   }, [])
 
   useEffect(() => {
