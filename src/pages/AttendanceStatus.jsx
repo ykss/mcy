@@ -11,7 +11,7 @@ import { Button } from "@mui/material"
 import { useState, useEffect } from "react"
 
 import Layout from "../components/Layout/Layout"
-import { shareKakao } from "../utils/kakaoShareButton"
+import { shareKakao } from "../utils/shareKakao"
 import { handleNextWeek } from "../utils/handleNextWeek"
 import { handlePreviousWeek } from "../utils/handlePreviousWeek"
 import { getAttendanceApi } from "../api/attendanceDataApi"
