@@ -21,12 +21,17 @@ const AttendanceStatus = () => {
   const dayOfWeek = today.day() // 0은 일요일, 6은 토요일
   const lastSunday = today.subtract(dayOfWeek, "day")
   const [selectedDateInfo, setSelectedDateInfo] = useState(lastSunday.format("YYYY-MM-DD"))
-  const [attendanceData, setAttendanceData] = useState([])
+  const [cellData, setCellData] = useState([])
+  const [adultCount, setAdultCount] = useState()
+  const [memberCount, setMemberCount] = useState()
+  const [totalCount, setTotalCount] = useState()
   const fetchData = async () => {
     try {
       const data = await getAttendanceApi(selectedDateInfo)
-      setAttendanceData(data)
-      console.log(data)
+      setCellData(data.cellData)
+      setAdultCount(data.adultCount)
+      setMemberCount(data.memberCount)
+      setTotalCount(data.totalCount)
     } catch (error) {
       console.error("Error fetching data: ", error)
     }
@@ -36,8 +41,7 @@ const AttendanceStatus = () => {
   }, [selectedDateInfo])
 
   return (
-    <div id="download">
-      {/* 캡처할 영역 */}
+    <>
       <Layout>
         <AttendanceStatusWrapper>
           <StatusPaper>
@@ -52,19 +56,22 @@ const AttendanceStatus = () => {
             </SelectWrapper>
             <RenderingArea>
               {/* 셀 리스트 */}
-              <BoxWrapper>
-                <StyledBox>
-                  <Typography fontSize={12}>신중석셀</Typography>
-                </StyledBox>
-                <MemberBox>
-                  <StyledTypography>신중석</StyledTypography>
-                  <StyledTypography>유경상</StyledTypography>
-                  {/* 다른 멤버들 */}
-                </MemberBox>
-                <StyledBox>
-                  <Typography fontSize={12}>15</Typography>
-                </StyledBox>
-              </BoxWrapper>
+              {cellData.map(item => (
+                <BoxWrapper key={item.cell}>
+                  <CellNameBox>
+                    <Typography fontSize={12}>{item.cell}</Typography>
+                  </CellNameBox>
+                  <MemberBox>
+                    {item.checkedMember.map(member => (
+                      <StyledTypography>{member}</StyledTypography>
+                    ))}
+                    {/* 다른 멤버들 */}
+                  </MemberBox>
+                  <CountBox>
+                    <Typography fontSize={12}>{item.checkedMember.length}</Typography>
+                  </CountBox>
+                </BoxWrapper>
+              ))}
             </RenderingArea>
             <CountWrapper>
               <MemberCountWrapper>
@@ -72,13 +79,13 @@ const AttendanceStatus = () => {
                   출석
                 </Typography>
                 <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center", borderBottom: 1 }}>
-                  {attendanceData.memberCount ? attendanceData.memberCount : 0}명
+                  {memberCount ? memberCount : 0}명
                 </Typography>
                 <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center", borderRight: 1 }}>
                   기타
                 </Typography>
                 <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center" }}>
-                  {attendanceData.adultCount ? attendanceData.adultCount : 0}명
+                  {adultCount ? adultCount : 0}명
                 </Typography>
               </MemberCountWrapper>
               <TotalCountWrapper>
@@ -86,7 +93,7 @@ const AttendanceStatus = () => {
                   총인원
                 </Typography>
                 <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center" }}>
-                  {attendanceData.totalCount ? attendanceData.totalCount : 0}명
+                  {totalCount ? totalCount : 0}명
                 </Typography>
               </TotalCountWrapper>
             </CountWrapper>
@@ -99,7 +106,7 @@ const AttendanceStatus = () => {
           </StatusPaper>
         </AttendanceStatusWrapper>
       </Layout>
-    </div>
+    </>
   )
 }
 
@@ -131,23 +138,34 @@ const StatusPaper = styled(Stack)`
 `
 
 const BoxWrapper = styled(Stack)`
-  display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
+  flex-direction: row;
   width: 95%;
   height: 75px;
-  margin: 0 auto;
+  margin: 5px auto;
 `
-const StyledBox = styled(Stack)`
+const CellNameBox = styled(Stack)`
+  width: 107px;
+  height: 60px;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #404040;
+  background-color: #d9d9d9;
+`
+const CountBox = styled(Stack)`
+  width: 45px;
+  height: 60px;
   justify-content: center;
   align-items: center;
   border: 1px solid #404040;
   background-color: #d9d9d9;
 `
 const MemberBox = styled(Stack)`
+  width: 55%;
+  height: 60px;
   flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
-  padding: 5px;
+  padding: 0 5px;
   border-top: 1px solid #404040;
   border-bottom: 1px solid #404040;
 `
@@ -170,6 +188,7 @@ const CountWrapper = styled(Stack)`
   justify-content: space-around;
   flex-direction: row;
   align-items: center;
+  margin-top: 10px;
 `
 const MemberCountWrapper = styled(Stack)`
   display: grid;
@@ -187,7 +206,7 @@ const TotalCountWrapper = styled(Stack)`
 `
 const SaveWrapper = styled(Stack)`
   width: 90%;
-  height: 15%;
+  height: 13%;
   margin: 0 auto;
   align-items: flex-end;
   justify-content: center;
