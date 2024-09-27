@@ -1,11 +1,10 @@
 import { nanoid } from "nanoid"
 
-export const mcyMember = [
+const mcyMembers = [
   {
     id: nanoid(10),
     cell: "대예배",
-    isChecked: false,
-    cellMember: [
+    checkedMember: [
       "강인영",
       "고나영",
       "구본익",
@@ -52,104 +51,43 @@ export const mcyMember = [
   {
     id: nanoid(10),
     cell: "이화승 / 류지연 셀",
-    cellMember: [
-      {
-        id: nanoid(5),
-        isChecked: false,
-        cellMember: "이화승",
-      },
-      {
-        id: nanoid(5),
-        isChecked: false,
-        cellMember: "류지연",
-      },
-      {
-        id: nanoid(5),
-        isChecked: false,
-        cellMember: "국다혜",
-      },
-      {
-        id: nanoid(5),
-        isChecked: false,
-        cellMember: "김태경",
-      },
-      {
-        id: nanoid(5),
-        isChecked: false,
-        cellMember: "서다현",
-      },
-      {
-        id: nanoid(5),
-        isChecked: false,
-        cellMember: "유지원",
-      },
-      {
-        id: nanoid(5),
-        isChecked: false,
-        cellMember: "윤동하",
-      },
-      {
-        id: nanoid(5),
-        isChecked: false,
-        cellMember: "전한나",
-      },
-      {
-        id: nanoid(5),
-        isChecked: false,
-        cellMember: "최대한",
-      },
-      {
-        id: nanoid(5),
-        isChecked: false,
-        cellMember: "황윤표",
-      },
-      {
-        id: nanoid(5),
-        isChecked: false,
-        cellMember: "최현빈",
-      },
-    ],
+    checkedMember: ["이화승", "류지연", "국다혜", "김태경", "서다현", "유지원", "윤동하", "전한나", "최대한", "황윤표", "최현빈"],
   },
   {
     id: nanoid(10),
     cell: "박유리 셀",
-    isChecked: false,
-    cellMember: ["박유리", "구민경", "김예슬", "박기열", "윤지원", "이경원", "이유미", "최세현", "황주연", "김성용"],
+    checkedMember: ["박유리", "구민경", "김예슬", "박기열", "윤지원", "이경원", "이유미", "최세현", "황주연", "김성용"],
   },
   {
     id: nanoid(10),
     cell: "신이슬 / 김다은 셀",
-    isChecked: false,
-    cellMember: ["신이슬", "김다은", "김승찬", "박찬주", "박천진", "윤동주", "이규영", "정한슬", "하유진", "김옥주"],
+    checkedMember: ["신이슬", "김다은", "김승찬", "박찬주", "박천진", "윤동주", "이규영", "정한슬", "하유진", "김옥주"],
   },
   {
     id: nanoid(10),
     cell: "정구연 셀",
-    isChecked: false,
-    cellMember: ["정구연", "김아영", "김예찬", "노준근", "박보민", "서도원", "신이서", "신중범", "이선화", "차순영", "최정완"],
+    checkedMember: ["정구연", "김아영", "김예찬", "노준근", "박보민", "서도원", "신이서", "신중범", "이선화", "차순영", "최정완"],
   },
   {
     id: nanoid(10),
     cell: "봉지수 셀",
-    isChecked: false,
-    cellMember: ["봉지수", "김민성", "박민웅", "방민아", "오예솔", "이혜성", "최지혜", "한수연", "한지선", "최원대", "김예빈", "김윤주"],
+    checkedMember: ["봉지수", "김민성", "박민웅", "방민아", "오예솔", "이혜성", "최지혜", "한수연", "한지선", "최원대", "김예빈", "김윤주"],
   },
   {
     id: nanoid(10),
     cell: "유경상 / 신중석 셀",
-    isChecked: false,
-    cellMember: ["유경상", "신중석", "권 율", "김태균", "박동진", "선승훈", "윤소영", "이예진", "전혜현", "박한빈"],
+    checkedMember: ["유경상", "신중석", "권 율", "김태균", "박동진", "선승훈", "윤소영", "이예진", "전혜현", "박한빈"],
   },
   {
     id: nanoid(10),
     cell: "전대현 셀",
-    isChecked: false,
-    cellMember: ["전대현", "김민준", "백승도", "윤태호", "이유진", "정영운", "정지혁", "한명수", "황수정", "정 현"],
+    checkedMember: ["전대현", "김민준", "백승도", "윤태호", "이유진", "정영운", "정지혁", "한명수", "황수정", "정 현"],
   },
   {
     id: nanoid(10),
     cell: "이채영 / 류지애 셀",
-    isChecked: false,
-    cellMember: ["이채영", "류지애", "마관영", "박준배", "신수진", "이재연", "정지민", "차미진", "황명표", "정 빈"],
+    checkedMember: ["이채영", "류지애", "마관영", "박준배", "신수진", "이재연", "정지민", "차미진", "황명표", "정 빈"],
   },
 ]
+
+export default mcyMembers
