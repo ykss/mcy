@@ -1,7 +1,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js")
 
 const CACHE = "pwabuilder-page"
-const offlineFallbackPage = "/offline.html"
+const offlineFallbackPage = "/Offline.jsx"
 
 self.addEventListener("message", event => {
   if (event.data && event.data.type === "SKIP_WAITING") {

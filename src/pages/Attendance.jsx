@@ -21,8 +21,8 @@ import ButtonGroup from "@mui/material/ButtonGroup"
 import Button from "@mui/material/Button"
 
 import Layout from "../components/Layout/Layout"
-import { getMcyMemberApi } from "../api/mcyMemberApi"
-import { getAttendanceApi, updateAttendanceApi } from "../api/attendanceDataApi"
+import mcyMembers from "../data/mcyMember"
+import { getAttendanceApi, updateAttendanceApi } from "../api/mcyAttendanceDataApi"
 
 const Attendance = () => {
   const [members, setMembers] = useState([])
@@ -42,36 +42,28 @@ const Attendance = () => {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const membersList = await getMcyMemberApi()
-        setMembers(membersList)
-      } catch (error) {
-        console.log("Error fetching members:", error)
-      }
-    }
-    fetchData()
+    setMembers(mcyMembers) // 상태에 바로 저장
+    console.log("memberList", mcyMembers)
   }, [])
 
   useEffect(() => {
     const fetchAttendanceData = async () => {
       try {
-        const date = state.value.format("YYYY-MM-DD")
-        const getData = await getAttendanceApi(date)
+        const getData = await getAttendanceApi(state.value.format("YYYY-MM-DD"))
         if (getData) {
+          const initialCheckedState = {}
+
+          // cellData 형태에 맞춰 초기 체크 상태 설정
+          const cellData = getData.cellData || []
+          cellData.forEach(cellInfo => {
+            cellInfo.checkedMember.forEach(member => {
+              initialCheckedState[member] = true // 체크된 멤버는 true로 설정
+            })
+          })
+
           setState(prevState => ({
             ...prevState,
-            isChecked: getData.cellData
-              ? Object.assign(
-                  {},
-                  ...Object.values(getData.cellData).map(members =>
-                    members.reduce((acc, member) => {
-                      acc[member] = true
-                      return acc
-                    }, {}),
-                  ),
-                )
-              : {},
+            isChecked: initialCheckedState,
             adultCount: getData.adultCount || 0,
             memberCount: getData.memberCount || 0,
             totalCount: getData.totalCount || 0,
@@ -81,53 +73,57 @@ const Attendance = () => {
         console.error("Error fetching attendance data: ", error)
       }
     }
-    fetchAttendanceData()
+
+    if (Object.keys(state.value).length > 0) {
+      fetchAttendanceData()
+    }
   }, [state.value])
 
   // 출석 데이터 저장
-  const handleUpdateAttendance = async (isChecked, adultCount, totalCount) => {
-    try {
-      const date = state.value.format("YYYY-MM-DD")
-      const attendanceData = {
-        date,
-        adultCount,
-        memberCount: Object.values(isChecked).filter(Boolean).length,
-        totalCount,
-        cellData: members.reduce((acc, leader) => {
-          acc[leader.cell] = leader?.cellMember?.filter(member => isChecked[member])
-          return acc
-        }, {}),
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      const handleUpdateAttendance = async () => {
+        try {
+          const date = state.value.format("YYYY-MM-DD")
+          const attendanceData = {
+            date,
+            adultCount: state.adultCount,
+            memberCount: Object.values(state.isChecked).filter(Boolean).length,
+            totalCount: state.totalCount,
+            cellData: members.map(leader => ({
+              cell: leader.cell,
+              checkedMember: leader?.checkedMember?.filter(member => state.isChecked[member]) || [],
+            })),
+          }
+          await updateAttendanceApi(date, attendanceData)
+          console.log("Attendance data updated successfully!")
+        } catch (error) {
+          console.error("Error updating attendance data: ", error)
+        }
       }
 
-      await updateAttendanceApi(date, attendanceData)
-      console.log("Attendance data updated successfully!")
-    } catch (error) {
-      console.error("Error updating attendance data: ", error)
-    }
-  }
+      if (Object.keys(state.isChecked).length > 0) {
+        handleUpdateAttendance()
+      }
+    }, 3000)
+
+    return () => clearTimeout(delay) // 이전 타이머 취소
+  }, [state.isChecked, state.adultCount, state.totalCount, members, state.value])
 
   useEffect(() => {
-    const initialCheckedState = {}
-    const currentDayOfWeek = dayjs().day()
-    const daysToLastSunday = currentDayOfWeek === 0 ? 7 : currentDayOfWeek
-    const lastSunday = dayjs().subtract(daysToLastSunday, "day")
-    members.forEach(leader => {
-      if (leader && leader.cellMember) {
-        leader.cellMember.forEach(member => {
+    if (members.length > 0) {
+      const initialCheckedState = {}
+      members.forEach(leader => {
+        leader?.checkedMember?.forEach(member => {
           initialCheckedState[member] = leader.isChecked || false
         })
-      }
-    })
+      })
 
-    if (members.length > 0) {
+      const lastSunday = dayjs().subtract(dayjs().day() === 0 ? 7 : dayjs().day(), "day")
+
       setState(prevState => ({
         ...prevState,
         isChecked: initialCheckedState,
-        selectedLeader: "대예배",
-        adultCount: 0,
-        memberCount: 0,
-        totalCount: 0,
-        attendanceAllData: {},
         value: dayjs(lastSunday),
       }))
     }
@@ -216,13 +212,6 @@ const Attendance = () => {
     })
   }
 
-  useEffect(() => {
-    const delay = setTimeout(() => {
-      handleUpdateAttendance(state.isChecked, state.adultCount, state.totalCount)
-    }, 300)
-    return () => clearTimeout(delay) // 이펙트 정리
-  }, [state.isChecked, state.adultCount, state.totalCount])
-
   return (
     <Layout>
       <AttendanceWrapper>
@@ -267,7 +256,7 @@ const Attendance = () => {
                 (state.selectedLeader
                   ? members
                       .find(leader => leader.cell === state.selectedLeader)
-                      ?.cellMember.map(member => (
+                      ?.checkedMember.map(member => (
                         <MemberDataWrapper key={member}>
                           <CheckBoxWrapper checked={!!state.isChecked[member]} onChange={() => handleCheck(member)} />
                           <CheckMemberWrapper checked={state.isChecked[member]} onClick={() => handleCheck(member)}>
@@ -275,7 +264,7 @@ const Attendance = () => {
                           </CheckMemberWrapper>
                         </MemberDataWrapper>
                       ))
-                  : members[0]?.cellMember.map(member => (
+                  : members[0]?.checkedMember.map(member => (
                       <MemberDataWrapper key={member}>
                         <CheckBoxWrapper checked={!!state.isChecked[member]} onChange={() => handleCheck(member)} />
                         <CheckMemberWrapper checked={state.isChecked[member]} onClick={() => handleCheck(member)}>

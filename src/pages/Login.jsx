@@ -88,10 +88,7 @@ const IconWrapper = styled(Stack)`
   align-items: center;
   justify-content: center;
 `
-const TextFieldWrapper = styled(Stack)`
-  width: 100%;
-  height: 60%;
-`
+
 const IdTextField = styled(TextField)`
   width: 255px;
   height: 55px;
