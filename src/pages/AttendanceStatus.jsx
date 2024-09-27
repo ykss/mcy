@@ -8,19 +8,33 @@ import IconButton from "@mui/material/IconButton"
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import { Button } from "@mui/material"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import Layout from "../components/Layout/Layout"
 import { shareKakao } from "../utils/kakaoShareButton"
-import { KakaoIcon } from "../components/shared/KakaoIcon"
 import { handleNextWeek } from "../utils/handleNextWeek"
 import { handlePreviousWeek } from "../utils/handlePreviousWeek"
+import { getAttendanceApi } from "../api/attendanceDataApi"
 
 const AttendanceStatus = () => {
   const today = dayjs()
   const dayOfWeek = today.day() // 0은 일요일, 6은 토요일
   const lastSunday = today.subtract(dayOfWeek, "day")
   const [selectedDateInfo, setSelectedDateInfo] = useState(lastSunday.format("YYYY-MM-DD"))
+  const [attendanceData, setAttendanceData] = useState([])
+  const fetchData = async () => {
+    try {
+      const data = await getAttendanceApi(selectedDateInfo)
+      setAttendanceData(data)
+      console.log(data)
+    } catch (error) {
+      console.error("Error fetching data: ", error)
+    }
+  }
+  useEffect(() => {
+    fetchData()
+  }, [selectedDateInfo])
+
   return (
     <div id="download">
       {/* 캡처할 영역 */}
@@ -37,6 +51,7 @@ const AttendanceStatus = () => {
               </IconButton>
             </SelectWrapper>
             <RenderingArea>
+              {/* 셀 리스트 */}
               <BoxWrapper>
                 <StyledBox>
                   <Typography fontSize={12}>신중석셀</Typography>
@@ -54,16 +69,16 @@ const AttendanceStatus = () => {
             <CountWrapper>
               <MemberCountWrapper>
                 <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center", borderRight: 1, borderBottom: 1 }}>
-                  신중석
+                  출석
                 </Typography>
                 <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center", borderBottom: 1 }}>
-                  108명
+                  {attendanceData.memberCount ? attendanceData.memberCount : 0}명
                 </Typography>
                 <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center", borderRight: 1 }}>
                   기타
                 </Typography>
                 <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center" }}>
-                  12명
+                  {attendanceData.adultCount ? attendanceData.adultCount : 0}명
                 </Typography>
               </MemberCountWrapper>
               <TotalCountWrapper>
@@ -71,19 +86,15 @@ const AttendanceStatus = () => {
                   총인원
                 </Typography>
                 <Typography textAlign="center" sx={{ display: "flex", alignItems: "center" /* 수직 중앙 정렬 */, justifyContent: "center" }}>
-                  12명
+                  {attendanceData.totalCount ? attendanceData.totalCount : 0}명
                 </Typography>
               </TotalCountWrapper>
             </CountWrapper>
             {/* 캡처 및 콘솔 출력 버튼 */}
             <SaveWrapper>
               <SaveButton variant="contained" color="primary" onClick={shareKakao}>
-                {/* <KakaoIcon /> */}
                 공유하기
               </SaveButton>
-              {/* <IconButton onClick={shareKakao}>
-                <KakaoIcon />
-              </IconButton> */}
             </SaveWrapper>
           </StatusPaper>
         </AttendanceStatusWrapper>
@@ -146,14 +157,14 @@ const StyledTypography = styled(Typography)`
 `
 const RenderingArea = styled(Stack)`
   width: 100%;
-  height: 55%;
+  height: 60%;
   overflow-y: auto;
   &::-webkit-scrollbar {
     width: 0;
   }
 `
 const CountWrapper = styled(Stack)`
-  width: 90%;
+  width: 95%;
   height: 14%;
   margin: 0 auto;
   justify-content: space-around;
@@ -163,15 +174,15 @@ const CountWrapper = styled(Stack)`
 const MemberCountWrapper = styled(Stack)`
   display: grid;
   grid-template-columns: 1fr 2fr;
-  width: 155px;
+  width: 45%;
   height: 60px;
   border: 1px solid #000000;
 `
 const TotalCountWrapper = styled(Stack)`
   display: grid;
   grid-template-columns: 2fr 3fr;
-  width: 40%;
-  height: 90%;
+  width: 45%;
+  height: 60px;
   border: 1px solid #000000;
 `
 const SaveWrapper = styled(Stack)`
@@ -183,7 +194,9 @@ const SaveWrapper = styled(Stack)`
 `
 
 const SaveButton = styled(Button)`
-  width: 30%;
+  font-family: "Noto Sans";
+  font-weight: 600;
+  width: 100px;
   height: 45px;
   border: 1px solid #000;
   border-radius: 16px;
