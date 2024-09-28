@@ -1,7 +1,8 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js")
 
 const CACHE = "pwabuilder-page"
-const offlineFallbackPage = "/Offline.jsx"
+const offlineFallbackPage = "/offline.html"
+const icon = "/favicon.ico"
 
 self.addEventListener("message", event => {
   if (event.data && event.data.type === "SKIP_WAITING") {
@@ -10,7 +11,7 @@ self.addEventListener("message", event => {
 })
 
 self.addEventListener("install", async event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.add(offlineFallbackPage)))
+  event.waitUntil(caches.open(CACHE).then(cache => cache.add([offlineFallbackPage, icon])))
 })
 
 if (workbox.navigationPreload.isSupported()) {
@@ -36,6 +37,27 @@ self.addEventListener("fetch", event => {
           return cachedResp
         }
       })(),
+    )
+  } else {
+    event.respondWith(
+      caches
+        .match(event.request)
+        .then(cachedResponse => {
+          return (
+            cachedResponse ||
+            fetch(event.request).then(networkResponse => {
+              return caches.open(CACHE).then(cache => {
+                cache.put(event.request, networkResponse.clone())
+                return networkResponse
+              })
+            })
+          )
+        })
+        .catch(() => {
+          if (event.request.url.endsWith(".ico")) {
+            return caches.match(icon)
+          }
+        }),
     )
   }
 })

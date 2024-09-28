@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./public/favicon.ico" type="image/x-icon" />
+    <title>MCY Offline Page</title>
+    <style>
+      .offline-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 100vw;
+        height: calc(100vh - 100px);
+        background-color: #fffcf6;
+      }
+
+      .icon-wrapper {
+        display: flex;
+        width: 100vw;
+        height: 20%;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .icon-img {
+        width: 150px;
+        height: 150px;
+      }
+
+      .info-text {
+        font-size: 20px;
+      }
+
+      .footer-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 80px;
+        background-color: #fffcf6;
+      }
+
+      .footer-content {
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="offline-wrapper">
+      <div class="icon-wrapper">
+        <img class="icon-img" src="/favicon.ico" alt="Favicon Icon"></img>
+      </div>
+      <p class="info-text">연결이 좋지 않습니다</p>
+        <p>네트워크를 확인해주세요!</p>
+    </div>
+    <div class="footer-area">
+      <p class="footer-content">MCY</p>
+      <p class="footer-content">Copyright 2024. MCY all rights reserved.</p>
+    </div>
+  </body>
+</html>
