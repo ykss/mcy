@@ -39,7 +39,7 @@ const MenuDrawer = ({ open, setOpen, navigate }) => {
             </ListWrapper>
           </MenuListWrapper>
         </ListButton>
-        <ListButton onClick={() => handleNavigate("attendance")}>
+        <ListButton onClick={admin ? () => handleNavigate("attendance") : () => handleNavigate("attendancestatus")}>
           <MenuListWrapper>
             <SquareWrapper>
               <SquareGreenWrapper />

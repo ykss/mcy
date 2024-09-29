@@ -13,6 +13,7 @@ import IconButton from "@mui/material/IconButton"
 import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
+import toast, { Toaster } from "react-hot-toast"
 
 import Layout from "../components/Layout/Layout"
 import { NewsPlusButton } from "../components/shared/PlusButton"
@@ -35,7 +36,9 @@ const News = () => {
       const data = await McyNewsApi()
       setNewsData(data)
     } catch (error) {
-      console.error("Error fetching data: ", error)
+      toast.error("데이터 가져오기 실패", {
+        duration: 1500, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+      })
     }
   }
 
@@ -78,15 +81,18 @@ const News = () => {
 
         // 새로운 배열을 문서에 업데이트
         await updateDoc(docRef, { list })
-
-        alert("Data deleted successfully!")
+        toast.success("데이터 삭제 성공!", {
+          duration: 1500, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+        })
       } else {
-        console.log("Document with the given ID not found.")
-        alert("Document not found.")
+        toast.error("삭제할 데이터를 찾지 못함", {
+          duration: 1500, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+        })
       }
     } catch (error) {
-      console.error("Error deleting data: ", error)
-      alert("Error deleting data.")
+      toast.error("데이터 삭제 실패", {
+        duration: 1500, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+      })
     }
   }
 
@@ -103,6 +109,7 @@ const News = () => {
   }
   return (
     <Layout>
+      <Toaster position="top-center" reverseOrder={false} />
       <NewsWrapper>
         <SelectWrapper>
           <IconButton onClick={handlePreviousMonth}>
