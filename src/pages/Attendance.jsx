@@ -38,7 +38,7 @@ const Attendance = () => {
   })
 
   const handleNavigate = () => {
-    navigate("/attendancestatus")
+    navigate("/attendanceStatus")
   }
 
   useEffect(() => {
@@ -324,7 +324,7 @@ const SettingsIconWrapper = styled(SettingsIcon)`
 `
 
 const MobileDateWrapper = styled(MobileDatePicker)`
-  width: 40%;
+  width: 60%;
   pointer-events: none;
   & .MuiInputBase-root {
     justify-content: center;
@@ -466,14 +466,14 @@ const CounterWrapper = styled(Stack)`
 `
 
 const AdultDataWrapper = styled(ButtonGroup)`
-  width: 60%;
-  height: 70%;
+  width: 40%;
+  height: 80%;
   justify-content: center;
   align-items: center;
 `
 
 const AddIconWrapper = styled(Button)`
-  width: 50%;
+  width: 85%;
   height: 100%;
   border: 1px solid #000;
   border-radius: 25px;
@@ -502,7 +502,7 @@ const AddIconWrapper = styled(Button)`
 `
 
 const MinusIconWrapper = styled(Button)`
-  width: 50%;
+  width: 85%;
   height: 100%;
   border: 1px solid #000;
   border-radius: 25px;
@@ -532,8 +532,8 @@ const MinusIconWrapper = styled(Button)`
 
 const AttendanceTotalDataWrapper = styled(Stack)`
   background-color: #c7bdeb;
-  width: 40%;
-  height: 70%;
+  width: 60%;
+  height: 80%;
   border: 1px solid black;
   flex-direction: row;
   gap: 10px;
