@@ -1,3 +1,4 @@
+import toast from "react-hot-toast" // react-toastify 대신 react-hot-toast 사용
 import { collection, getDocs, getDoc, doc, updateDoc, setDoc } from "firebase/firestore"
 import { db } from "../firebase"
 
@@ -11,14 +12,15 @@ const getAttendanceApi = async selectedDateInfo => {
     if (docSnap.exists()) {
       // 문서에서 list 배열을 가져오기
       const memberList = docSnap.data()
-      // entries 배열을 각 인덱스의 date를 기준으로 내림차순 정렬
       return memberList
     } else {
-      console.log("No such document!")
+      toast.error("출석 데이터가 없습니다.", {
+        duration: 1000, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+      })
       return []
     }
   } catch (error) {
-    console.error("문서 가져오기 에러: ", error)
+    toast.error("출석 데이터를 불러오는 중 에러가 발생했습니다.") // 에러 발생 시 toast로 알림
   }
 }
 
@@ -31,14 +33,13 @@ const updateAttendanceApi = async (id, attendanceData) => {
     // 문서가 이미 존재하는 경우 업데이트, 존재하지 않는 경우 새로 생성
     if (docSnap.exists()) {
       await updateDoc(docRef, attendanceData)
-      console.log("Document updated successfully!")
     } else {
       await setDoc(docRef, attendanceData)
-      console.log("New document created!")
     }
   } catch (error) {
-    console.error("Error updating document: ", error)
+    toast.error("출석 데이터를 업데이트하는 중 에러가 발생했습니다.") // 에러 발생 시 toast로 알림
     throw error
   }
 }
+
 export { getAttendanceApi, updateAttendanceApi }

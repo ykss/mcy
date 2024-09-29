@@ -39,30 +39,16 @@ const MenuDrawer = ({ open, setOpen, navigate }) => {
             </ListWrapper>
           </MenuListWrapper>
         </ListButton>
-        {admin ? (
-          <ListButton onClick={() => handleNavigate("attendance")}>
-            <MenuListWrapper>
-              <SquareWrapper>
-                <SquareGreenWrapper />
-              </SquareWrapper>
-              <ListWrapper>
-                <ListText>출석</ListText>
-              </ListWrapper>
-            </MenuListWrapper>
-          </ListButton>
-        ) : (
-          <ListButton onClick={() => handleNavigate("attendancestatus")}>
-            <MenuListWrapper>
-              <SquareWrapper>
-                <SquareGreenWrapper />
-              </SquareWrapper>
-              <ListWrapper>
-                <ListText>출석</ListText>
-              </ListWrapper>
-            </MenuListWrapper>
-          </ListButton>
-        )}
-
+        <ListButton onClick={admin ? () => handleNavigate("attendance") : () => handleNavigate("attendancestatus")}>
+          <MenuListWrapper>
+            <SquareWrapper>
+              <SquareGreenWrapper />
+            </SquareWrapper>
+            <ListWrapper>
+              <ListText>출석</ListText>
+            </ListWrapper>
+          </MenuListWrapper>
+        </ListButton>
         <ListButton onClick={() => handleNavigate("birthday")}>
           <MenuListWrapper>
             <SquareWrapper>

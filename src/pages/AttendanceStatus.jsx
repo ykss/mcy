@@ -9,6 +9,7 @@ import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import { Button } from "@mui/material"
 import { useState, useEffect } from "react"
+import { Toaster } from "react-hot-toast"
 
 import Layout from "../components/Layout/Layout"
 import { shareKakao } from "../utils/shareKakao"
@@ -42,6 +43,7 @@ const AttendanceStatus = () => {
   return (
     <>
       <Layout>
+        <Toaster position="top-center" reverseOrder={false} />
         <AttendanceStatusWrapper>
           <StatusPaper>
             <SelectWrapper>

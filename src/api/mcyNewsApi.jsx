@@ -1,5 +1,6 @@
 import { doc, updateDoc, setDoc, getDoc, arrayUnion } from "firebase/firestore"
 import { db } from "../firebase"
+import toast from "react-hot-toast"
 
 const McyNewsApi = async () => {
   try {
@@ -13,15 +14,19 @@ const McyNewsApi = async () => {
       // entries 배열을 각 인덱스의 date를 기준으로 내림차순 정렬
       return newsList ? newsList.sort((a, b) => new Date(b.date) - new Date(a.date)) : []
     } else {
-      console.log("No such document!")
+      toast.error("소식 데이터가 없습니다", {
+        duration: 1500, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+      })
       return []
     }
   } catch (error) {
-    console.error("문서 가져오기 에러: ", error)
+    toast.error("문서 가져오기 에러", {
+      duration: 1500, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+    })
   }
 }
 // 파이어 베이스 저장
-const handleSave = async (selectedDateInfo, setTextValue, textValue, fetchData, toggleDrawer) => {
+const saveApi = async (selectedDateInfo, textValue) => {
   try {
     const dateString = selectedDateInfo // 날짜를 문자열로 변환
     const docRef = doc(db, "news", "NewsList")
@@ -52,18 +57,18 @@ const handleSave = async (selectedDateInfo, setTextValue, textValue, fetchData, 
         ],
       })
     }
-    alert("Data saved successfully!")
-    setTextValue("")
-    fetchData()
-    toggleDrawer()
+    toast.success("데이터 저장 성공!", {
+      duration: 1500, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+    })
   } catch (e) {
-    console.error("Error saving document: ", e)
-    alert("Error saving data.")
+    toast.error("데이터 저장 실패", {
+      duration: 1500, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+    })
   }
 }
 
 // 파이어 베이스 수정
-const handleUpdate = async (selectedDateInfo, textValue, fetchData, toggleDrawer) => {
+const updateApi = async (selectedDateInfo, textValue) => {
   try {
     if (selectedDateInfo) {
       // selectedDateInfo가 있으면 기존 문서 가져오기
@@ -85,23 +90,29 @@ const handleUpdate = async (selectedDateInfo, textValue, fetchData, toggleDrawer
 
           // 업데이트된 배열을 Firestore에 저장
           await updateDoc(docRef, { list })
-          alert("Data updated successfully!")
+          toast.success("데이터 업데이트 성공", {
+            duration: 1500, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+          })
         } else {
-          alert("No matching date found.")
+          toast.error("데이터 가져오기 에러", {
+            duration: 1500, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+          })
         }
-
-        fetchData()
-        toggleDrawer()
       } else {
-        alert("Document does not exist.")
+        toast.error("데이터가 없습니다", {
+          duration: 1500, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+        })
       }
     } else {
-      alert("No document found to update.")
+      toast.error("데이터 가져오기 에러", {
+        duration: 1500, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+      })
     }
   } catch (e) {
-    console.error("Error updating document: ", e)
-    alert("Error updating data.")
+    toast.error("데이터 업데이트 에러.", {
+      duration: 1500, // 자동 닫힘 시간 (밀리초), 필요 시 수정 가능
+    })
   }
 }
 
-export { McyNewsApi, handleUpdate, handleSave }
+export { McyNewsApi, updateApi, saveApi }

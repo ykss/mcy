@@ -13,7 +13,7 @@ import { IconButton, Typography } from "@mui/material"
 
 import { handlePreviousWeek } from "../../utils/handlePreviousWeek"
 import { handleNextWeek } from "../../utils/handleNextWeek"
-import { handleSave, handleUpdate } from "../../api/mcyNewsApi"
+import { saveApi, updateApi } from "../../api/mcyNewsApi"
 
 const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
   const toggleDrawer = () => {
@@ -41,6 +41,19 @@ const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
   // 텍스트 필드에서 타이핑 할때 마다 TextValue 값 선언
   const handleTextChange = event => {
     setTextValue(event.target.value)
+  }
+
+  const handleSave = async (selectedDateInfo, textValue) => {
+    await saveApi(selectedDateInfo, textValue)
+    setTextValue("")
+    fetchData()
+    toggleDrawer()
+  }
+
+  const handleUpdate = async (selectedDateInfo, textValue) => {
+    await updateApi(selectedDateInfo, textValue)
+    fetchData()
+    toggleDrawer()
   }
 
   const DrawerList = (
@@ -72,9 +85,9 @@ const NewsDrawer = ({ fetchData, open, onClose, mode, targetData }) => {
       </TextFiledArea>
       <SaveChipWrapper>
         {mode === "add" ? (
-          <StyledSaveChip label="저장" onClick={() => handleSave(selectedDateInfo, setTextValue, textValue, fetchData, toggleDrawer)} />
+          <StyledSaveChip label="저장" onClick={() => handleSave(selectedDateInfo, textValue)} />
         ) : (
-          <StyledSaveChip label="수정" onClick={() => handleUpdate(selectedDateInfo, textValue, fetchData, toggleDrawer)} />
+          <StyledSaveChip label="수정" onClick={() => handleUpdate(selectedDateInfo, textValue)} />
         )}
       </SaveChipWrapper>
     </NewsDrawerWrapper>
