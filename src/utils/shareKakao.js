@@ -12,16 +12,16 @@ export const shareKakao = () => {
         description: "",
         imageUrl: "",
         link: {
-          mobileWebUrl: "https://mokchun-youth.netlify.app",
-          webUrl: "https://mokchun-youth.netlify.app",
+          mobileWebUrl: "https://mokchun-youth.netlify.app/attendancestatus",
+          webUrl: "https://mokchun-youth.netlify.app/attendancestatus",
         },
       },
       buttons: [
         {
           title: "웹으로 이동",
           link: {
-            mobileWebUrl: "https://mokchun-youth.netlify.app",
-            webUrl: "https://mokchun-youth.netlify.app",
+            mobileWebUrl: "https://mokchun-youth.netlify.app/attendancestatus",
+            webUrl: "https://mokchun-youth.netlify.app/attendancestatus",
           },
         },
       ],
