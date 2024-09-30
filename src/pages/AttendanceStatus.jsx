@@ -160,8 +160,8 @@ const BoxWrapper = styled(Stack)`
   margin: 5px auto;
 `
 const CellNameBox = styled(Stack)`
-  width: 107px;
-  height: 60px;
+  width: 120px;
+  height: 67px;
   justify-content: center;
   align-items: center;
   border: 1px solid #404040;
@@ -169,7 +169,7 @@ const CellNameBox = styled(Stack)`
 `
 const CountBox = styled(Stack)`
   width: 45px;
-  height: 60px;
+  height: 67px;
   justify-content: center;
   align-items: center;
   border: 1px solid #404040;
@@ -177,7 +177,7 @@ const CountBox = styled(Stack)`
 `
 const MemberBox = styled(Stack)`
   width: 55%;
-  height: 60px;
+  height: 67px;
   flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
@@ -187,7 +187,7 @@ const MemberBox = styled(Stack)`
 `
 
 const StyledTypography = styled(Typography)`
-  width: 20%;
+  width: 25%;
 `
 const RenderingArea = styled(Stack)`
   width: 100%;
