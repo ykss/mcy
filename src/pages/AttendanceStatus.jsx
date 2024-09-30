@@ -198,7 +198,7 @@ const RenderingArea = styled(Stack)`
   }
 `
 const CountWrapper = styled(Stack)`
-  width: 95%;
+  width: 100%;
   height: 14%;
   margin: 0 auto;
   justify-content: space-around;
@@ -221,7 +221,7 @@ const TotalCountWrapper = styled(Stack)`
   border: 1px solid #000000;
 `
 const SaveWrapper = styled(Stack)`
-  width: 90%;
+  width: 95%;
   height: 13%;
   margin: 0 auto;
   align-items: flex-end;
@@ -236,8 +236,6 @@ const SaveButton = styled(Button)`
   border: 1px solid #000;
   border-radius: 16px;
   background-color: #ede8ff;
-  margin-right: 5px;
-  gap: 10px;
 `
 
 export default AttendanceStatus
