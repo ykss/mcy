@@ -67,7 +67,7 @@ const Login = () => {
           로그인
         </LoginButton>
         <StyledGoogleButton onClick={onSuccess} variant="contained">
-          Go to MCY
+          GO MCY
         </StyledGoogleButton>
       </LoginWrapper>
       <Footer />
