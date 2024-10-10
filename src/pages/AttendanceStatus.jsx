@@ -10,9 +10,9 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight"
 import { Button } from "@mui/material"
 import { useState, useEffect } from "react"
 import { Toaster } from "react-hot-toast"
+import html2canvas from "html2canvas"
 
 import Layout from "../components/Layout/Layout"
-import { shareKakao } from "../utils/shareKakao"
 import { handleNextWeek } from "../utils/handleNextWeek"
 import { handlePreviousWeek } from "../utils/handlePreviousWeek"
 import { getAttendanceApi } from "../api/mcyAttendanceDataApi"
@@ -40,11 +40,26 @@ const AttendanceStatus = () => {
     fetchData()
   }, [selectedDateInfo])
 
+  const handleCapture = async () => {
+    const target = document.getElementById("download")
+    if (!target) {
+      return alert("사진 저장에 실패했습니다.")
+    }
+    html2canvas(target).then(canvas => {
+      const link = document.createElement("a")
+      document.body.appendChild(link)
+      link.href = canvas.toDataURL("image/png")
+      link.download = "mcyAttendance.png" // 다운로드 이미지 파일 이름
+      link.click()
+      document.body.removeChild(link)
+    })
+  }
+
   return (
-    <>
-      <Layout>
-        <Toaster position="top-center" reverseOrder={false} />
-        <AttendanceStatusWrapper>
+    <Layout>
+      <Toaster position="top-center" reverseOrder={false} />
+      <AttendanceStatusWrapper>
+        <div id="download">
           <StatusPaper>
             <SelectWrapper>
               <IconButton onClick={() => handlePreviousWeek(selectedDateInfo, setSelectedDateInfo)}>
@@ -115,20 +130,21 @@ const AttendanceStatus = () => {
             </CountWrapper>
             {/* 캡처 및 콘솔 출력 버튼 */}
             <SaveWrapper>
-              <SaveButton variant="contained" color="primary" onClick={shareKakao}>
-                공유하기
+              <SaveButton variant="contained" color="primary" onClick={handleCapture}>
+                저장하기
               </SaveButton>
             </SaveWrapper>
           </StatusPaper>
-        </AttendanceStatusWrapper>
-      </Layout>
-    </>
+        </div>
+      </AttendanceStatusWrapper>
+    </Layout>
   )
 }
 
 const AttendanceStatusWrapper = styled(Stack)`
   width: 100vw;
   height: calc(100dvh - 180px);
+  overflow-y: auto;
   background-color: #fffcf6;
 `
 
@@ -146,20 +162,21 @@ const DateWrapper = styled(Typography)`
 
 const StatusPaper = styled(Stack)`
   width: 90%;
-  height: 99%;
   background-color: #f0f0f0;
   margin: 0 auto;
   border-radius: 25px;
   border: 1px solid #000000;
+  padding-bottom: 25px;
 `
 
 const BoxWrapper = styled(Stack)`
   flex-direction: row;
   width: 95%;
   height: 75px;
-  margin: 5px auto;
+  margin: 0 auto;
 `
 const CellNameBox = styled(Stack)`
+  // 셀 이름
   width: 120px;
   height: 67px;
   justify-content: center;
@@ -168,6 +185,7 @@ const CellNameBox = styled(Stack)`
   background-color: #d9d9d9;
 `
 const CountBox = styled(Stack)`
+  // 각 셀 출석현황
   width: 45px;
   height: 67px;
   justify-content: center;
@@ -176,7 +194,8 @@ const CountBox = styled(Stack)`
   background-color: #d9d9d9;
 `
 const MemberBox = styled(Stack)`
-  width: 55%;
+  // 출석한 셀원 리스트
+  width: calc(100% - 165px);
   height: 67px;
   flex-direction: row;
   align-items: center;
@@ -188,14 +207,12 @@ const MemberBox = styled(Stack)`
 
 const StyledTypography = styled(Typography)`
   width: 25%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 const RenderingArea = styled(Stack)`
   width: 100%;
-  height: 60%;
-  overflow-y: auto;
-  &::-webkit-scrollbar {
-    width: 0;
-  }
 `
 const CountWrapper = styled(Stack)`
   width: 100%;
@@ -223,7 +240,7 @@ const TotalCountWrapper = styled(Stack)`
 const SaveWrapper = styled(Stack)`
   width: 95%;
   height: 13%;
-  margin: 0 auto;
+  margin: 15px auto 0;
   align-items: flex-end;
   justify-content: center;
 `

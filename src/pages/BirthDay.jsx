@@ -37,11 +37,14 @@ const BirthDay = () => {
 
   // Chip 아이디 값이 변경될때마다 필터를 통해 해당 월의 데이터만 추출
   useEffect(() => {
-    const filteredData = birthDayData.filter(item => {
-      const date = dayjs(item.date, "MM-DD") // 날짜 형식에 맞게 수정
-      const month = date.month() + 1 // dayjs는 0부터 시작하므로 +1
-      return month === monthChipId
-    })
+    const filteredData = birthDayData
+      .filter(item => {
+        const date = dayjs(item.date, "MM-DD") // 날짜 형식에 맞게 수정
+        const month = date.month() + 1 // dayjs는 0부터 시작하므로 +1
+        return month === monthChipId
+      })
+      .sort((a, b) => dayjs(a.date, "MM-DD") - dayjs(b.date, "MM-DD")) // 날짜 기준 오름차순 정렬
+
     setSelectedData(filteredData)
   }, [monthChipId, birthDayData])
 

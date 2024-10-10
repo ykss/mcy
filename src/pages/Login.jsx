@@ -61,7 +61,7 @@ const Login = () => {
         <IconWrapper>
           <McyIcon />
         </IconWrapper>
-        <IdTextField placeholder="아이디" variant="outlined" onChange={CurrentId} />
+        <IdTextField placeholder="마스터 아이디" variant="outlined" onChange={CurrentId} />
         <PasswordTextField placeholder="비밀번호" variant="outlined" type="password" onChange={CurrentPassword} />
         <LoginButton variant="contained" onClick={masterLogin}>
           로그인
