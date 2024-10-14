@@ -27,14 +27,18 @@ import { getAttendanceApi, updateAttendanceApi } from "../api/mcyAttendanceDataA
 const Attendance = () => {
   const [members, setMembers] = useState([])
   const navigate = useNavigate()
+  const initialValue = dayjs().day(0)
+  if (dayjs().day() === 0) {
+    initialValue.subtract(7, "day")
+  }
   const [state, setState] = useState({
-    selectedLeader: "대예배",
+    selectedLeader: "이화승 / 류지연 셀",
     adultCount: 0,
     memberCount: 0,
     totalCount: 0,
     attendanceAllData: {},
     isChecked: {},
-    value: dayjs().subtract(dayjs().day() === 0 ? 7 : dayjs().day(), "day"),
+    value: initialValue,
   })
 
   const handleNavigate = () => {
@@ -43,6 +47,7 @@ const Attendance = () => {
 
   useEffect(() => {
     setMembers(mcyMembers) // 상태에 바로 저장
+    console.log(mcyMembers)
   }, [])
 
   useEffect(() => {
@@ -133,7 +138,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).subtract(7, "day"),
-      selectedLeader: "대예배",
+      selectedLeader: "이화승 / 류지연 셀",
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
@@ -147,7 +152,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).add(7, "day"),
-      selectedLeader: "대예배",
+      selectedLeader: "이화승 / 류지연 셀",
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
@@ -226,7 +231,7 @@ const Attendance = () => {
         </CalendarWrapper>
         <LeaderInfoWrapper>
           <SelectWrapper
-            value={state.selectedLeader ? state.selectedLeader : "대예배"}
+            value={state.selectedLeader}
             onChange={e => handleLeaderClick(e.target.value)}
             MenuProps={{
               PaperProps: {
@@ -263,7 +268,7 @@ const Attendance = () => {
                           </CheckMemberWrapper>
                         </MemberDataWrapper>
                       ))
-                  : members[0]?.checkedMember.map(member => (
+                  : members[1]?.checkedMember.map(member => (
                       <MemberDataWrapper key={member}>
                         <CheckBoxWrapper checked={!!state.isChecked[member]} onChange={() => handleCheck(member)} />
                         <CheckMemberWrapper checked={state.isChecked[member]} onClick={() => handleCheck(member)}>
