@@ -28,7 +28,7 @@ const Attendance = () => {
   const [members, setMembers] = useState([])
   const navigate = useNavigate()
   const [state, setState] = useState({
-    selectedLeader: "대예배",
+    selectedLeader: "이화승 / 류지연 셀",
     adultCount: 0,
     memberCount: 0,
     totalCount: 0,
@@ -133,7 +133,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).subtract(7, "day"),
-      selectedLeader: "대예배",
+      selectedLeader: "이화승 / 류지연 셀",
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
@@ -147,7 +147,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).add(7, "day"),
-      selectedLeader: "대예배",
+      selectedLeader: "이화승 / 류지연 셀",
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
@@ -226,7 +226,7 @@ const Attendance = () => {
         </CalendarWrapper>
         <LeaderInfoWrapper>
           <SelectWrapper
-            value={state.selectedLeader ? state.selectedLeader : "대예배"}
+            value={state.selectedLeader}
             onChange={e => handleLeaderClick(e.target.value)}
             MenuProps={{
               PaperProps: {
@@ -263,7 +263,7 @@ const Attendance = () => {
                           </CheckMemberWrapper>
                         </MemberDataWrapper>
                       ))
-                  : members[0]?.checkedMember.map(member => (
+                  : members[1]?.checkedMember.map(member => (
                       <MemberDataWrapper key={member}>
                         <CheckBoxWrapper checked={!!state.isChecked[member]} onChange={() => handleCheck(member)} />
                         <CheckMemberWrapper checked={state.isChecked[member]} onClick={() => handleCheck(member)}>
