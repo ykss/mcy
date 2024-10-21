@@ -5,6 +5,7 @@ const mcyMembers = [
     id: nanoid(10),
     cell: "대예배",
     checkedMember: [
+      "강승민",
       "강인영",
       "고나영",
       "구본익",
