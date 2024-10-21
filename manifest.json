@@ -3,7 +3,7 @@
   "dir": "ltr",
   "display": "standalone",
   "name": "MCY",
-  "orientation": "landscape",
+  "orientation": "portrait",
   "scope": "/",
   "short_name": "MCY",
   "start_url": "/",
