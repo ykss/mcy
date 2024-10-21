@@ -3,6 +3,7 @@ importScripts("https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox
 const CACHE = "pwabuilder-page"
 const offlineFallbackPage = "/offline.html"
 const icon = "/favicon.ico"
+const manifest = "/manifest.json"
 
 self.addEventListener("message", event => {
   if (event.data && event.data.type === "SKIP_WAITING") {
@@ -10,12 +11,30 @@ self.addEventListener("message", event => {
   }
 })
 
-self.addEventListener("install", async event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.add([offlineFallbackPage, icon])))
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE).then(cache => {
+      return cache.addAll([offlineFallbackPage, icon, manifest])
+    }),
+  )
 })
 
-if (workbox.navigationPreload.isSupported()) {
-  workbox.navigationPreload.enable()
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE) {
+            return caches.delete(cacheName) // 이전 캐시 삭제
+          }
+        }),
+      )
+    }),
+  )
+})
+
+if (self.workbox.navigationPreload.isSupported()) {
+  self.workbox.navigationPreload.enable()
 }
 
 self.addEventListener("fetch", event => {
