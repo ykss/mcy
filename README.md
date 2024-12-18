@@ -56,33 +56,33 @@
 
 <h3> 로그인 페이지 </h3>
 
-<img width="337" alt="스크린샷 2024-12-13 오후 7 34 47" src="https://github.com/user-attachments/assets/7dfe93ff-89fe-4c51-a6d6-c6528555a25c" />
+<img width="337" alt="로그인 페이지" src="https://github.com/user-attachments/assets/7dfe93ff-89fe-4c51-a6d6-c6528555a25c" />
 
 <h3> 메인 페이지 </h3>
 
 <div style="display:flex; gap:24px;">
-    <img width="338" alt="스크린샷 2024-12-18 오후 2 40 05" src="https://github.com/user-attachments/assets/b5773db7-985d-4320-9141-2dfd94425aff" />
-    <img width="336" alt="스크린샷 2024-12-18 오후 2 58 55" src="https://github.com/user-attachments/assets/1d82b1d3-82b6-41d4-a8b7-9acd8334cb64" />
+    <img width="338" alt="메인페이지" src="https://github.com/user-attachments/assets/b5773db7-985d-4320-9141-2dfd94425aff" />
+    <img width="336" alt="메인 Drawer을 통해 다른 페이지간 이동이 가능하다." src="https://github.com/user-attachments/assets/1d82b1d3-82b6-41d4-a8b7-9acd8334cb64" />
 </div>
 
 <h3> 소식 페이지 </h3>
 
 <div style="display:flex; gap:24px;">
-  <img width="300" alt="스크린샷 2024-12-13 오후 7 37 31" src="https://github.com/user-attachments/assets/d49f1365-f6b4-4a55-939e-db5a16a2bcee" />
-  <img width="300" alt="스크린샷 2024-12-13 오후 7 38 27" src="https://github.com/user-attachments/assets/6f3d8dc8-7b84-4877-a23a-c4fe67f4739a" />
-  <img width="300" alt="스크린샷 2024-12-13 오후 7 38 20" src="https://github.com/user-attachments/assets/990f5db8-c578-45af-869c-518eece15aa1" />
+  <img width="300" alt="소식 추가 페이지" src="https://github.com/user-attachments/assets/d49f1365-f6b4-4a55-939e-db5a16a2bcee" />
+  <img width="300" alt="소식 페이지" src="https://github.com/user-attachments/assets/6f3d8dc8-7b84-4877-a23a-c4fe67f4739a" />
+  <img width="300" alt="소식 수정 페이지" src="https://github.com/user-attachments/assets/990f5db8-c578-45af-869c-518eece15aa1" />
 </div>
 
 <h3> 출석 페이지 </h3>
 
-<img width="337" alt="스크린샷 2024-12-18 오후 2 42 52" src="https://github.com/user-attachments/assets/660d8047-5b3b-4f83-98fc-e12dc1641577" />
+<img width="337" alt="출석 페이지" src="https://github.com/user-attachments/assets/660d8047-5b3b-4f83-98fc-e12dc1641577" />
 
 
 <h3> 출석 현황 페이지 </h3>
 
-<img width="338" alt="스크린샷 2024-12-18 오후 2 49 50" src="https://github.com/user-attachments/assets/58b93737-dc5f-4d66-9f2b-765fe3252413" />
+<img width="338" alt="출석 현황 페이지" src="https://github.com/user-attachments/assets/58b93737-dc5f-4d66-9f2b-765fe3252413" />
 
     
 <h3> 생일 페이지 </h3>
 
-<img width="339" alt="스크린샷 2024-12-13 오후 10 34 04" src="https://github.com/user-attachments/assets/6f84df34-f11a-4281-922f-9e02fb20eb15" />
+<img width="339" alt="생일자 페이지" src="https://github.com/user-attachments/assets/6f84df34-f11a-4281-922f-9e02fb20eb15" />
