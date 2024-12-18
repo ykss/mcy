@@ -61,8 +61,8 @@
 <h3> 메인 페이지 </h3>
 
 <div style="display:flex; gap:24px;">
-    <img width="336" alt="스크린샷 2024-12-13 오후 7 35 05" src="https://github.com/user-attachments/assets/a6ae3436-4967-4cfe-be48-444038366861" />
-    <img width="337" alt="스크린샷 2024-12-13 오후 7 35 15" src="https://github.com/user-attachments/assets/cb846e63-c5c9-4e47-87c3-b7db1c67d2a3" />
+    <img width="338" alt="스크린샷 2024-12-18 오후 2 40 05" src="https://github.com/user-attachments/assets/b5773db7-985d-4320-9141-2dfd94425aff" />
+    <img width="336" alt="스크린샷 2024-12-18 오후 2 58 55" src="https://github.com/user-attachments/assets/1d82b1d3-82b6-41d4-a8b7-9acd8334cb64" />
 </div>
 
 <h3> 소식 페이지 </h3>
@@ -75,11 +75,13 @@
 
 <h3> 출석 페이지 </h3>
 
-<img width="337" alt="스크린샷 2024-12-13 오후 7 38 37" src="https://github.com/user-attachments/assets/17bc8685-4495-4b66-b3eb-0875d1a489bf" />
+<img width="337" alt="스크린샷 2024-12-18 오후 2 42 52" src="https://github.com/user-attachments/assets/660d8047-5b3b-4f83-98fc-e12dc1641577" />
+
 
 <h3> 출석 현황 페이지 </h3>
 
-<img width="336" alt="스크린샷 2024-12-13 오후 7 35 32" src="https://github.com/user-attachments/assets/1b2983a8-8cb9-4235-aabf-e49a20b62569" />
+<img width="338" alt="스크린샷 2024-12-18 오후 2 49 50" src="https://github.com/user-attachments/assets/58b93737-dc5f-4d66-9f2b-765fe3252413" />
+
     
 <h3> 생일 페이지 </h3>
 
