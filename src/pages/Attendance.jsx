@@ -23,7 +23,7 @@ import Button from "@mui/material/Button"
 import Layout from "../components/Layout/Layout"
 // import mcyMembers from "../data/mcyMember"
 import { getAttendanceApi, updateAttendanceApi } from "../api/mcyAttendanceDataApi"
-import { McyMemberApi } from "../api/mcyMemberApi"
+import { getMcyMemberApi } from "../api/mcyMemberApi"
 
 const Attendance = () => {
   const [members, setMembers] = useState([])
@@ -47,7 +47,7 @@ const Attendance = () => {
   }, [])
 
   const fetchMemberData = async () => {
-    const data = await McyMemberApi()
+    const data = await getMcyMemberApi()
     setMembers(data)
   }
 

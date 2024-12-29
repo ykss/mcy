@@ -1,7 +1,7 @@
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../firebase"
 
-const McyMemberApi = async () => {
+const getMcyMemberApi = async () => {
   try {
     // mcyMember 컬렉션의 memberInfo 문서 참조
     const docRef = doc(db, "mcyMember", "memberInfo")
@@ -21,4 +21,4 @@ const McyMemberApi = async () => {
   }
 }
 
-export { McyMemberApi }
+export { getMcyMemberApi }
