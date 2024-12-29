@@ -21,8 +21,9 @@ import ButtonGroup from "@mui/material/ButtonGroup"
 import Button from "@mui/material/Button"
 
 import Layout from "../components/Layout/Layout"
-import mcyMembers from "../data/mcyMember"
+// import mcyMembers from "../data/mcyMember"
 import { getAttendanceApi, updateAttendanceApi } from "../api/mcyAttendanceDataApi"
+import { getMcyMemberApi } from "../api/mcyMemberApi"
 
 const Attendance = () => {
   const [members, setMembers] = useState([])
@@ -42,8 +43,13 @@ const Attendance = () => {
   }
 
   useEffect(() => {
-    setMembers(mcyMembers) // 상태에 바로 저장
+    fetchMemberData() // 상태에 바로 저장
   }, [])
+
+  const fetchMemberData = async () => {
+    const data = await getMcyMemberApi()
+    setMembers(data)
+  }
 
   useEffect(() => {
     const fetchAttendanceData = async () => {
