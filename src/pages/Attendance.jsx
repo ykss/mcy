@@ -21,15 +21,15 @@ import ButtonGroup from "@mui/material/ButtonGroup"
 import Button from "@mui/material/Button"
 
 import Layout from "../components/Layout/Layout"
-// import mcyMembers from "../data/mcyMember"
 import { getAttendanceApi, updateAttendanceApi } from "../api/mcyAttendanceDataApi"
 import { getMcyMemberApi } from "../api/mcyMemberApi"
 
 const Attendance = () => {
   const [members, setMembers] = useState([])
+  console.log(members)
   const navigate = useNavigate()
   const [state, setState] = useState({
-    selectedLeader: "이화승 셀",
+    selectedLeader: "",
     adultCount: 0,
     memberCount: 0,
     totalCount: 0,
@@ -117,6 +117,10 @@ const Attendance = () => {
 
   useEffect(() => {
     if (members.length > 0) {
+      setState(prevState => ({
+        ...prevState,
+        selectedLeader: members[0].cell,
+      }))
       const initialCheckedState = {}
       members.forEach(leader => {
         leader?.checkedMember?.forEach(member => {
@@ -139,7 +143,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).subtract(7, "day"),
-      selectedLeader: "이화승 셀",
+      selectedLeader: members[0].cell,
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
@@ -153,7 +157,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).add(7, "day"),
-      selectedLeader: "이화승 셀",
+      selectedLeader: members[0].cell,
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
