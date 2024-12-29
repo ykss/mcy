@@ -28,7 +28,7 @@ const Attendance = () => {
   const [members, setMembers] = useState([])
   const navigate = useNavigate()
   const [state, setState] = useState({
-    selectedLeader: "이화승 / 류지연 셀",
+    selectedLeader: "이화승 셀",
     adultCount: 0,
     memberCount: 0,
     totalCount: 0,
@@ -133,7 +133,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).subtract(7, "day"),
-      selectedLeader: "이화승 / 류지연 셀",
+      selectedLeader: "이화승 셀",
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
@@ -147,7 +147,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).add(7, "day"),
-      selectedLeader: "이화승 / 류지연 셀",
+      selectedLeader: "이화승 셀",
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
