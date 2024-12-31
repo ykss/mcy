@@ -26,7 +26,6 @@ import { getMcyMemberApi } from "../api/mcyMemberApi"
 
 const Attendance = () => {
   const [members, setMembers] = useState([])
-  console.log(members)
   const navigate = useNavigate()
   const [state, setState] = useState({
     selectedLeader: "",
