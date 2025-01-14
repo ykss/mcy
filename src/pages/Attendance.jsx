@@ -5,7 +5,7 @@ import dayjs from "dayjs"
 import "dayjs/locale/ko"
 
 import Stack from "@mui/material/Stack"
-import { styled } from "@mui/material"
+import { Grid, styled } from "@mui/material"
 import Typography from "@mui/material/Typography"
 import Checkbox from "@mui/material/Checkbox"
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
@@ -21,7 +21,6 @@ import ButtonGroup from "@mui/material/ButtonGroup"
 import Button from "@mui/material/Button"
 
 import Layout from "../components/Layout/Layout"
-// import mcyMembers from "../data/mcyMember"
 import { getAttendanceApi, updateAttendanceApi } from "../api/mcyAttendanceDataApi"
 import { getMcyMemberApi } from "../api/mcyMemberApi"
 
@@ -29,7 +28,7 @@ const Attendance = () => {
   const [members, setMembers] = useState([])
   const navigate = useNavigate()
   const [state, setState] = useState({
-    selectedLeader: "이화승 셀",
+    selectedLeader: "",
     adultCount: 0,
     memberCount: 0,
     totalCount: 0,
@@ -117,6 +116,10 @@ const Attendance = () => {
 
   useEffect(() => {
     if (members.length > 0) {
+      setState(prevState => ({
+        ...prevState,
+        selectedLeader: members[0].cell,
+      }))
       const initialCheckedState = {}
       members.forEach(leader => {
         leader?.checkedMember?.forEach(member => {
@@ -139,7 +142,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).subtract(7, "day"),
-      selectedLeader: "이화승 셀",
+      selectedLeader: members[0].cell,
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
@@ -153,7 +156,7 @@ const Attendance = () => {
     setState(prevState => ({
       ...prevState,
       value: dayjs(prevState.value).add(7, "day"),
-      selectedLeader: "이화승 셀",
+      selectedLeader: members[0].cell,
       adultCount: 0,
       memberCount: 0,
       totalCount: 0,
@@ -418,6 +421,7 @@ const DataWrapper = styled(Stack)`
   background-color: #f8e6ba;
   border-radius: 25px;
 `
+
 const DataAreaWrapper = styled(Stack)`
   width: 100%;
   height: 100%;
@@ -425,23 +429,25 @@ const DataAreaWrapper = styled(Stack)`
   align-items: center;
   display: flex;
 `
-const MemberDataAreaWrapper = styled(Stack)`
+
+const MemberDataAreaWrapper = styled(Grid)`
   width: 90%;
   height: 90%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: min-content;
   overflow-y: auto;
-  align-items: center;
-  gap: 10px;
+  align-content: flex-start;
 `
 const MemberDataWrapper = styled(Stack)`
+  display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between; /* 공간을 적절히 나눔 */
   border: 1px solid black;
   background-color: #f0f0f0;
   border-radius: 16px;
-  width: 85%;
+  width: 90%;
   height: 70px;
   margin: 5px auto;
 `
@@ -455,7 +461,7 @@ const CheckBoxWrapper = styled(Checkbox)`
 `
 
 const CheckMemberWrapper = styled(Typography)`
-  width: 50%;
+  width: 90%;
   font-size: 20px;
   font-weight: ${props => (props.checked ? 700 : 500)};
   color: #000;
