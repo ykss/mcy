@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button"
 
 import { McyIcon } from "../components/shared/McyIcon"
 import Footer from "../components/Layout/Footer"
