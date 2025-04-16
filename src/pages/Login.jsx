@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { Button } from "@/components/ui/button"
 
 import { McyIcon } from "../components/shared/McyIcon"
 import Footer from "../components/Layout/Footer"
@@ -55,7 +56,7 @@ const Login = () => {
 
   return (
     <>
-      d
+      <Button variant="outline">Outline</Button>
       <div className="w-screen h-[calc(100dvh-80px)] bg-[#fffcf6] flex flex-col items-center justify-center">
         <div className="w-screen h-[40%] flex items-center justify-center">
           <McyIcon />
