@@ -6,14 +6,15 @@ import { Button } from "../../components/ui/button"
 import { Input } from "../../components/ui/input"
 import Footer from "../components/Layout/Footer"
 import { getMcyMasterIdApi } from "../api/mcyMasterIdApi"
+import type { MasterAccount } from "../types/MasterAccount"
 
 const Login = () => {
-  const [currentId, setCurrentId] = useState("")
-  const [currentPassword, setCurrentPassword] = useState("")
+  const [currentId, setCurrentId] = useState<string>("")
+  const [currentPassword, setCurrentPassword] = useState<string>("")
   const navigate = useNavigate()
 
   // 일반 유저 로그인 성공시 main 페이지 이동
-  const userLogin = async () => {
+  const userLogin = async (): Promise<void> => {
     try {
       localStorage.setItem("admin", "false") //localStorage.setItem()은 문자열만 저장할 수 있으므로,
       toast.success("로그인 성공!")
@@ -24,20 +25,19 @@ const Login = () => {
     }
   }
 
-  const handleIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleIdChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setCurrentId(event.target.value)
   }
 
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setCurrentPassword(event.target.value)
   }
 
   //마스터 로그인
-  const masterLogin = async () => {
+  const masterLogin = async (): Promise<void> => {
     try {
       // 저장된 계정 정보 가져오기
-      const storedData = await getMcyMasterIdApi()
-
+      const storedData: MasterAccount | undefined = await getMcyMasterIdApi()
       // 아이디 확인
       if (storedData && storedData.id !== currentId) {
         toast.error("아이디를 다시 확인해주세요")
