@@ -11,9 +11,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <div className="max-w-[450px] w-full h-[100dvh] bg-[#fffcf6] mx-auto">
       <Header setIsDrawerOpen={setIsDrawerOpen} />
       {/* <MenuDrawer open={isDrawerOpen} setOpen={setIsDrawerOpen} navigate={navigate} /> */}
-      <div className="w-full h-[calc(100dvh-180px)] bg-[#FFFCF6]">{children}</div>
+      <div className="w-full h-[calc(100dvh-160px)] bg-[#FFFCF6]">{children}</div>
 
-      {/* <Footer /> */}
+      <Footer />
     </div>
   )
 }

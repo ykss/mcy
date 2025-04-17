@@ -17,7 +17,7 @@ function App() {
         <Route path={PAGE_PATH.MAIN} element={<Main />} />
         <Route path={PAGE_PATH.LOGIN} element={<Login />} />
         {/* <Route path="/mypage" element={<MyPage />} /> */}
-        <Route path="/birthDay" element={<BirthDay />} />
+        <Route path={PAGE_PATH.BIRTHDAY} element={<BirthDay />} />
         {/* <Route path="/attendance" element={<Attendance />} /> */}
         {/* 소식 페이지(나중에 사용하면 다시 주석 해제) */}
         {/* <Route path="/news" element={<News />} /> */}
