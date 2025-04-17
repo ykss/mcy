@@ -6,20 +6,21 @@ import Typography from "@mui/material/Typography"
 import IconButton from "@mui/material/IconButton"
 import MenuIcon from "@mui/icons-material/Menu"
 
-const Header = ({ setIsDrawerOpen }) => {
-  const Navigate = useNavigate()
+const Header = ({ setIsDrawerOpen }: { setIsDrawerOpen: (isDrawerOpen: boolean) => void }) => {
+  const navigate = useNavigate()
 
   const handleDrawerOpen = () => {
     setIsDrawerOpen(true)
   }
 
   const handleGoMain = () => {
-    Navigate("/main")
+    navigate("/main")
   }
 
   return (
     <>
-      <HeaderWrapper>
+      <div className="w-full h-[80px] bg-[#FFFCF6]"></div>
+      {/* <HeaderWrapper>
         <LogoWrapper>
           <TitleWrapper variant="h6" onClick={handleGoMain}>
             MCY
@@ -30,7 +31,7 @@ const Header = ({ setIsDrawerOpen }) => {
             </IconButton>
           </MenuIconWrapper>
         </LogoWrapper>
-      </HeaderWrapper>
+      </HeaderWrapper> */}
     </>
   )
 }
