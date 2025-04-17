@@ -1,12 +1,8 @@
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../firebase"
+import { MasterAccount } from "../types/MasterAccount"
 
-interface MasterData {
-  id: string
-  password: string
-}
-
-export const getMcyMasterIdApi = async (): Promise<MasterData | undefined> => {
+export const getMcyMasterIdApi = async (): Promise<MasterAccount | undefined> => {
   try {
     // 'masterAccount' 컬렉션의 'masterInfo' 문서 참조
     const masterInfoDocRef = doc(db, "masterAccount", "masterInfo")
@@ -15,7 +11,7 @@ export const getMcyMasterIdApi = async (): Promise<MasterData | undefined> => {
     const masterInfoDocSnap = await getDoc(masterInfoDocRef)
 
     // 문서가 존재하면 데이터를 반환
-    return masterInfoDocSnap.data() as MasterData
+    return masterInfoDocSnap.data() as MasterAccount
   } catch (error) {
     console.error("문서 가져오기 에러: ", error)
     return undefined
