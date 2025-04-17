@@ -2,8 +2,9 @@ import { initializeApp } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
 import { getStorage } from "firebase/storage"
+import type { FirebaseOptions } from "firebase/app"
 
-const firebaseConfig = {
+const firebaseConfig: FirebaseOptions = {
   apiKey: import.meta.env.VITE_FB_API_KEY,
   authDomain: import.meta.env.VITE_FB_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_PROJECT_ID,
