@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+// import { useNavigate } from "react-router-dom"
 import { toast, Toaster } from "react-hot-toast"
 
 import { Button } from "../components/ui/button"
@@ -14,14 +14,14 @@ import mcyIcon from "../assets/images/Login/MCYICON.svg"
 const Login = () => {
   const [currentId, setCurrentId] = useState<string>("")
   const [currentPassword, setCurrentPassword] = useState<string>("")
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   // 일반 유저 로그인 성공시 main 페이지 이동
   const userLogin = async (): Promise<void> => {
     try {
       localStorage.setItem("admin", "false") //localStorage.setItem()은 문자열만 저장할 수 있으므로,
       toast.success("로그인 성공!")
-      navigate(PAGE_PATH.MAIN)
+      // navigate(PAGE_PATH.MAIN)
       console.log("PAGE_PATH.MAIN", PAGE_PATH.MAIN)
     } catch (error) {
       console.error("로그인 실패:", error)
@@ -55,7 +55,7 @@ const Login = () => {
       // 아이디와 비밀번호가 모두 일치하는 경우
       localStorage.setItem("admin", "true")
       toast.success("로그인 성공!")
-      navigate(PAGE_PATH.MAIN)
+      // navigate(PAGE_PATH.MAIN)
     } catch (error) {
       console.error("Error fetching data: ", error)
       toast.error("서버 오류가 발생했습니다.")
@@ -63,7 +63,7 @@ const Login = () => {
   }
 
   return (
-    <div className="max-w-[450px] h-[100dvh] flex flex-col justify-center items-center">
+    <div className="max-w-[450px] h-[100dvh] mx-auto flex flex-col justify-center items-center">
       <Toaster />
       <div className="w-full h-full bg-[#FFFCF6] flex flex-col justify-center items-center">
         <div className="w-[40%] h-[20%]">

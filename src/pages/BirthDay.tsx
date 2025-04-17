@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 
 import Layout from "../components/Layout/Layout"
-import { Button } from "../../components/ui/button"
+import { Button } from "../components/ui/button"
 import BirthDayList from "../components/BirthDay/BirthDayList"
 import { useState, useEffect } from "react"
 import { McyBirthdayApi } from "../api/mcyBirthdayApi"
