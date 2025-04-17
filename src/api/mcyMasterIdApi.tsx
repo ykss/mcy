@@ -8,7 +8,6 @@ interface MasterData {
 
 export const getMcyMasterIdApi = async (): Promise<MasterData | undefined> => {
   try {
-    // 'masterAccount' 컬렉션의 'masterInfo' 문서 참조
     const masterInfoDocRef = doc(db, "masterAccount", "masterInfo")
 
     // 문서 데이터 가져오기
