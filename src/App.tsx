@@ -1,4 +1,3 @@
-import React from "react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 // import { ThemeProvider } from "@mui/material/styles"
 
@@ -12,7 +11,6 @@ import Login from "./pages/Login.tsx"
 // import AttendanceStatus from "./pages/AttendanceStatus"
 
 import "./App.css"
-import Layout from "./components/Layout/Layout.tsx"
 
 function App() {
   return (
