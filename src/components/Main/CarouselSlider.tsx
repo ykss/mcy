@@ -34,13 +34,13 @@ const CarouselSlider = ({ imageArray }: CarouselSliderProps) => {
   }, [emblaApi, onSelect])
 
   return (
-    <div className="relative w-[387px]">
-      <div className="overflow-hidden" ref={emblaRef}>
+    <div className="relative w-[85%]">
+      <div className="overflow-hidden rounded-[20px]" ref={emblaRef}>
         <div className="flex">
           {imageArray.map((content, index) => (
             <div key={index} className="flex-[0_0_100%] min-w-0">
               <div className="relative">
-                <img src={content.img} alt={`슬라이더 ${index + 1}`} className="w-[387px] h-[210px] rounded-[20px]" />
+                <img src={content.img} alt={`슬라이더 ${index + 1}`} className="w-full h-[210px] rounded-[20px]" />
                 <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2">
                   {imageArray.map((_, idx) => (
                     <div key={idx} className={`w-2.5 h-2.5 rounded-full transition-colors duration-300 ${idx === selectedIndex ? "bg-black" : "bg-white"}`} />

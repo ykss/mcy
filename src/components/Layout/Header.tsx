@@ -19,7 +19,7 @@ const Header = ({ setIsDrawerOpen }: { setIsDrawerOpen: (isDrawerOpen: boolean) 
     <>
       <div className="w-full h-[80px] bg-[#FFFCF6]">
         <header className="flex flex-row items-center w-full h-[80px] bg-[#FFFCF6]">
-          <div className="flex flex-row justify-center items-center w-full h-[60%] border-y-[1px] border-x-0 border-solid border-[#7c7c7c]">
+          <div className="flex flex-row relative justify-center items-center w-full h-[60%] border-y-[1px] border-x-0 border-solid border-[#7c7c7c]">
             <Typography
               scroll-m-20
               text-base
@@ -29,7 +29,7 @@ const Header = ({ setIsDrawerOpen }: { setIsDrawerOpen: (isDrawerOpen: boolean) 
               onClick={handleGoMain}>
               MCY
             </Typography>
-            <div className="absolute translate-x-48">
+            <div className="absolute right-0">
               <Button
                 variant="ghost"
                 size="icon"
