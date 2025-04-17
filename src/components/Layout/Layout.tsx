@@ -2,7 +2,7 @@ import { useState } from "react"
 
 // import MenuDrawer from "./MenuDrawer"
 import Header from "./Header"
-// import Footer from "./Footer"
+import Footer from "./Footer"
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)

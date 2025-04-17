@@ -70,7 +70,7 @@ const Login = () => {
           <img src={mcyIcon} alt="" className="w-full h-full" />
         </div>
         {/* 로그인 입력창 */}
-        <div className="w-[70%] h-[47%] flex flex-col justify-between gap-5 mt-11">
+        <div className="w-[70%] h-[300px] flex flex-col justify-between gap-5 mt-11">
           <Input
             placeholder="마스터 아이디"
             className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-[#F0F0F0] text-center focus:border-black focus:outline-none text-base placeholder:text-base p-0 m-0 box-border"
