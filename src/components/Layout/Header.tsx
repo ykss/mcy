@@ -1,10 +1,8 @@
 import { useNavigate } from "react-router-dom"
-
-import Stack from "@mui/material/Stack"
-import { styled } from "@mui/material"
-import Typography from "@mui/material/Typography"
-import IconButton from "@mui/material/IconButton"
-import MenuIcon from "@mui/icons-material/Menu"
+import PAGE_PATH from "../../constants/path"
+import { Button } from "../ui/button"
+import { Menu } from "lucide-react"
+import { Typography } from "../../assets/theme/theme"
 
 const Header = ({ setIsDrawerOpen }: { setIsDrawerOpen: (isDrawerOpen: boolean) => void }) => {
   const navigate = useNavigate()
@@ -14,60 +12,37 @@ const Header = ({ setIsDrawerOpen }: { setIsDrawerOpen: (isDrawerOpen: boolean) 
   }
 
   const handleGoMain = () => {
-    navigate("/main")
+    navigate(PAGE_PATH.MAIN)
   }
 
   return (
     <>
-      <div className="w-full h-[80px] bg-[#FFFCF6]"></div>
-      {/* <HeaderWrapper>
-        <LogoWrapper>
-          <TitleWrapper variant="h6" onClick={handleGoMain}>
-            MCY
-          </TitleWrapper>
-          <MenuIconWrapper>
-            <IconButton onClick={handleDrawerOpen}>
-              <MenuIcons />
-            </IconButton>
-          </MenuIconWrapper>
-        </LogoWrapper>
-      </HeaderWrapper> */}
+      <div className="w-full h-[80px] bg-[#FFFCF6]">
+        <header className="flex flex-row items-center w-full h-[80px] bg-[#FFFCF6]">
+          <div className="flex flex-row relative justify-center items-center w-full h-[60%] border-y-[1px] border-x-0 border-solid border-[#7c7c7c]">
+            <Typography
+              scroll-m-20
+              text-base
+              font-semibold
+              tracking-tight
+              className="w-[25%] text-center text-[20px] rounded-[15px] border-[1px] border-solid  border-black cursor-pointer"
+              onClick={handleGoMain}>
+              MCY
+            </Typography>
+            <div className="absolute right-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-black bg-transparent hover:bg-transparent hover:border-none focus:border-none focus:ring-0 active:border-none active:ring-0 outline-none border-0 [&_svg]:size-6"
+                onClick={handleDrawerOpen}>
+                <Menu className="h-7 w-7" />
+              </Button>
+            </div>
+          </div>
+        </header>
+      </div>
     </>
   )
 }
-const HeaderWrapper = styled(Stack)`
-  flex-direction: row;
-  align-items: center;
-  width: 100vw;
-  height: 80px;
-  background-color: #fffcf6;
-`
-const LogoWrapper = styled(Stack)`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 60%;
-  border-top: 1px solid #7c7c7c;
-  border-bottom: 1px solid #7c7c7c;
-`
-
-const TitleWrapper = styled(Typography)`
-  width: 15%;
-  text-align: center;
-  font-size: 20px;
-  border: 1px solid #000000;
-  border-radius: 15px;
-`
-
-const MenuIconWrapper = styled(Stack)`
-  position: absolute;
-  top: 20px;
-  right: 1%;
-`
-
-const MenuIcons = styled(MenuIcon)`
-  color: #000;
-`
 
 export default Header

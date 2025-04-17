@@ -1,0 +1,7 @@
+export { default as Login } from "./Login"
+export { default as Main } from "./Main"
+// export { default as MyPage } from "./MyPage"
+// export { default as BirthDay } from "./BirthDay"
+// export { default as Attendance } from "./Attendance"
+// export { default as News } from "./News"
+// export { default as AttendanceStatus } from "./AttendanceStatus"
