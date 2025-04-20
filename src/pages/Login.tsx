@@ -1,61 +1,60 @@
-import { useState } from "react"
-// import { useNavigate } from "react-router-dom"
-import { toast, Toaster } from "react-hot-toast"
+import { useNavigate } from "react-router-dom"
+import { toast } from "react-hot-toast"
+import { useForm } from "react-hook-form"
 
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
-import Footer from "../components/Layout/Footer"
 import { getMcyMasterIdApi } from "../api/mcyMasterIdApi"
 import type { MasterAccount } from "../types/MasterAccount"
 import PAGE_PATH from "../constants/path"
-
+import Layout from "../components/Layout/Layout"
+import Footer from "../components/Layout/Footer"
 import mcyIcon from "../assets/images/Login/MCYICON.svg"
 
+type LoginFormData = {
+  id: string
+  password: string
+}
+
 const Login = () => {
-  const [currentId, setCurrentId] = useState<string>("")
-  const [currentPassword, setCurrentPassword] = useState<string>("")
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
-  // 일반 유저 로그인 성공시 main 페이지 이동
-  const userLogin = async (): Promise<void> => {
-    try {
-      localStorage.setItem("admin", "false") //localStorage.setItem()은 문자열만 저장할 수 있으므로,
-      toast.success("로그인 성공!")
-      // navigate(PAGE_PATH.MAIN)
-      console.log("PAGE_PATH.MAIN", PAGE_PATH.MAIN)
-    } catch (error) {
-      console.error("로그인 실패:", error)
-      toast.error("로그인에 실패했습니다. 다시 시도해주세요.")
-    }
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    defaultValues: {
+      id: "",
+      password: "",
+    },
+  })
 
-  const handleIdChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setCurrentId(event.target.value)
-  }
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    setCurrentPassword(event.target.value)
+  // GO MCY 버튼 클릭 시 main 페이지로 이동
+  const goToMain = (): void => {
+    localStorage.setItem("admin", "false")
+    navigate(PAGE_PATH.MAIN)
   }
 
   //마스터 로그인
-  const masterLogin = async (): Promise<void> => {
+  const masterLogin = async (data: LoginFormData): Promise<void> => {
     try {
       // 저장된 계정 정보 가져오기
       const storedData: MasterAccount | undefined = await getMcyMasterIdApi()
       // 아이디 확인
-      if (storedData && storedData.id !== currentId) {
+      if (storedData && storedData.id !== data.id) {
         toast.error("아이디를 다시 확인해주세요")
         return
       }
       // 비밀번호 확인
-      if (storedData && storedData.password !== currentPassword) {
+      if (storedData && storedData.password !== data.password) {
         toast.error("비밀번호를 다시 확인해주세요")
         return
       }
       // 아이디와 비밀번호가 모두 일치하는 경우
       localStorage.setItem("admin", "true")
       toast.success("로그인 성공!")
-      // navigate(PAGE_PATH.MAIN)
+      navigate(PAGE_PATH.MAIN)
     } catch (error) {
       console.error("Error fetching data: ", error)
       toast.error("서버 오류가 발생했습니다.")
@@ -63,40 +62,41 @@ const Login = () => {
   }
 
   return (
-    <div className="max-w-[450px] h-[100dvh] mx-auto flex flex-col justify-center items-center">
-      <Toaster />
-      <div className="w-full h-full bg-[#FFFCF6] flex flex-col justify-center items-center">
-        <div className="w-[40%] h-[20%]">
-          <img src={mcyIcon} alt="" className="w-full h-full" />
+    <div className="w-full h-[100dvh]">
+      <Layout>
+        <div className="w-full max-w-[450px] h-full flex flex-col justify-center items-center gap-8">
+          {/* 로고 이미지 */}
+          <div className="w-[40%]">
+            <img src={mcyIcon} alt="MCY 아이콘" className="w-full" />
+          </div>
+          {/* 로그인 입력창 */}
+          <form onSubmit={handleSubmit(masterLogin)} className="w-full h-[40%] flex flex-col justify-between items-center box-border px-[10%]">
+            <Input
+              placeholder="마스터 아이디"
+              className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-[#F0F0F0] text-center focus:border-black focus:outline-none text-base placeholder:text-base p-0 m-0 box-border ring-0"
+              {...register("id", { required: "아이디를 입력해주세요" })}
+            />
+            <Input
+              placeholder="비밀번호"
+              type="password"
+              className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-[#F0F0F0] text-center focus:border-black focus:outline-none text-base placeholder:text-base p-0 m-0 box-border ring-0"
+              {...register("password", { required: "비밀번호를 입력해주세요" })}
+            />
+            <Button
+              type="submit"
+              className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-[#B4DFC3] text-center focus:border-black focus:outline-none text-base hover:bg-[#B4DFC3] active:bg-[#B4DFC3] hover:opacity-100 active:opacity-100 p-0 m-0 box-border">
+              로그인
+            </Button>
+            <Button
+              type="button"
+              className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-white text-center focus:border-black focus:outline-none text-base hover:bg-white active:bg-white hover:opacity-100 active:opacity-100 p-0 m-0 box-border"
+              onClick={goToMain}>
+              GO MCY
+            </Button>
+          </form>
         </div>
-        {/* 로그인 입력창 */}
-        <div className="w-[70%] h-[300px] flex flex-col justify-between gap-5 mt-11">
-          <Input
-            placeholder="마스터 아이디"
-            className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-[#F0F0F0] text-center focus:border-black focus:outline-none text-base placeholder:text-base p-0 m-0 box-border"
-            onChange={handleIdChange}
-            value={currentId}
-          />
-          <Input
-            type="password"
-            placeholder="비밀번호"
-            className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-[#F0F0F0] text-center focus:border-black focus:outline-none text-base placeholder:text-base p-0 m-0 box-border"
-            onChange={handlePasswordChange}
-            value={currentPassword}
-          />
-          <Button
-            className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-[#B4DFC3] text-center focus:border-black focus:outline-none text-base hover:bg-[#B4DFC3] active:bg-[#B4DFC3] hover:opacity-100 active:opacity-100 p-0 m-0 box-border"
-            onClick={masterLogin}>
-            로그인
-          </Button>
-          <Button
-            className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-white text-center focus:border-black focus:outline-none text-base hover:bg-white active:bg-white hover:opacity-100 active:opacity-100 p-0 m-0 box-border"
-            onClick={userLogin}>
-            GO MCY
-          </Button>
-        </div>
-      </div>
-      <Footer />
+        <Footer />
+      </Layout>
     </div>
   )
 }
