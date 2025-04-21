@@ -16,7 +16,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <Toaster />
       {!isRootPath && <Header setIsDrawerOpen={setIsDrawerOpen} />}
       {/* <MenuDrawer open={isDrawerOpen} setOpen={setIsDrawerOpen} navigate={navigate} /> */}
-      <div className="w-full h-full">{children}</div>
+      <div className={`w-full h-main-calc`}>{children}</div>
     </div>
   )
 }

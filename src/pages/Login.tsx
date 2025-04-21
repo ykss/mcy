@@ -73,12 +73,12 @@ const Login = () => {
           </div>
           {/* 로그인 입력창 */}
           <Form {...form}>
-            <form onSubmit={onSubmit} className="w-full h-[40%] flex flex-col justify-between items-center box-border px-[10%]">
+            <form onSubmit={onSubmit} className="w-full h-[50%] flex flex-col justify-center items-center box-border gap-4 px-[10%]">
               <FormField
                 control={form.control}
                 name="id"
                 render={({ field }) => (
-                  <FormItem className="w-full h-[20%]">
+                  <FormItem className="w-full h-[60px]">
                     <FormControl>
                       <Input
                         placeholder="마스터 아이디"
@@ -94,7 +94,7 @@ const Login = () => {
                 control={form.control}
                 name="password"
                 render={({ field }) => (
-                  <FormItem className="w-full h-[20%]">
+                  <FormItem className="w-full h-[60px]">
                     <FormControl>
                       <Input
                         placeholder="비밀번호"
@@ -109,12 +109,12 @@ const Login = () => {
               />
               <Button
                 type="submit"
-                className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-[#B4DFC3] text-center focus:border-black focus:outline-none text-base hover:bg-[#B4DFC3] active:bg-[#B4DFC3] hover:opacity-100 active:opacity-100 p-0 m-0 box-border">
+                className="w-full h-[60px] border-1 border-solid border-black rounded-[17px] bg-[#B4DFC3] text-center focus:border-black focus:outline-none text-base hover:bg-[#B4DFC3] active:bg-[#B4DFC3] hover:opacity-100 active:opacity-100 p-0 m-0 box-border">
                 로그인
               </Button>
               <Button
                 type="button"
-                className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-white text-center focus:border-black focus:outline-none text-base hover:bg-white active:bg-white hover:opacity-100 active:opacity-100 p-0 m-0 box-border"
+                className="w-full h-[60px] border-1 border-solid border-black rounded-[17px] bg-white text-center focus:border-black focus:outline-none text-base hover:bg-white active:bg-white hover:opacity-100 active:opacity-100 p-0 m-0 box-border"
                 onClick={goToMain}>
                 GO MCY
               </Button>
