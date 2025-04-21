@@ -18,7 +18,7 @@ const McyBirthdayApi = async (): Promise<BirthdayInfo[]> => {
     }
   } catch (error) {
     console.error("문서 가져오기 에러: ", error)
-    return []
+    throw error
   }
 }
 
