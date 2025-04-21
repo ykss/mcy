@@ -6,6 +6,7 @@ import BirthDayList from "../components/BirthDay/BirthDayList"
 import { useState, useEffect } from "react"
 import { McyBirthdayApi } from "../api/mcyBirthdayApi"
 import { BirthdayInfo } from "../types/BirthdayInfo"
+import Footer from "../components/Layout/Footer"
 
 const BirthDay = () => {
   const [monthChipId, setMonthChipId] = useState<number>(dayjs().month() + 1)
@@ -49,37 +50,47 @@ const BirthDay = () => {
   }, [birthDayData, monthChipId])
 
   return (
-    <Layout>
-      <div className="w-full h-full flex flex-col">
-        {/* 월 선택 버튼 */}
-        <div className="w-[90%] h-[30%] mx-auto flex flex-col justify-center gap-[20px]">
-          <div className="text-2xl font-bold">월 선택</div>
-          <div className="grid grid-cols-6 gap-1">
-            {Array.from({ length: 12 }, (_, i) => (
-              <Button
-                key={i}
-                variant="ghost"
-                className={`p-0 w-full h-[50px] bg-[#F0F0F0] rounded-none hover:bg-[#F0F0F0] border-0  ${i === 0 ? "rounded-tl-lg" : i === 5 ? "rounded-tr-lg" : i === 6 ? "rounded-bl-lg" : i === 11 ? "rounded-br-lg" : ""}`}
-                onClick={() => handleChipClick(i + 1)}>
-                <div className="text-sm text-[#7C7C7C]">{i + 1}월</div>
-              </Button>
-            ))}
+    <div className="w-full h-[100dvh]">
+      <Layout>
+        <div className="w-full h-full flex flex-col">
+          {/* 월 선택 버튼 */}
+          <div className="w-full px-[5%] h-[30%] mx-auto flex flex-col justify-center gap-[20px] box-border">
+            <div className="text-2xl font-bold">월 선택</div>
+            <div className="grid grid-cols-6 gap-1">
+              {Array.from({ length: 12 }, (_, i) => (
+                <Button
+                  key={i}
+                  variant="ghost"
+                  className={`p-0 w-full h-[50px] bg-[#F0F0F0] rounded-none hover:bg-[#F0F0F0] border-0  ${i === 0 ? "rounded-tl-lg" : i === 5 ? "rounded-tr-lg" : i === 6 ? "rounded-bl-lg" : i === 11 ? "rounded-br-lg" : ""}`}
+                  onClick={() => handleChipClick(i + 1)}>
+                  <div className="text-sm text-[#7C7C7C]">{i + 1}월</div>
+                </Button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* 생일 리스트 */}
-        <div className="w-[90%] h-[70%] mt-[20px] mx-auto bg-[#F3C5C5] rounded-[17px] border border-solid border-black box-border flex flex-col justify-center gap-1">
-          <div className="w-[90%] h-[10%] mx-auto text-xl font-bold">{monthChipId}월 생일을 축하합니다</div>
-          <div
-            className="bg-[#F0F0F0] w-[90%] h-[75%] mx-auto rounded-[17px] border border-solid border-black grid grid-cols-2 gap-6 justify-items-center content-start box-border p-4 py-6 overflow-y-scroll"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-            {selectedData.map((item, index) => (
-              <BirthDayList key={index} date={item.date} name={item.name} />
-            ))}
+          {/* 생일 리스트 */}
+          <div className="w-full h-[380px] px-[5%]  mt-[20px] rounded-[17px] box-border ">
+            <div className="w-full h-full bg-[#F3C5C5] rounded-[17px] border border-solid border-black box-border p-[15px] flex flex-col justify-between ">
+              <div className="w-full text-xl font-bold box-border">{monthChipId}월 생일을 축하합니다</div>
+              <div className="w-full h-[296px] box-border">
+                <div
+                  className="bg-[#F0F0F0] w-full h-full mx-auto rounded-[17px] border border-solid border-black grid grid-cols-2 gap-8 justify-items-center content-start box-border overflow-y-scroll p-4"
+                  style={{
+                    scrollbarWidth: "none", // Firefox
+                    msOverflowStyle: "none", // IE and Edge
+                  }}>
+                  {selectedData.map((item, index) => (
+                    <BirthDayList key={index} date={item.date} name={item.name} />
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </Layout>
+        <Footer />
+      </Layout>
+    </div>
   )
 }
 
