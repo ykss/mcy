@@ -10,6 +10,7 @@ import PAGE_PATH from "../constants/path"
 import Layout from "../components/Layout/Layout"
 import Footer from "../components/Layout/Footer"
 import mcyIcon from "../assets/images/Login/MCYICON.svg"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../components/ui/form"
 
 type LoginFormData = {
   id: string
@@ -19,44 +20,45 @@ type LoginFormData = {
 const Login = () => {
   const navigate = useNavigate()
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>({
+  const form = useForm<LoginFormData>({
     defaultValues: {
       id: "",
       password: "",
     },
   })
 
-  // GO MCY 버튼 클릭 시 main 페이지로 이동
+  const onSubmit = form.handleSubmit(data => {
+    masterLogin(data)
+  })
+
   const goToMain = (): void => {
     localStorage.setItem("admin", "false")
     navigate(PAGE_PATH.MAIN)
   }
 
-  //마스터 로그인
   const masterLogin = async (data: LoginFormData): Promise<void> => {
     try {
-      // 저장된 계정 정보 가져오기
       const storedData: MasterAccount | undefined = await getMcyMasterIdApi()
-      // 아이디 확인
-      if (storedData && storedData.id !== data.id) {
+
+      if (!storedData) {
+        toast.error("서버에서 계정 정보를 가져오지 못했습니다.")
+        return
+      }
+
+      if (storedData.id !== data.id) {
         toast.error("아이디를 다시 확인해주세요")
         return
       }
-      // 비밀번호 확인
-      if (storedData && storedData.password !== data.password) {
+
+      if (storedData.password !== data.password) {
         toast.error("비밀번호를 다시 확인해주세요")
         return
       }
-      // 아이디와 비밀번호가 모두 일치하는 경우
+
       localStorage.setItem("admin", "true")
       toast.success("로그인 성공!")
       navigate(PAGE_PATH.MAIN)
     } catch (error) {
-      console.error("Error fetching data: ", error)
       toast.error("서버 오류가 발생했습니다.")
     }
   }
@@ -70,30 +72,54 @@ const Login = () => {
             <img src={mcyIcon} alt="MCY 아이콘" className="w-full" />
           </div>
           {/* 로그인 입력창 */}
-          <form onSubmit={handleSubmit(masterLogin)} className="w-full h-[40%] flex flex-col justify-between items-center box-border px-[10%]">
-            <Input
-              placeholder="마스터 아이디"
-              className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-[#F0F0F0] text-center focus:border-black focus:outline-none text-base placeholder:text-base p-0 m-0 box-border ring-0"
-              {...register("id", { required: "아이디를 입력해주세요" })}
-            />
-            <Input
-              placeholder="비밀번호"
-              type="password"
-              className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-[#F0F0F0] text-center focus:border-black focus:outline-none text-base placeholder:text-base p-0 m-0 box-border ring-0"
-              {...register("password", { required: "비밀번호를 입력해주세요" })}
-            />
-            <Button
-              type="submit"
-              className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-[#B4DFC3] text-center focus:border-black focus:outline-none text-base hover:bg-[#B4DFC3] active:bg-[#B4DFC3] hover:opacity-100 active:opacity-100 p-0 m-0 box-border">
-              로그인
-            </Button>
-            <Button
-              type="button"
-              className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-white text-center focus:border-black focus:outline-none text-base hover:bg-white active:bg-white hover:opacity-100 active:opacity-100 p-0 m-0 box-border"
-              onClick={goToMain}>
-              GO MCY
-            </Button>
-          </form>
+          <Form {...form}>
+            <form onSubmit={onSubmit} className="w-full h-[40%] flex flex-col justify-between items-center box-border px-[10%]">
+              <FormField
+                control={form.control}
+                name="id"
+                render={({ field }) => (
+                  <FormItem className="w-full h-[20%]">
+                    <FormControl>
+                      <Input
+                        placeholder="마스터 아이디"
+                        className="w-full h-full border-1 border-solid border-black rounded-[17px] bg-[#F0F0F0] text-center focus:border-black focus:outline-none text-base placeholder:text-base p-0 m-0 box-border ring-0"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="w-full h-[20%]">
+                    <FormControl>
+                      <Input
+                        placeholder="비밀번호"
+                        type="password"
+                        className="w-full h-full border-1 border-solid border-black rounded-[17px] bg-[#F0F0F0] text-center focus:border-black focus:outline-none text-base placeholder:text-base p-0 m-0 box-border ring-0"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-[#B4DFC3] text-center focus:border-black focus:outline-none text-base hover:bg-[#B4DFC3] active:bg-[#B4DFC3] hover:opacity-100 active:opacity-100 p-0 m-0 box-border">
+                로그인
+              </Button>
+              <Button
+                type="button"
+                className="w-full h-[20%] border-1 border-solid border-black rounded-[17px] bg-white text-center focus:border-black focus:outline-none text-base hover:bg-white active:bg-white hover:opacity-100 active:opacity-100 p-0 m-0 box-border"
+                onClick={goToMain}>
+                GO MCY
+              </Button>
+            </form>
+          </Form>
         </div>
         <Footer />
       </Layout>
