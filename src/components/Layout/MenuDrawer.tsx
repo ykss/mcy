@@ -26,9 +26,9 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
           <X className="text-[15px]" onClick={toggleDrawer} />
         </div>
         <SheetHeader className="mt-[60px]">
-          {/* 현재 사용하지 않는 메뉴 */}
           <div className="w-[100%]">
-            <div className={"ml-[10px]"} onClick={() => handleNavigate("PAGE_PATH.NEWS")}>
+            {/* 현재 사용하지 않는 메뉴 */}
+            {/* <div className={"ml-[10px]"} onClick={() => handleNavigate(PAGE_PATH.NEWS)}>
               <div className="flex flex-row w-full">
                 <div className="flex justify-center items-center w-[30%]">
                   <div className="w-[90%] h-[30%] bg-[#c7bdeb] border-[1px] border-solid  border-black rounded-[22px]" />
@@ -37,7 +37,7 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
                   <p className=" font-['Noto_Sans'] font-semibold text-[24px] ">소식</p>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className={"ml-[10px]"} onClick={() => handleNavigate(admin ? "attendance" : "attendanceStatus")}>
               <div className="flex flex-row w-[100%]">
@@ -49,7 +49,7 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
                 </div>
               </div>
             </div>
-            <div className={"ml-[10px]"} onClick={() => handleNavigate("birthday")}>
+            <div className={"ml-[10px]"} onClick={() => handleNavigate(PAGE_PATH.BIRTHDAY)}>
               <div className="flex flex-row w-full">
                 <div className="flex justify-center items-center w-[30%]">
                   <div className="w-[90%] h-[30%] bg-[#f3c5c5] border-[1px] border-solid  border-black rounded-[22px]" />
