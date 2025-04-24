@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { Toaster } from "react-hot-toast"
 import { useLocation } from "react-router-dom"
 
 // import MenuDrawer from "./MenuDrawer"
@@ -13,7 +12,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="max-w-[450px] w-full h-full mx-auto bg-[#FFFCF6]">
-      <Toaster />
       {!isRootPath && <Header setIsDrawerOpen={setIsDrawerOpen} />}
       {/* <MenuDrawer open={isDrawerOpen} setOpen={setIsDrawerOpen} navigate={navigate} /> */}
       <div className={`w-full h-main-calc`}>{children}</div>

@@ -2,11 +2,10 @@ import dayjs from "dayjs"
 
 import Layout from "../components/Layout/Layout"
 import { Button } from "../components/ui/button"
-import BirthDayList from "../components/BirthDay/BirthDayList"
+import BirthDayCard from "../components/BirthDay/BirthDayCard"
 import { useState, useEffect } from "react"
 import { McyBirthdayApi } from "../api/mcyBirthdayApi"
 import { BirthdayInfo } from "../types/BirthdayInfo"
-import Footer from "../components/Layout/Footer"
 
 const BirthDay = () => {
   const [monthChipId, setMonthChipId] = useState<number>(dayjs().month() + 1)
@@ -52,7 +51,7 @@ const BirthDay = () => {
   return (
     <div className="w-full h-[100dvh]">
       <Layout>
-        <div className="w-full h-full flex flex-col">
+        <div className="w-full h-full flex flex-col box-border">
           {/* 월 선택 버튼 */}
           <div className="w-full px-[5%] h-[30%] mx-auto flex flex-col justify-center gap-[20px] box-border">
             <div className="text-2xl font-bold">월 선택</div>
@@ -70,25 +69,18 @@ const BirthDay = () => {
           </div>
 
           {/* 생일 리스트 */}
-          <div className="w-full h-[380px] px-[5%]  mt-[20px] rounded-[17px] box-border ">
-            <div className="w-full h-full bg-[#F3C5C5] rounded-[17px] border border-solid border-black box-border p-[15px] flex flex-col justify-between ">
-              <div className="w-full text-xl font-bold box-border">{monthChipId}월 생일을 축하합니다</div>
-              <div className="w-full h-[296px] box-border">
-                <div
-                  className="bg-[#F0F0F0] w-full h-full mx-auto rounded-[17px] border border-solid border-black grid grid-cols-2 gap-8 justify-items-center content-start box-border overflow-y-scroll p-4"
-                  style={{
-                    scrollbarWidth: "none", // Firefox
-                    msOverflowStyle: "none", // IE and Edge
-                  }}>
-                  {selectedData.map((item, index) => (
-                    <BirthDayList key={index} date={item.date} name={item.name} />
-                  ))}
+          <div className="w-full h-full px-[5%]  mt-[20px] rounded-[17px] box-border bg-[#FFFCF6] ">
+            <div className="w-full text-xl font-bold box-border">{monthChipId}월 생일을 축하합니다</div>
+            <div className="w-full flex flex-wrap justify-between pt-[20px]">
+              {selectedData.map((item, index) => (
+                <div className="pb-4">
+                  <BirthDayCard key={index} name={item.name} date={item.date} />
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </Layout>
     </div>
   )
