@@ -1,7 +1,8 @@
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "../firebase"
+import { BirthdayInfo } from "../types/BirthdayInfo"
 
-const McyBirthdayApi = async () => {
+const McyBirthdayApi = async (): Promise<BirthdayInfo[]> => {
   try {
     // 특정 문서(BirthDayList)를 가져오기
     const docRef = doc(db, "birthDay", "BirthDayList")
@@ -17,6 +18,8 @@ const McyBirthdayApi = async () => {
     }
   } catch (error) {
     console.error("문서 가져오기 에러: ", error)
+    throw error
   }
 }
-export { McyBirthdayApi }
+
+export { McyBirthdayApi, type BirthdayInfo }

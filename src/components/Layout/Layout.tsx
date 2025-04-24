@@ -1,19 +1,20 @@
 import { useState } from "react"
+import { useLocation } from "react-router-dom"
 
 // import MenuDrawer from "./MenuDrawer"
 import Header from "./Header"
-// import Footer from "./Footer"
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const location = useLocation()
+  const isRootPath = location.pathname === "/"
+
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
 
   return (
-    <div className="max-w-[450px] w-full h-[100dvh] bg-[#fffcf6] mx-auto">
-      <Header setIsDrawerOpen={setIsDrawerOpen} />
+    <div className="max-w-[450px] w-full h-full mx-auto bg-[#FFFCF6]">
+      {!isRootPath && <Header setIsDrawerOpen={setIsDrawerOpen} />}
       {/* <MenuDrawer open={isDrawerOpen} setOpen={setIsDrawerOpen} navigate={navigate} /> */}
-      <div className="w-full h-[calc(100dvh-180px)] bg-[#FFFCF6]">{children}</div>
-
-      {/* <Footer /> */}
+      <div className={`w-full h-main-calc`}>{children}</div>
     </div>
   )
 }

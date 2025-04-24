@@ -12,6 +12,9 @@ const config: Config = {
       borderRadius: {
         17: "17px",
       },
+      spacing: {
+        "main-calc": "calc(100dvh - 80px)", // headerHeight = 80px
+      },
     },
   },
   plugins: [],
