@@ -9,6 +9,9 @@ const config: Config = {
         secondary: "#f0f0f0",
         accent: "#b4dfc3",
       },
+      fontFamily: {
+        sans: ["Noto Sans", "Inter", "system-ui", "Avenir", "Helvetica", "Arial", "sans-serif"],
+      },
       borderRadius: {
         17: "17px",
       },
