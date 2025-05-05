@@ -234,14 +234,16 @@ const AttendanceCheck = () => {
           </div>
         </div>
         {/* 출석체크 */}
-        <div className="w-full px-[5%] py-[20px] box-border bg-[#FFFCF6]">
-          <div className="w-full px-[23px] py-[40px] bg-[#F8E6BA] border border-solid border-black rounded-[25px] box-border grid grid-cols-2 justify-items-center gap-[20px]">
+        <div className="w-full h-[50%] px-[5%] py-[20px] box-border bg-[#FFFCF6]">
+          <div className="w-full h-full px-[10%] py-[40px] overflow-y-scroll bg-[#F8E6BA] border border-solid border-black rounded-[25px] box-border flex flex-wrap items-start content-start justify-between gap-[15px] scrollbar-hide">
             {selectedCell?.checkedMember.map((member, index) => {
               const key = `${selectedCell.cell}:${member}`
               return (
-                <div key={index} className="w-[122px] h-[43px] bg-[#F0F0F0] rounded-[18px] border border-solid border-black flex flex-row items-center justify-center gap-2 ">
+                <div
+                  key={index}
+                  className="w-[100px] min-h-[43px] my-[5px] bg-[#F0F0F0] rounded-[18px] border border-solid border-black flex flex-row items-center justify-center gap-2 py-[5px] px-[10px]">
                   <Checkbox id={key} checked={checkedItems[key] || false} onCheckedChange={checked => handleCheckChange(`${selectedCell.cell}:${member}`, checked as boolean)} />
-                  <label htmlFor={key} className={`text-[20px] ${checkedItems[key] ? "font-bold" : "font-medium"}`}>
+                  <label htmlFor={key} className={`text-[20px] ${checkedItems[key] ? "font-bold" : "font-medium"} break-keep text-center leading-[1.2]`}>
                     {member}
                   </label>
                 </div>
