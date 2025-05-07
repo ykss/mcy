@@ -11,7 +11,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
 
   return (
-    <div className="max-w-[450px] w-full h-full mx-auto bg-[#FFFCF6]">
+    <div className="w-full h-full mx-auto bg-[#FFFCF6]">
       {!isRootPath && <Header setIsDrawerOpen={setIsDrawerOpen} />}
       {/* <MenuDrawer open={isDrawerOpen} setOpen={setIsDrawerOpen} navigate={navigate} /> */}
       <div className={`w-full h-main-calc`}>{children}</div>
