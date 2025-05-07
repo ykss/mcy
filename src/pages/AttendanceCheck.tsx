@@ -3,6 +3,7 @@ import "dayjs/locale/ko"
 import { ChevronLeftIcon, ChevronRightIcon, UserGroupIcon } from "@heroicons/react/24/outline"
 import { PlusIcon, MinusIcon } from "@heroicons/react/24/solid"
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { Checkbox } from "../components/ui/checkbox"
@@ -12,8 +13,10 @@ import { getMcyMemberApi } from "../api/mcyMemberApi"
 import Layout from "../components/Layout/Layout"
 import { CheckedMember } from "../types/CheckedMember"
 import { getAttendanceApi, updateAttendanceApi } from "../api/mcyAttendanceDataApi"
+import PAGE_PATH from "../constants/path"
 
 const AttendanceCheck = () => {
+  const navigate = useNavigate()
   const [totalMember, setTotalMember] = useState<number>(0)
   const [attendanceMember, setAttendanceMember] = useState<number>(0)
   const [adultCount, setAdultCount] = useState<number>(0)
@@ -113,7 +116,7 @@ const AttendanceCheck = () => {
 
     setAttendanceData(updatedData)
     setAdultCount(newCount)
-    setTotalMember(calculateTotalCount(attendanceMember, newCount))
+    setTotalMember(calculateTotalCount(attendanceData.memberCount, newCount))
 
     // Firebase 업데이트
     await updateFirebaseAttendance(updatedData)
@@ -202,6 +205,10 @@ const AttendanceCheck = () => {
     loadAttendanceData()
   }, [currentDate])
 
+  const handleGoAttendanceStatus = () => {
+    navigate(PAGE_PATH.ATTENDANCE_STATUS)
+  }
+
   return (
     <div className="w-full h-[100dvh] flex flex-col box-border">
       <Layout>
@@ -218,10 +225,10 @@ const AttendanceCheck = () => {
             <SelectTrigger className="w-[77%] h-[71px] bg-[#C7BDEB] text-[24px] font-bold border border-solid border-black rounded-[22px] flex justify-between items-center px-7 box-border">
               <SelectValue placeholder={memberList[0]?.cell || "셀 선택"} data-slot="select-value" className="" />
             </SelectTrigger>
-            <SelectContent className="w-full bg-[#DDD6F9] rounded-[22px] border border-solid border-black box-border overflow-y-auto max-h-[300px] ">
+            <SelectContent className="w-full bg-[#DDD6F9] rounded-[22px] border border-solid border-black box-border overflow-y-auto max-h-[300px]" position="popper" sideOffset={5}>
               <SelectGroup className="px-7 py-2 box-border">
                 {memberList.map(member => (
-                  <SelectItem className="w-full h-[55px] text-[18px] font-semibold" value={member.cell}>
+                  <SelectItem key={member.cell} className="w-full h-[55px] text-[18px] font-semibold" value={member.cell}>
                     <span className="">{member.cell}</span>
                   </SelectItem>
                 ))}
@@ -229,7 +236,7 @@ const AttendanceCheck = () => {
             </SelectContent>
           </Select>
           {/* 출석부 바로 가기 */}
-          <div className="w-[71px] h-[71px] bg-[#DDD6F9] rounded-[22px] border border-solid border-black flex items-center justify-center">
+          <div className="w-[71px] h-[71px] bg-[#DDD6F9] rounded-[22px] border border-solid border-black flex items-center justify-center" onClick={handleGoAttendanceStatus}>
             <UserGroupIcon className="w-11 h-11" />
           </div>
         </div>
