@@ -4,7 +4,7 @@ import { db } from "../firebase"
 import { CheckedMember } from "../types/CheckedMember"
 
 // 출석 데이터 불러오기
-const getAttendanceApi = async (selectedDateInfo: string): Promise<CheckedMember | []> => {
+const getAttendanceStatusApi = async (selectedDateInfo: string): Promise<CheckedMember | []> => {
   try {
     // 특정 문서(NewsList)를 가져오기
     const docRef = doc(db, "attendanceData", selectedDateInfo)
@@ -27,9 +27,9 @@ const getAttendanceApi = async (selectedDateInfo: string): Promise<CheckedMember
 }
 
 // 출석 데이터 수정하기
-const updateAttendanceApi = async (id: string, attendanceData: CheckedMember): Promise<void> => {
+const updateAttendanceApi = async (date: string, attendanceData: CheckedMember): Promise<void> => {
   try {
-    const docRef = doc(db, "attendanceData", id)
+    const docRef = doc(db, "attendanceData", date)
     const docSnap = await getDoc(docRef)
 
     // 문서가 이미 존재하는 경우 업데이트, 존재하지 않는 경우 새로 생성
@@ -44,4 +44,4 @@ const updateAttendanceApi = async (id: string, attendanceData: CheckedMember): P
   }
 }
 
-export { getAttendanceApi, updateAttendanceApi }
+export { getAttendanceStatusApi, updateAttendanceApi }

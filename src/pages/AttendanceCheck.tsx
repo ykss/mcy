@@ -8,12 +8,13 @@ import { useNavigate } from "react-router-dom"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { Checkbox } from "../components/ui/checkbox"
 import { Button } from "../components/ui/button"
-import { McyMember } from "../types/McyMember"
-import { getMcyMemberApi } from "../api/mcyMemberApi"
 import Layout from "../components/Layout/Layout"
+import { McyMember } from "../types/McyMember"
 import { CheckedMember } from "../types/CheckedMember"
-import { getAttendanceApi, updateAttendanceApi } from "../api/mcyAttendanceDataApi"
 import PAGE_PATH from "../constants/path"
+
+import { getMcyMemberApi } from "../api/mcyMemberApi"
+import { getAttendanceStatusApi, updateAttendanceApi } from "../api/mcyAttendanceDataApi"
 
 const AttendanceCheck = () => {
   const navigate = useNavigate()
@@ -65,7 +66,7 @@ const AttendanceCheck = () => {
   const loadAttendanceData = async () => {
     const dateStr = getCurrentDateStr()
     try {
-      const data: CheckedMember | [] = await getAttendanceApi(dateStr)
+      const data: CheckedMember | [] = await getAttendanceStatusApi(dateStr)
       if (Array.isArray(data) || !data) {
         // 새 데이터 생성
         const newData: CheckedMember = {
