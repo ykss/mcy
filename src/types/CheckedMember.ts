@@ -2,8 +2,7 @@ export interface CellData {
   cell: string
   checkedMember: string[]
 }
-
-export interface CheckedMember {
+export interface AttendanceStatus {
   adultCount: number
   cellData: CellData[]
   date: string

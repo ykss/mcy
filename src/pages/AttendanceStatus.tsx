@@ -37,7 +37,7 @@ const AttendanceStatus = () => {
         setTotalCount(data.totalCount)
 
         // 가장 많은 멤버를 가진 셀의 행 수 계산
-        const maxMemberCount = Math.max(...data.cellData.map(cell => cell.checkedMember.length))
+        const maxMemberCount = Math.max(...data.cellData.map((cell: CellData) => cell.checkedMember.length))
         setMaxRows(Math.ceil(maxMemberCount / 4)) // 4명씩 한 줄이므로 4로 나눔
       }
     } catch (error) {
