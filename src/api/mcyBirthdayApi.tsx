@@ -11,7 +11,7 @@ const McyBirthdayApi = async (): Promise<BirthdayInfo[]> => {
     if (docSnap.exists()) {
       // 문서에서 birthDayInfo 배열을 가져오기
       const birthdayList = docSnap.data().birthDayInfo
-      return birthdayList ? birthdayList : []
+      return birthdayList ? birthdayList.sort((a: BirthdayInfo, b: BirthdayInfo) => a.date.localeCompare(b.date)) : []
     } else {
       console.log("No such document!")
       return []

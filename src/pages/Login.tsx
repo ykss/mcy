@@ -66,7 +66,7 @@ const Login = () => {
   return (
     <div className="w-full h-[100dvh]">
       <Layout>
-        <div className="w-full max-w-[450px] h-full flex flex-col justify-center items-center gap-8">
+        <div className="w-full h-full flex flex-col justify-center items-center gap-8">
           {/* 로고 이미지 */}
           <div className="w-[40%]">
             <img src={mcyIcon} alt="MCY 아이콘" className="w-full" />
