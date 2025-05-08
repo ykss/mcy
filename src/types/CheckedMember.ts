@@ -1,4 +1,4 @@
-interface CellData {
+export interface CellData {
   cell: string
   checkedMember: string[]
 }
