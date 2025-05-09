@@ -14,9 +14,7 @@ import { AttendanceStats } from "../components/attendance/AttendanceStats"
 dayjs.locale("ko")
 
 const AttendanceStatus = () => {
-  const [currentSunday, setCurrentSunday] = useState<dayjs.Dayjs>(
-    dayjs().locale("ko").day(0), // 이번 주 일요일
-  )
+  const [currentSunday, setCurrentSunday] = useState<dayjs.Dayjs>(dayjs().locale("ko").day(0))
 
   const { cellData, adultCount, memberCount, totalCount, maxRows } = useWeeklyAttendance(currentSunday)
 
