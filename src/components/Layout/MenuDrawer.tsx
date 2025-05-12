@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Sheet, SheetContent, SheetHeader, SheetFooter } from "../../components/ui/sheet"
+import { Drawer, DrawerContent, DrawerHeader, DrawerFooter } from "../../components/ui/drawer"
 import { MenuDrawerProps } from "../../types/MenuDrawer"
 import PAGE_PATH from "../../constants/path"
 import { X } from "lucide-react"
@@ -20,12 +20,12 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
   }
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetContent>
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerContent>
         <div className="absolute right-1 top-3 text-black">
           <X className="text-[15px]" onClick={toggleDrawer} />
         </div>
-        <SheetHeader className="mt-[60px]">
+        <DrawerHeader className="mt-[60px]">
           <div className="w-[100%]">
             {/* 현재 사용하지 않는 메뉴 */}
             {/* <div className={"ml-[10px]"} onClick={() => handleNavigate(PAGE_PATH.NEWS)}>
@@ -60,9 +60,9 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
               </div>
             </div>
           </div>
-        </SheetHeader>
+        </DrawerHeader>
 
-        <SheetFooter className="flex flex-row justify-end gap-2 mr-[23px] mt-[160px]">
+        <DrawerFooter className="flex flex-row justify-end gap-2 mr-[23px] mt-[160px]">
           <div
             className="font-['Noto_Sans'] font-semibold text-[16px] text-black"
             onClick={() => {
@@ -70,9 +70,9 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
             }}>
             {admin ? "로그아웃" : "로그인"}
           </div>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   )
 }
 
