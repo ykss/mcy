@@ -10,7 +10,7 @@ import { Checkbox } from "../components/ui/checkbox"
 import { Button } from "../components/ui/button"
 import Layout from "../components/Layout/Layout"
 import { McyMember } from "../types/McyMember"
-import { CheckedMember } from "../types/CheckedMember"
+import { AttendanceStatus, CellData } from "../types/CheckedMember"
 import PAGE_PATH from "../constants/path"
 
 import { getMcyMemberApi } from "../api/mcyMemberApi"
@@ -27,14 +27,14 @@ const AttendanceCheck = () => {
     dayjs().locale("ko").day(0), // 이번 주 일요일
   )
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({})
-  const [attendanceData, setAttendanceData] = useState<CheckedMember | null>(null)
+  const [attendanceData, setAttendanceData] = useState<AttendanceStatus | null>(null)
 
   // 공통으로 사용되는 함수들
   const getCurrentDateStr = () => currentDate.format("YYYY-MM-DD") // 현재 날짜 문자열 반환
 
   const calculateTotalCount = (memberCount: number, adultCount: number) => memberCount + adultCount // 총 인원 수 계산
 
-  const updateFirebaseAttendance = async (newData: CheckedMember) => {
+  const updateFirebaseAttendance = async (newData: AttendanceStatus) => {
     // 출석 데이터 업데이트
     const dateStr = getCurrentDateStr()
     try {
@@ -66,10 +66,10 @@ const AttendanceCheck = () => {
   const loadAttendanceData = async () => {
     const dateStr = getCurrentDateStr()
     try {
-      const data: CheckedMember | [] = await getAttendanceStatusApi(dateStr)
+      const data: AttendanceStatus | [] = await getAttendanceStatusApi(dateStr)
       if (Array.isArray(data) || !data) {
         // 새 데이터 생성
-        const newData: CheckedMember = {
+        const newData: AttendanceStatus = {
           adultCount: 0,
           cellData: [],
           date: dateStr,
@@ -85,8 +85,8 @@ const AttendanceCheck = () => {
         // 기존 데이터 설정
         setAttendanceData(data)
         const newCheckedItems: Record<string, boolean> = {}
-        data.cellData.forEach(cellData => {
-          cellData.checkedMember.forEach(memberName => {
+        data.cellData.forEach((cellData: CellData) => {
+          cellData.checkedMember.forEach((memberName: string) => {
             newCheckedItems[`${cellData.cell}:${memberName}`] = true
           })
         })
@@ -109,7 +109,7 @@ const AttendanceCheck = () => {
   const handleAdultCountUpdate = async (newCount: number) => {
     if (!attendanceData) return
 
-    const updatedData: CheckedMember = {
+    const updatedData: AttendanceStatus = {
       ...attendanceData,
       adultCount: newCount,
       totalCount: calculateTotalCount(attendanceData.memberCount, newCount),
