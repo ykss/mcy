@@ -27,18 +27,6 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
         </div>
         <DrawerHeader className="mt-[60px]">
           <div className="w-[100%]">
-            {/* 현재 사용하지 않는 메뉴 */}
-            {/* <div className={"ml-[10px]"} onClick={() => handleNavigate(PAGE_PATH.NEWS)}>
-              <div className="flex flex-row w-full">
-                <div className="flex justify-center items-center w-[30%]">
-                  <div className="w-[90%] h-[30%] bg-[#c7bdeb] border-[1px] border-solid  border-black rounded-[22px]" />
-                </div>
-                <div className="w-[30%]">
-                  <p className=" font-['Noto_Sans'] font-semibold text-[24px] ">소식</p>
-                </div>
-              </div>
-            </div> */}
-
             <div className={"ml-[10px]"} onClick={() => handleNavigate(admin ? "attendance" : "attendanceStatus")}>
               <div className="flex flex-row w-[100%] gap-3">
                 <div className="flex justify-center items-center w-[30%]">
