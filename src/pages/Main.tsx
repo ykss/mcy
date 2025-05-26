@@ -43,12 +43,12 @@ const Main = () => {
         </div>
 
         <div className="flex flex-row items-center justify-center w-[90%] h-[20%] gap-4">
-          <div className="flex flex-col justify-around  gap-1 w-[75%] h-[90%] bg-[#f3c5c5] border-1 border-solid border-black rounded-[25px] box-border p-2">
-            <div className="font-['Noto_Sans'] font-bold text-xs ml-5">1.위로 하나님을 경배하는 거룩한 예배공동체</div>
-            <div className="font-['Noto_Sans'] font-bold text-xs ml-5">2.안으로 예수님을 닮아가는 말씀 실천의 제자공동체</div>
-            <div className="font-['Noto_Sans'] font-bold text-xs ml-5">3.밖으로 성령님을 의지하는 사랑의 섬김공동체</div>
+          <div className="flex flex-col justify-around  gap-1 w-[80%] h-[90%] bg-[#f3c5c5] border-1 border-solid border-black rounded-[25px] box-border p-2">
+            <div className="font-['Noto_Sans'] font-bold text-[0.65rem] ml-4">1.위로 하나님을 경배하는 거룩한 예배공동체</div>
+            <div className="font-['Noto_Sans'] font-bold text-[0.65rem] ml-4">2.안으로 예수님을 닮아가는 말씀 실천의 제자공동체</div>
+            <div className="font-['Noto_Sans'] font-bold text-[0.65rem] ml-4">3.밖으로 성령님을 의지하는 사랑의 섬김공동체</div>
           </div>
-          <div className="w-[25%] h-[90%] bg-[#b4dfc3] border border-1 border-solid border-black rounded-[25px]" />
+          <div className="w-[20%] h-[90%] bg-[#b4dfc3] border border-1 border-solid border-black rounded-[25px]" />
         </div>
       </div>
     </Layout>

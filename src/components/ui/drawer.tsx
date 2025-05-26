@@ -21,7 +21,7 @@ const DrawerPortal = DialogPrimitive.Portal
 DrawerPortal.displayName = "DrawerPortal"
 
 const DrawerOverlay = React.forwardRef<React.ElementRef<typeof DialogPrimitive.Overlay>, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(({ className, ...props }, ref) => (
-  <DialogPrimitive.Overlay ref={ref} className={cn("fixed  w-[450px] h-full inset-0  z-50 bg-black/50", className)} {...props} />
+  <DialogPrimitive.Overlay ref={ref} className={cn("fixed h-full inset-0  z-50 bg-black/50", className)} {...props} />
 ))
 DrawerOverlay.displayName = "DrawerOverlay"
 
@@ -33,7 +33,7 @@ const DrawerContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
         ref={ref}
         className={cn(
           // 위치 및 너비 설정
-          "fixed top-0 right-0 w-[60%] max-w-[60%] h-full z-50",
+          "fixed top-0 right-0 w-[70%] h-full z-50",
           // 애니메이션 설정
           "data-[state=open]:animate-drawer-in",
           "data-[state=closed]:animate-drawer-out",

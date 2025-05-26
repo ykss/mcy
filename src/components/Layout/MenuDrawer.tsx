@@ -40,7 +40,7 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
             </div> */}
 
             <div className={"ml-[10px]"} onClick={() => handleNavigate(admin ? "attendance" : "attendanceStatus")}>
-              <div className="flex flex-row w-[100%]">
+              <div className="flex flex-row w-[100%] gap-3">
                 <div className="flex justify-center items-center w-[30%]">
                   <div className="w-[90%] h-[35%] bg-[#b4dfc3] border-[1px] border-solid border-black rounded-[22px]" />
                 </div>
@@ -50,7 +50,7 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
               </div>
             </div>
             <div className={"ml-[10px]"} onClick={() => handleNavigate(PAGE_PATH.BIRTHDAY)}>
-              <div className="flex flex-row w-full">
+              <div className="flex flex-row w-[100%] gap-3">
                 <div className="flex justify-center items-center w-[30%]">
                   <div className="w-[90%] h-[30%] bg-[#f3c5c5] border-[1px] border-solid  border-black rounded-[22px]" />
                 </div>
