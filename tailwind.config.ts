@@ -18,9 +18,37 @@ const config: Config = {
       spacing: {
         "main-calc": "calc(100dvh - 80px)", // headerHeight = 80px
       },
+      keyframes: {
+        "drawer-in": {
+          from: { transform: "translateX(100%)" },
+          to: { transform: "translateX(0)" },
+        },
+        "drawer-out": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(100%)" },
+        },
+      },
+      animation: {
+        "drawer-in": "drawer-in 0.3s ease-out",
+        "drawer-out": "drawer-out 0.3s ease-in",
+      },
+      keyframes: {
+        "drawer-in": {
+          from: { transform: "translateX(100%)" },
+          to: { transform: "translateX(0)" },
+        },
+        "drawer-out": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(100%)" },
+        },
+      },
+      animation: {
+        "drawer-in": "drawer-in 0.3s ease-out",
+        "drawer-out": "drawer-out 0.3s ease-in",
+      },
     },
   },
-  plugins: [require("tailwind-scrollbar-hide")],
+  plugins: [require("tailwindcss-animate")],
   corePlugins: {
     preflight: false,
   },

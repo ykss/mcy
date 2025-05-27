@@ -68,12 +68,12 @@ const Login = () => {
       <Layout>
         <div className="w-full h-full flex flex-col justify-center items-center gap-8">
           {/* 로고 이미지 */}
-          <div className="w-[40%]">
-            <img src={mcyIcon} alt="MCY 아이콘" className="w-full" />
+          <div className="w-[50%] h-[50%] max-w-[40%] max-h-[40%]">
+            <img src={mcyIcon} alt="MCY 아이콘" className="w-full h-full" />
           </div>
           {/* 로그인 입력창 */}
           <Form {...form}>
-            <form onSubmit={onSubmit} className="w-full h-[50%] flex flex-col justify-center items-center box-border gap-4 px-[10%]">
+            <form onSubmit={onSubmit} className="w-full max-w-[90%] h-[50%] flex flex-col justify-center items-center box-border gap-4 px-[10%]">
               <FormField
                 control={form.control}
                 name="id"

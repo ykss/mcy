@@ -1,8 +1,6 @@
 import "./index.css"
 import "./App.css"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-// import MyPage from "./pages/MyPage"
-// import Attendance from "./pages/Attendance"
 // import News from "./pages/News"
 import { Login, Main, BirthDay, AttendanceCheck, AttendanceStatus } from "./pages/index"
 import PAGE_PATH from "./constants/path"
