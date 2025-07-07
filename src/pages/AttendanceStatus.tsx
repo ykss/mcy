@@ -57,7 +57,9 @@ const AttendanceStatus = () => {
           </div>
         </div>
         <div className="w-full box-border px-[5%] flex justify-end items-center pb-[35px] bg-[#FFFCF6]">
-          <Button onClick={handleCapture} className="w-[102px] h-[43px] text-[16px] border border-solid border-black rounded-[16px] bg-[#EDE8FF] focus:bg-[#EDE8FF] focus:border-black">
+          <Button
+            onClick={handleCapture}
+            className="w-[102px] h-[43px] text-[16px] border border-solid border-black rounded-[16px] bg-[#EDE8FF] focus:bg-[#EDE8FF] focus:border-black text-black hover:bg-[#EDE8FF] hover:border-black active:bg-[#EDE8FF] active:border-black">
             공유하기
           </Button>
         </div>
