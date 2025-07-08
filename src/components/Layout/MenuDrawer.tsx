@@ -16,7 +16,7 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
   }
 
   const handleNavigate = (path: string) => {
-    navigate(`/${path}`)
+    navigate(`${path}`)
   }
 
   return (
@@ -27,7 +27,7 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
         </div>
         <DrawerHeader className="mt-[60px]">
           <div className="w-[100%]">
-            <div className={"ml-[10px]"} onClick={() => handleNavigate(admin ? "attendance" : "attendanceStatus")}>
+            <div className={"ml-[10px]"} onClick={() => handleNavigate(admin ? PAGE_PATH.ATTENDANCE_CHECK : PAGE_PATH.ATTENDANCE_STATUS)}>
               <div className="flex flex-row w-[100%] gap-3">
                 <div className="flex justify-center items-center w-[30%]">
                   <div className="w-[90%] h-[35%] bg-[#b4dfc3] border-[1px] border-solid border-black rounded-[22px]" />
@@ -54,7 +54,7 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
           <div
             className="font-['Noto_Sans'] font-semibold text-[16px] text-black"
             onClick={() => {
-              handleNavigate("")
+              handleNavigate(PAGE_PATH.LOGIN)
             }}>
             {admin ? "로그아웃" : "로그인"}
           </div>

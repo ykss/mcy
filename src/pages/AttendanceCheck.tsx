@@ -223,7 +223,7 @@ const AttendanceCheck = () => {
         {/* 선택 영역 */}
         <div className="w-full px-[5%] flex flex-row items-center justify-between box-border py-[20px]">
           <Select onValueChange={handleCellChange}>
-            <SelectTrigger className="w-[77%] h-[71px] bg-[#C7BDEB] text-[24px] font-bold border border-solid border-black rounded-[22px] flex justify-between items-center px-7 box-border">
+            <SelectTrigger className="w-[77%] h-[71px] bg-[#C7BDEB] text-[24px] text-black font-bold border border-solid border-black rounded-[22px] flex justify-between items-center px-7 box-border">
               <SelectValue placeholder={memberList[0]?.cell || "셀 선택"} data-slot="select-value" className="" />
             </SelectTrigger>
             <SelectContent className="w-full bg-[#DDD6F9] rounded-[22px] border border-solid border-black box-border overflow-y-auto max-h-[300px]" position="popper" sideOffset={5}>
@@ -249,9 +249,9 @@ const AttendanceCheck = () => {
               return (
                 <div
                   key={index}
-                  className="w-[100px] min-h-[43px] my-[5px] bg-[#F0F0F0] rounded-[18px] border border-solid border-black flex flex-row items-center justify-center gap-2 py-[5px] px-[10px]">
-                  <Checkbox id={key} checked={checkedItems[key] || false} onCheckedChange={checked => handleCheckChange(`${selectedCell.cell}:${member}`, checked as boolean)} />
-                  <label htmlFor={key} className={`text-[20px] ${checkedItems[key] ? "font-bold" : "font-medium"} break-keep text-center leading-[1.2]`}>
+                  className="w-[100px] min-h-[43px] my-[5px] bg-[#F0F0F0] rounded-[18px] border border-solid border-black flex flex-row items-center justify-center gap-2 py-[5px] px-[10px] ">
+                  <Checkbox id={key} checked={checkedItems[key] || false} onCheckedChange={checked => handleCheckChange(`${selectedCell.cell}:${member}`, checked as boolean)} className="bg-white" />
+                  <label htmlFor={key} className={`text-[20px]  ${checkedItems[key] ? "font-bold" : "font-medium"} break-keep text-center leading-[1.2]`}>
                     {member}
                   </label>
                 </div>
@@ -270,13 +270,13 @@ const AttendanceCheck = () => {
             {/* 출석 인원 증가 */}
             <Button
               onClick={handleAdultPlusMember}
-              className="w-[70px] h-[70px] px-[5%] bg-[#DDD6F9] box-border border border-solid border-black rounded-[25px] [&_svg]:size-10 focus:bg-[#DDD6F9] focus:border-black">
+              className="w-[70px] h-[70px] px-[5%] bg-[#DDD6F9] text-black box-border border border-solid border-black rounded-[25px] [&_svg]:size-10 focus:bg-[#DDD6F9] focus:border-black">
               <PlusIcon />
             </Button>
             {/* 출석 인원 감소 */}
             <Button
               onClick={handleAdultMinusMember}
-              className="w-[70px] h-[70px] px-[5%] bg-[#DDD6F9] box-border border border-solid border-black rounded-[25px] [&_svg]:size-10 focus:bg-[#DDD6F9] focus:border-black">
+              className="w-[70px] h-[70px] px-[5%] bg-[#DDD6F9] text-black box-border border border-solid border-black rounded-[25px] [&_svg]:size-10 focus:bg-[#DDD6F9] focus:border-black">
               <MinusIcon />
             </Button>
           </div>

@@ -82,7 +82,7 @@ const Login = () => {
                     <FormControl>
                       <Input
                         placeholder="마스터 아이디"
-                        className="w-full h-full border-1 border-solid border-black rounded-[17px] bg-[#F0F0F0] text-center focus:border-black focus:outline-none text-base placeholder:text-base p-0 m-0 box-border ring-0"
+                        className="w-full h-full border-1 border-solid border-black rounded-[17px] bg-[#F0F0F0] text-center text-black focus:border-black focus:outline-none focus:ring-0 focus:ring-transparent focus:shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:shadow-none text-base placeholder:text-base p-0 m-0 box-border ring-0 "
                         {...field}
                       />
                     </FormControl>
@@ -99,7 +99,7 @@ const Login = () => {
                       <Input
                         placeholder="비밀번호"
                         type="password"
-                        className="w-full h-full border-1 border-solid border-black rounded-[17px] bg-[#F0F0F0] text-center focus:border-black focus:outline-none text-base placeholder:text-base p-0 m-0 box-border ring-0"
+                        className="w-full h-full border-1 border-solid border-black rounded-[17px] bg-[#F0F0F0] text-center text-black focus:border-black focus:outline-none focus:ring-0 focus:ring-transparent focus:shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:shadow-none text-base placeholder:text-base p-0 m-0 box-border ring-0"
                         {...field}
                       />
                     </FormControl>
@@ -109,12 +109,12 @@ const Login = () => {
               />
               <Button
                 type="submit"
-                className="w-full h-[60px] border-1 border-solid border-black rounded-[17px] bg-[#B4DFC3] text-center focus:border-black focus:outline-none text-base hover:bg-[#B4DFC3] active:bg-[#B4DFC3] hover:opacity-100 active:opacity-100 p-0 m-0 box-border">
+                className="w-full h-[60px] border-1 border-solid border-black rounded-[17px] bg-[#B4DFC3] text-center text-black focus:border-black focus:outline-none text-base hover:bg-[#B4DFC3] hover:border-black  active:bg-[#B4DFC3]  p-0 m-0 box-border">
                 로그인
               </Button>
               <Button
                 type="button"
-                className="w-full h-[60px] border-1 border-solid border-black rounded-[17px] bg-white text-center focus:border-black focus:outline-none text-base hover:bg-white active:bg-white hover:opacity-100 active:opacity-100 p-0 m-0 box-border"
+                className="w-full h-[60px] border-1 border-solid border-black rounded-[17px] bg-white text-center text-black focus:border-black focus:outline-none text-base hover:bg-white active:bg-white hover:opacity-100 hover:border-black active:opacity-100 p-0 m-0 box-border"
                 onClick={goToMain}>
                 GO MCY
               </Button>
