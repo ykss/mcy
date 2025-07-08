@@ -35,11 +35,33 @@ const AttendanceStatus = () => {
 
     try {
       const canvas = await html2canvas(element)
-      const link = document.createElement("a")
-      link.download = `${currentSunday.format("YYYY-MM-DD")}_출석현황.png`
-      link.href = canvas.toDataURL()
-      link.click()
-      toast.success("사진이 저장되었습니다.")
+      const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, "image/png"))
+      if (!blob) {
+        toast.error("이미지 변환에 실패했습니다.")
+        return
+      }
+
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+      if (isMobile && navigator.canShare && navigator.canShare({ files: [new File([blob], "attendance.png", { type: blob.type })] })) {
+        const file = new File([blob], "attendance.png", { type: blob.type })
+        await navigator.share({
+          files: [file],
+          title: "출석 현황",
+          text: "출석 현황 이미지를 공유합니다.",
+        })
+        toast.success("공유가 완료되었습니다.")
+      } else {
+        // fallback: 다운로드 링크 제공
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement("a")
+        link.href = url
+        link.download = `${currentSunday.format("YYYY-MM-DD")}_출석현황.png`
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+        toast("이미지가 다운로드되었습니다. 갤러리에 저장하려면 파일 앱에서 이동하세요.", { icon: "📷" })
+      }
     } catch (error) {
       console.error("Error capturing image:", error)
       toast.error("사진 저장에 실패했습니다.")
