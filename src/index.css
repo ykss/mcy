@@ -98,6 +98,17 @@ button:hover {
   border-color: #646cff;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #f0f0f0 inset !important;
+  box-shadow: 0 0 0 1000px #f0f0f0 inset !important;
+  -webkit-text-fill-color: #000 !important;
+  caret-color: #000 !important;
+  color: #000 !important;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
