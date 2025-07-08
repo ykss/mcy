@@ -42,8 +42,8 @@ const AttendanceStatus = () => {
       }
 
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-      if (isMobile && navigator.canShare && navigator.canShare({ files: [new File([blob], "attendance.png", { type: blob.type })] })) {
-        const file = new File([blob], "attendance.png", { type: blob.type })
+      if (isMobile && navigator.canShare && navigator.canShare({ files: [new File([blob], `${currentSunday.format("YYYY-MM-DD")}_출석현황.png`, { type: blob.type })] })) {
+        const file = new File([blob], `${currentSunday.format("YYYY-MM-DD")}_출석현황.png`, { type: blob.type })
         await navigator.share({
           files: [file],
           title: "출석 현황",
