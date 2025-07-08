@@ -1,4 +1,5 @@
 import dayjs from "dayjs"
+import customParseFormat from "dayjs/plugin/customParseFormat"
 
 import Layout from "../components/Layout/Layout"
 import { Button } from "../components/ui/button"
@@ -11,6 +12,8 @@ const BirthDay = () => {
   const [monthChipId, setMonthChipId] = useState<number>(dayjs().month() + 1)
   const [birthDayData, setBirthDayData] = useState<BirthdayInfo[]>([]) // 파이어베이스 저장된 전체 생일 데이터
   const [selectedData, setSelectedData] = useState<BirthdayInfo[]>([]) // 선택된 해당 월 생일 데이터
+
+  dayjs.extend(customParseFormat)
 
   // 파이어베이스에서 데이터 가져오기
   const fetchData = async (): Promise<void> => {
@@ -25,11 +28,13 @@ const BirthDay = () => {
   // 해당 월 생일 데이터 필터링
   const filterData = (): void => {
     const filteredData = birthDayData.filter(item => {
-      const date = dayjs(item.date, "MM-DD")
+      if (!item.date) return false
+      const date = dayjs(item.date, "MM/DD")
       const month = date.month() + 1
       return month === monthChipId
     })
     setSelectedData(filteredData)
+    console.log(filteredData)
   }
 
   const handleChipClick = (targetId: number): void => {
@@ -69,12 +74,12 @@ const BirthDay = () => {
           </div>
 
           {/* 생일 리스트 */}
-          <div className="w-full h-full px-[5%]  mt-[20px] rounded-[17px] box-border bg-[#FFFCF6] ">
+          <div className="w-full flex-1 px-[5%] mt-[20px] rounded-[17px] box-border bg-[#FFFCF6] ">
             <div className="w-full text-xl font-bold box-border">{monthChipId}월 생일을 축하합니다</div>
             <div className="w-full flex flex-wrap justify-between pt-[20px]">
               {selectedData.map((item, index) => (
-                <div className="pb-4">
-                  <BirthDayCard key={index} name={item.name} date={item.date} />
+                <div className="pb-4" key={index}>
+                  <BirthDayCard name={item.name} date={item.date} />
                 </div>
               ))}
             </div>
