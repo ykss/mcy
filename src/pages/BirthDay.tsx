@@ -34,7 +34,6 @@ const BirthDay = () => {
       return month === monthChipId
     })
     setSelectedData(filteredData)
-    console.log(filteredData)
   }
 
   const handleChipClick = (targetId: number): void => {
