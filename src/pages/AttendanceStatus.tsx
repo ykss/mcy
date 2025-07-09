@@ -42,8 +42,8 @@ const AttendanceStatus = () => {
       }
 
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-      if (isMobile && navigator.canShare && navigator.canShare({ files: [new File([blob], "attendance.png", { type: blob.type })] })) {
-        const file = new File([blob], "attendance.png", { type: blob.type })
+      if (isMobile && navigator.canShare && navigator.canShare({ files: [new File([blob], `${currentSunday.format("YYYY-MM-DD")}_출석현황.png`, { type: blob.type })] })) {
+        const file = new File([blob], `${currentSunday.format("YYYY-MM-DD")}_출석현황.png`, { type: blob.type })
         await navigator.share({
           files: [file],
           title: "출석 현황",
@@ -63,7 +63,6 @@ const AttendanceStatus = () => {
         toast("이미지가 다운로드되었습니다. 갤러리에 저장하려면 파일 앱에서 이동하세요.", { icon: "📷" })
       }
     } catch (error) {
-      console.error("Error capturing image:", error)
       toast.error("사진 저장에 실패했습니다.")
     }
   }
