@@ -37,16 +37,16 @@ const Main = () => {
 
         <div className="flex justify-evenly items-center w-[90%] h-[20%]">
           <div className="flex flex-col justify-center gap-1 w-full h-[90%] bg-[#f8e6ba] border-1 border-solid border-black rounded-[25px]">
-            <div className="font-['Noto_Sans'] font-bold text-sm ml-5">성령의 능력으로 부흥하는 청년교회</div>
-            <div className="font-['Noto_Sans'] font-bold text-sm ml-5">겔 37:14, 행 9:31</div>
+            <div className="font-['Noto_Sans'] font-bold text-sm ml-5">용서, 사랑의 시작입니다.</div>
+            <div className="font-['Noto_Sans'] font-bold text-sm ml-5">사 55:7, 엡 4:31-32</div>
           </div>
         </div>
 
         <div className="flex flex-row items-center justify-center w-[90%] h-[20%] gap-4">
           <div className="flex flex-col justify-around  gap-1 w-[80%] h-[90%] bg-[#f3c5c5] border-1 border-solid border-black rounded-[25px] box-border p-2">
-            <div className="font-['Noto_Sans'] font-bold text-[0.65rem] ml-4">1.위로 하나님을 경배하는 거룩한 예배공동체</div>
-            <div className="font-['Noto_Sans'] font-bold text-[0.65rem] ml-4">2.안으로 예수님을 닮아가는 말씀 실천의 제자공동체</div>
-            <div className="font-['Noto_Sans'] font-bold text-[0.65rem] ml-4">3.밖으로 성령님을 의지하는 사랑의 섬김공동체</div>
+            <div className="font-['Noto_Sans'] font-bold text-[0.65rem] ml-4">1.예배를 통해 성령님의 임재를 깊이 체험한다.</div>
+            <div className="font-['Noto_Sans'] font-bold text-[0.65rem] ml-4">2.기도를 통해 성령님의 함께하심을 경험하고, 그분의 인도하심을 따라간다.</div>
+            <div className="font-['Noto_Sans'] font-bold text-[0.65rem] ml-4">3.모임을 통해 하나님의 말씀을 함께 나누고, 말씀을 붙들고 삶으로 나아간다.</div>
           </div>
           <div className="w-[20%] h-[90%] bg-[#b4dfc3] border border-1 border-solid border-black rounded-[25px]" />
         </div>

@@ -47,7 +47,6 @@ const AttendanceStatus = () => {
         await navigator.share({
           files: [file],
           title: "출석 현황",
-          text: "출석 현황 이미지를 공유합니다.",
         })
         toast.success("공유가 완료되었습니다.")
       } else {
