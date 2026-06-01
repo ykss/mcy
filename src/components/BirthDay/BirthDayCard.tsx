@@ -8,7 +8,7 @@ const BirthDayCard = ({ name, date }: { name: string; date: string }) => {
   const safeDate = month && day ? `2000-${month.padStart(2, "0")}-${day.padStart(2, "0")}` : ""
   const weekDay = safeDate ? dayjs(safeDate).format("ddd") : ""
   return (
-    <div className="font-bold w-[42vw] h-[22vw] xs:w-[42vw] xs:h-[22vw] sm:w-[44vw] sm:h-[23vw] lg:w-[45vw] lg:h-[24vw] bg-white flex flow-row items-center justify-start rounded-[13px] border border-solid border-black overflow-hidden box-border">
+    <div className="font-bold w-full h-[22vw] xs:h-[22vw] sm:h-[23vw] lg:h-[24vw] bg-white flex flow-row items-center justify-start rounded-[13px] border border-solid border-black overflow-hidden box-border">
       {/* 왼쪽 라인  */}
       <div className="w-[4.5vw] h-full bg-[#F3C5C5] border border-solid border-r-black border-l-0"></div>
       {/* 날짜 */}

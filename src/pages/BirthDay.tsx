@@ -73,9 +73,9 @@ const BirthDay = () => {
           </div>
 
           {/* 생일 리스트 */}
-          <div className="w-full flex-1 px-[5%] mt-[4vw] rounded-[17px] box-border bg-[#FFFCF6] overflow-y-auto">
+          <div className="w-full flex-1 px-[5%] my-[4vw] rounded-[17px] box-border bg-[#FFFCF6] overflow-y-auto">
             <div className="w-full text-[clamp(16px,4.5vw,20px)] font-bold box-border">{monthChipId}월 생일을 축하합니다</div>
-            <div className="w-full flex flex-wrap justify-between pt-[4vw] gap-y-[3vw]">
+            <div className="w-full grid grid-cols-2 gap-[3vw] pt-[4vw]">
               {selectedData.map((item, index) => (
                 <BirthDayCard key={index} name={item.name} date={item.date} />
               ))}
