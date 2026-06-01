@@ -1,10 +1,10 @@
 import toast from "react-hot-toast" // react-toastify 대신 react-hot-toast 사용
 import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore"
 import { db } from "../firebase"
-import { CheckedMember } from "../types/CheckedMember"
+import { AttendanceStatus } from "../types/CheckedMember"
 
 // 출석 데이터 불러오기
-const getAttendanceStatusApi = async (selectedDateInfo: string): Promise<CheckedMember | []> => {
+const getAttendanceStatusApi = async (selectedDateInfo: string): Promise<AttendanceStatus | []> => {
   try {
     // 특정 문서(NewsList)를 가져오기
     const docRef = doc(db, "attendanceData", selectedDateInfo)
@@ -12,7 +12,7 @@ const getAttendanceStatusApi = async (selectedDateInfo: string): Promise<Checked
 
     if (docSnap.exists()) {
       // 문서에서 list 배열을 가져오기
-      const memberList = docSnap.data() as CheckedMember
+      const memberList = docSnap.data() as AttendanceStatus
       return memberList
     } else {
       toast.error("출석 데이터가 없습니다.", {
@@ -27,7 +27,7 @@ const getAttendanceStatusApi = async (selectedDateInfo: string): Promise<Checked
 }
 
 // 출석 데이터 수정하기
-const updateAttendanceApi = async (date: string, attendanceData: CheckedMember): Promise<void> => {
+const updateAttendanceApi = async (date: string, attendanceData: AttendanceStatus): Promise<void> => {
   try {
     const docRef = doc(db, "attendanceData", date)
     const docSnap = await getDoc(docRef)
