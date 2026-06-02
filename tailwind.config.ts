@@ -3,6 +3,12 @@ import type { Config } from "tailwindcss"
 const config: Config = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    screens: {
+      xs: "320px",  // iPhone SE
+      sm: "375px",  // iPhone 표준
+      md: "390px",  // iPhone 14/15
+      lg: "430px",  // iPhone 15 Plus/Pro Max
+    },
     extend: {
       colors: {
         primary: "#fffcf6",
