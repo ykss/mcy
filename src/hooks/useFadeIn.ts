@@ -13,7 +13,7 @@ import { useEffect, useRef } from "react"
  * data-delay: 애니메이션 지연 시간 (ms 단위 숫자 문자열, 기본값 "0")
  */
 const useFadeIn = (threshold = 0.15) => {
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
     const container = ref.current
