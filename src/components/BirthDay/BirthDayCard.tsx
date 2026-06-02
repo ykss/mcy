@@ -1,5 +1,6 @@
 import dayjs from "dayjs"
-import calendar from "../../../public/birthday/calendar.svg"
+
+const calendar = "/birthday/calendar.svg"
 const BirthDayCard = ({ name, date }: { name: string; date: string }) => {
   // "06-07" → ["06", "07"]
   const [month, day] = date.split("-")
