@@ -211,3 +211,9 @@ input:-webkit-autofill:active {
     @apply bg-white text-gray-900;
   }
 }
+
+/* useFadeIn 훅 초기 상태 — JS 실행 전 FOUC 방지 */
+[data-fade] {
+  opacity: 0;
+  transform: translateY(24px);
+}
