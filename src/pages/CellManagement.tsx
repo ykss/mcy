@@ -6,6 +6,7 @@ import { McyMember } from "../types/McyMember"
 import { getMcyMemberApi } from "../api/mcyMemberApi"
 import CellManagementStats from "../components/cellManagement/CellManagementStats"
 import CellCard from "../components/cellManagement/CellCard"
+import MemberRow from "../components/cellManagement/MemberRow"
 
 const CellManagement = () => {
   const ref = useFadeIn()
@@ -68,7 +69,14 @@ const CellManagement = () => {
                 index={index}
                 isExpanded={expandedCells.has(cell.cell)}
                 onToggle={() => toggleCell(cell.cell)}
-              />
+              >
+                {(cell.members ?? []).map((member, i) => (
+                  <div key={member.name}>
+                    {i > 0 && <div className="mx-4 border-t border-black/5" />}
+                    <MemberRow member={member} />
+                  </div>
+                ))}
+              </CellCard>
             ))}
           </div>
         </section>
