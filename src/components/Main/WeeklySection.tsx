@@ -37,7 +37,7 @@ const WeeklySection = () => {
   return (
     <section ref={ref as React.RefObject<HTMLElement>} className="w-full max-w-[390px] mx-auto px-6 py-8">
       <div data-fade data-delay="0" className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-[#2C2722]">예배·모임 안내</h2>
+        <h2 className="text-[clamp(20px,6.2vw,24px)] font-bold text-[#2C2722]">예배·모임 안내</h2>
         <p className="text-xs font-semibold tracking-[0.2em] text-[#6A6157] uppercase">WEEKLY</p>
       </div>
       <div className="flex flex-col divide-y divide-black/10">

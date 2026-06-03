@@ -13,11 +13,11 @@ const Main = () => {
 
   return (
     <div className="min-h-screen bg-[#D6CFC4] flex justify-center">
-      <div className="w-full max-w-[390px] bg-[#FAF5EA] text-[#2C2722] min-h-screen relative shadow-[0_0_40px_rgba(0,0,0,0.15)]">
+      <div className="w-full bg-[#FAF5EA] text-[#2C2722] min-h-screen relative shadow-[0_0_40px_rgba(0,0,0,0.15)]">
         <MainHeader onMenuClick={() => setIsDrawerOpen(true)} />
         <HeroSection />
         <MissionSection />
-        <WeeklySection />
+        {/* <WeeklySection /> */}
         <MainFooter />
         <MenuDrawer open={isDrawerOpen} setOpen={setIsDrawerOpen} navigate={navigate} />
       </div>
