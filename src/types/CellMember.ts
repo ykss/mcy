@@ -1,7 +1,7 @@
-export type MemberRole = '대표리더' | '리더' | '셀원' | '임원'
+export type MemberRole = '임원' | '리더' | '셀원'
 
 export interface CellMember {
   name: string
-  role: MemberRole
+  roles: MemberRole[]
   position?: string
 }

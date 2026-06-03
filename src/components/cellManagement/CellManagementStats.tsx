@@ -9,11 +9,11 @@ const CellManagementStats = ({ cells }: Props) => {
   const cellCount = cells.length
   const leaderCount = cells.reduce(
     (acc, cell) =>
-      acc + (cell.members?.filter(m => m.role === "대표리더" || m.role === "리더").length ?? 0),
+      acc + (cell.members?.filter(m => m.roles?.includes("리더")).length ?? 0),
     0,
   )
   const imwonCount = cells.reduce(
-    (acc, cell) => acc + (cell.members?.filter(m => m.role === "임원").length ?? 0),
+    (acc, cell) => acc + (cell.members?.filter(m => m.roles?.includes("임원")).length ?? 0),
     0,
   )
 

@@ -7,15 +7,21 @@ import { getMcyMemberApi } from "../api/mcyMemberApi"
 import CellManagementStats from "../components/cellManagement/CellManagementStats"
 import CellCard from "../components/cellManagement/CellCard"
 import MemberRow from "../components/cellManagement/MemberRow"
+import AddCellDialog from "../components/cellManagement/AddCellDialog"
+import AddMemberDialog from "../components/cellManagement/AddMemberDialog"
 
 const CellManagement = () => {
   const ref = useFadeIn()
   const year = dayjs().year()
   const [cells, setCells] = useState<McyMember[]>([])
   const [expandedCells, setExpandedCells] = useState<Set<string>>(new Set())
+  const [addCellOpen, setAddCellOpen] = useState(false)
+  const [addMemberOpen, setAddMemberOpen] = useState(false)
+
+  const fetchCells = () => getMcyMemberApi().then(setCells)
 
   useEffect(() => {
-    getMcyMemberApi().then(setCells)
+    fetchCells()
   }, [])
 
   const toggleCell = (cellName: string) => {
@@ -48,10 +54,16 @@ const CellManagement = () => {
 
           <div data-fade data-delay="200" className="flex flex-col gap-2">
             <div className="flex gap-3">
-              <button className="flex-1 bg-[#5B4FCF] text-white font-bold py-4 rounded-2xl text-[15px]">
+              <button
+                className="flex-1 bg-[#5B4FCF] text-white font-bold py-4 rounded-2xl text-[15px]"
+                onClick={() => setAddMemberOpen(true)}
+              >
                 + 멤버 추가
               </button>
-              <button className="flex-1 bg-white border border-black/10 text-gray-700 font-bold py-4 rounded-2xl text-[15px]">
+              <button
+                className="flex-1 bg-white border border-black/10 text-gray-700 font-bold py-4 rounded-2xl text-[15px]"
+                onClick={() => setAddCellOpen(true)}
+              >
                 + 셀 추가
               </button>
             </div>
@@ -81,6 +93,18 @@ const CellManagement = () => {
           </div>
         </section>
       </Layout>
+
+      <AddCellDialog
+        open={addCellOpen}
+        onClose={() => setAddCellOpen(false)}
+        onSuccess={fetchCells}
+      />
+      <AddMemberDialog
+        open={addMemberOpen}
+        onClose={() => setAddMemberOpen(false)}
+        cells={cells}
+        onSuccess={fetchCells}
+      />
     </div>
   )
 }
