@@ -7,6 +7,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
 :root {
   width: 100vw;
   height: 100vh;
@@ -210,4 +218,10 @@ input:-webkit-autofill:active {
   body {
     @apply bg-white text-gray-900;
   }
+}
+
+/* useFadeIn 훅 초기 상태 — JS 실행 전 FOUC 방지 */
+[data-fade] {
+  opacity: 0;
+  transform: translateY(24px);
 }
