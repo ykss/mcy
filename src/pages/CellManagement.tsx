@@ -11,6 +11,7 @@ import MemberRow from "../components/cellManagement/MemberRow"
 import AddCellDialog from "../components/cellManagement/AddCellDialog"
 import AddMemberDialog from "../components/cellManagement/AddMemberDialog"
 import EditMemberDialog from "../components/cellManagement/EditMemberDialog"
+import EditCellDialog from "../components/cellManagement/EditCellDialog"
 import MoveMembersDialog from "../components/cellManagement/MoveMembersDialog"
 
 const CellManagement = () => {
@@ -21,6 +22,7 @@ const CellManagement = () => {
   const [addCellOpen, setAddCellOpen] = useState(false)
   const [addMemberOpen, setAddMemberOpen] = useState(false)
   const [editTarget, setEditTarget] = useState<{ cellName: string; member: CellMember } | null>(null)
+  const [editCellTarget, setEditCellTarget] = useState<McyMember | null>(null)
   const [moveOpen, setMoveOpen] = useState(false)
   // Map<cellName, Set<memberName>>
   const [checkedMembers, setCheckedMembers] = useState<Map<string, Set<string>>>(new Map())
@@ -107,6 +109,7 @@ const CellManagement = () => {
                 index={index}
                 isExpanded={expandedCells.has(cell.cell)}
                 onToggle={() => toggleCell(cell.cell)}
+                onSettingsClick={() => setEditCellTarget(cell)}
               >
                 {(cell.members ?? []).map((member, i) => {
                   const isChecked = checkedMembers.get(cell.cell)?.has(member.name) ?? false
@@ -167,6 +170,12 @@ const CellManagement = () => {
         member={editTarget?.member ?? null}
         cellName={editTarget?.cellName ?? ""}
         cells={cells}
+        onSuccess={fetchCells}
+      />
+      <EditCellDialog
+        open={!!editCellTarget}
+        onClose={() => setEditCellTarget(null)}
+        cell={editCellTarget}
         onSuccess={fetchCells}
       />
       <MoveMembersDialog
