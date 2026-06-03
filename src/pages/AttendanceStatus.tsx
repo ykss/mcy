@@ -68,19 +68,19 @@ const AttendanceStatus = () => {
   }
 
   return (
-    <div className="w-full h-[100dvh]">
+    <div className="w-full min-h-[100dvh]">
       <Layout>
-        <div id="capture" className="w-full px-[5%] pt-[20px] pb-[35px] box-border bg-[#FFFCF6]">
-          <div className="w-full px-[5%] py-[20px] flex flex-col gap-y-4 box-border rounded-[25px] border border-solid border-black bg-[#F0F0F0]">
+        <div id="capture" className="w-full px-[5%] pt-5 pb-9 box-border bg-[#FFFCF6]">
+          <div className="w-full px-[5%] py-5 flex flex-col gap-y-4 box-border rounded-[25px] border border-solid border-black bg-[#F0F0F0]">
             <DateSelector currentSunday={currentSunday} onPrevWeek={handlePrevWeek} onNextWeek={handleNextWeek} />
             <CellList cellData={cellData} maxRows={maxRows} />
             <AttendanceStats adultCount={adultCount} memberCount={memberCount} totalCount={totalCount} />
           </div>
         </div>
-        <div className="w-full box-border px-[5%] flex justify-end items-center pb-[35px] bg-[#FFFCF6]">
+        <div className="w-full box-border px-[5%] flex justify-end items-center pb-9 bg-[#FFFCF6]">
           <Button
             onClick={handleCapture}
-            className="w-[102px] h-[43px] text-[16px] border border-solid border-black rounded-[16px] bg-[#EDE8FF] focus:bg-[#EDE8FF] focus:border-black text-black hover:bg-[#EDE8FF] hover:border-black active:bg-[#EDE8FF] active:border-black">
+            className="w-[102px] h-11 text-base border border-solid border-black rounded-2xl bg-[#EDE8FF] focus:bg-[#EDE8FF] focus:border-black text-black hover:bg-[#EDE8FF] hover:border-black active:bg-[#EDE8FF] active:border-black">
             공유하기
           </Button>
         </div>
