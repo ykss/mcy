@@ -107,6 +107,36 @@ interface AttendanceStatus {
 
 ---
 
+## Animation Conventions
+
+### `useFadeIn` 훅
+
+스크롤 진입 시 아래→위 페이드인(stagger) 애니메이션은 `src/hooks/useFadeIn.ts`를 사용합니다.
+
+```tsx
+const ref = useFadeIn()
+
+return (
+  <section ref={ref}>
+    <h2 data-fade data-delay="0">제목</h2>
+    <p data-fade data-delay="100">첫 번째 항목 (100ms 지연)</p>
+    <p data-fade data-delay="200">두 번째 항목 (200ms 지연)</p>
+  </section>
+)
+```
+
+| 속성 | 타입 | 설명 |
+|------|------|------|
+| `data-fade` | boolean 속성 | 페이드인 대상 요소에 추가 |
+| `data-delay` | `string` (ms 숫자) | 애니메이션 지연 시간 |
+
+- `ref`는 `data-fade` 요소들의 공통 **부모**에 연결
+- 초기 숨김 상태는 `index.css`의 `[data-fade]` 규칙으로 처리 (JS 실행 전 FOUC 방지)
+- 애니메이션 키프레임은 `tailwind.config.ts`의 `fade-up`으로 정의 (`animate-fade-up` 클래스로 적용)
+- 새 페이드인 키프레임이 필요하면 `tailwind.config.ts`에 추가하고, CSS 초기 상태를 `index.css`에 함께 정의
+
+---
+
 ## Function Design Principles
 
 ### SRP (Single Responsibility Principle)
@@ -186,6 +216,37 @@ VITE_APP_ID=
 3. **작업 진행**: 승인 후 작업을 진행합니다.
 4. **커밋 메시지 추천**: 작업 완료 후 커밋 메시지를 추천합니다.
 5. **PR 작성**: 작업 완료 후 아래 PR 템플릿 형식에 맞게 PR 본문을 작성합니다.
+
+### Commit Message Format
+
+```
+<type>: <제목> (50자 이내)
+
+- <변경 이유 또는 맥락>
+- <주요 변경 사항 1>
+- <주요 변경 사항 2>
+```
+
+| type | 설명 |
+|------|------|
+| `feat` | 새 기능 추가 |
+| `fix` | 버그 수정 |
+| `refactor` | 기능 변경 없는 코드 개선 |
+| `style` | 포매팅, 오타 등 로직 무관한 수정 |
+| `docs` | 문서 수정 (CLAUDE.md 등) |
+| `chore` | 빌드·설정 파일 변경 |
+
+**예시**
+
+```
+feat: 출석 체크 페이지 날짜 선택 기능 추가
+
+- 매주 날짜를 수동 입력하던 불편함 해소
+- DatePicker 컴포넌트 신규 추가
+- useAttendanceDate 훅으로 날짜 상태 분리
+```
+
+---
 
 ### PR Template (`.github/PULL_REQUEST_TEMPLATE.md`)
 

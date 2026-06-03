@@ -57,29 +57,27 @@ const BirthDay = () => {
       <Layout>
         <div className="w-full h-full flex flex-col box-border">
           {/* 월 선택 버튼 */}
-          <div className="w-full px-[5%] h-[30%] mx-auto flex flex-col justify-center gap-[20px] box-border">
-            <div className="text-2xl font-bold">월 선택</div>
+          <div className="w-full px-[5%] h-[30%] mx-auto flex flex-col justify-center gap-[4vw] box-border">
+            <div className="text-[clamp(18px,5vw,24px)] font-bold">월 선택</div>
             <div className="grid grid-cols-6 gap-1">
               {Array.from({ length: 12 }, (_, i) => (
                 <Button
                   key={i}
                   variant="ghost"
-                  className={`p-0 w-full h-[50px] bg-[#F0F0F0] rounded-none hover:bg-[#F0F0F0] border-0  ${i === 0 ? "rounded-tl-lg" : i === 5 ? "rounded-tr-lg" : i === 6 ? "rounded-bl-lg" : i === 11 ? "rounded-br-lg" : ""}`}
+                  className={`p-0 w-full h-[clamp(36px,11vw,50px)] bg-[#F0F0F0] rounded-none hover:bg-[#F0F0F0] border-0 ${i === monthChipId - 1 ? "bg-[#b4dfc3] hover:bg-[#b4dfc3]" : ""} ${i === 0 ? "rounded-tl-lg" : i === 5 ? "rounded-tr-lg" : i === 6 ? "rounded-bl-lg" : i === 11 ? "rounded-br-lg" : ""}`}
                   onClick={() => handleChipClick(i + 1)}>
-                  <div className="text-sm text-[#7C7C7C]">{i + 1}월</div>
+                  <div className="text-[clamp(10px,3vw,14px)] text-[#7C7C7C]">{i + 1}월</div>
                 </Button>
               ))}
             </div>
           </div>
 
           {/* 생일 리스트 */}
-          <div className="w-full flex-1 px-[5%] mt-[20px] rounded-[17px] box-border bg-[#FFFCF6] ">
-            <div className="w-full text-xl font-bold box-border">{monthChipId}월 생일을 축하합니다</div>
-            <div className="w-full flex flex-wrap justify-between pt-[20px]">
+          <div className="w-full flex-1 px-[5%] my-[4vw] rounded-[17px] box-border bg-[#FFFCF6] overflow-y-auto">
+            <div className="w-full text-[clamp(16px,4.5vw,20px)] font-bold box-border">{monthChipId}월 생일을 축하합니다</div>
+            <div className="w-full grid grid-cols-2 gap-[3vw] pt-[4vw]">
               {selectedData.map((item, index) => (
-                <div className="pb-4" key={index}>
-                  <BirthDayCard name={item.name} date={item.date} />
-                </div>
+                <BirthDayCard key={index} name={item.name} date={item.date} />
               ))}
             </div>
           </div>
