@@ -26,11 +26,11 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
           <X className="text-[15px]" onClick={toggleDrawer} />
         </div>
         <DrawerHeader className="mt-[60px]">
-          <div className="w-[100%]">
+          <div className="w-[100%] flex flex-col gap-4">
             <div className={"ml-[10px]"} onClick={() => handleNavigate(admin ? PAGE_PATH.ATTENDANCE_CHECK : PAGE_PATH.ATTENDANCE_STATUS)}>
               <div className="flex flex-row w-[100%] gap-3">
                 <div className="flex justify-center items-center w-[30%]">
-                  <div className="w-[90%] h-[35%] bg-[#b4dfc3] border-[1px] border-solid border-black rounded-[22px]" />
+                  <div className="w-[90%] h-[35%] bg-[#b4dfc3] border-[1px] py-3 border-solid border-black rounded-[22px]" />
                 </div>
                 <div className="w-[30%]">
                   <p className=" font-['Noto_Sans'] font-semibold text-[24px] ">출석</p>
@@ -40,7 +40,7 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
             <div className={"ml-[10px]"} onClick={() => handleNavigate(PAGE_PATH.BIRTHDAY)}>
               <div className="flex flex-row w-[100%] gap-3">
                 <div className="flex justify-center items-center w-[30%]">
-                  <div className="w-[90%] h-[30%] bg-[#f3c5c5] border-[1px] border-solid  border-black rounded-[22px]" />
+                  <div className="w-[90%] h-[30%] bg-[#f3c5c5] border-[1px] py-3 border-solid  border-black rounded-[22px]" />
                 </div>
                 <div className="w-[30%]">
                   <p className=" font-['Noto_Sans'] font-semibold text-[24px] ">생일</p>
