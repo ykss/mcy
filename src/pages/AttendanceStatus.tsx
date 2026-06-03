@@ -4,6 +4,7 @@ import { useState } from "react"
 import html2canvas from "html2canvas"
 import toast from "react-hot-toast"
 
+import { ShareIcon } from "@heroicons/react/24/solid"
 import Layout from "../components/Layout/Layout"
 import { Button } from "../components/ui/button"
 import { useWeeklyAttendance } from "../hooks/useWeeklyAttendance"
@@ -80,7 +81,8 @@ const AttendanceStatus = () => {
         <div className="w-full px-5 flex justify-end pb-8 bg-[#FFFCF6]">
           <Button
             onClick={handleCapture}
-            className="w-[102px] h-11 text-base border border-solid border-black rounded-2xl bg-[#EDE8FF] focus:bg-[#EDE8FF] focus:border-black text-black hover:bg-[#EDE8FF] hover:border-black active:bg-[#EDE8FF] active:border-black">
+            className="w-full h-12 text-base rounded-2xl bg-[#6355C7] text-white border-0 font-semibold hover:bg-[#6355C7]/90 active:bg-[#6355C7]/80 flex items-center justify-center gap-2 my-2">
+            <ShareIcon className="w-5 h-5" />
             공유하기
           </Button>
         </div>
