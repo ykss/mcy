@@ -47,6 +47,16 @@ const MenuDrawer = ({ open, setOpen, navigate }: MenuDrawerProps) => {
                 </div>
               </div>
             </div>
+            <div className={"ml-[10px]"} onClick={() => handleNavigate(PAGE_PATH.CELL_MANAGEMENT)}>
+              <div className="flex flex-row w-[100%] gap-3">
+                <div className="flex justify-center items-center w-[30%]">
+                  <div className="w-[90%] h-[30%] bg-[#DCD5F7] border-[1px] py-3 border-solid border-black rounded-[22px]" />
+                </div>
+                <div className="w-[30%]">
+                  <p className=" font-['Noto_Sans'] font-semibold text-[24px] ">명단</p>
+                </div>
+              </div>
+            </div>
           </div>
         </DrawerHeader>
 
