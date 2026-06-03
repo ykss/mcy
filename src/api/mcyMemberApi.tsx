@@ -7,15 +7,25 @@ const COLLECTION = "mcyMember"
 const DOCUMENT = "memberInfo"
 const FIELD = "mcyMember"
 
+// Firebase에 저장된 구버전 데이터(checkedMember: string[])를 신규 구조로 변환
+const normalizeMember = (raw: McyMember & { checkedMember?: string[] }): McyMember => {
+  if (raw.members) return raw
+  return {
+    ...raw,
+    members: (raw.checkedMember ?? []).map(name => ({ name, roles: ["셀원"] as const })),
+    color: raw.color ?? "",
+  }
+}
+
 const getMcyMemberApi = async (): Promise<McyMember[]> => {
   try {
     const docRef = doc(db, COLLECTION, DOCUMENT)
     const docSnap = await getDoc(docRef)
 
     if (docSnap.exists()) {
-      const memberInfo = docSnap.data()[FIELD] as McyMember[]
+      const memberInfo = docSnap.data()[FIELD] as (McyMember & { checkedMember?: string[] })[]
       return memberInfo
-        ? memberInfo.sort((a, b) => Number(a.history) - Number(b.history))
+        ? memberInfo.map(normalizeMember).sort((a, b) => Number(a.history) - Number(b.history))
         : []
     }
     return []

@@ -21,11 +21,7 @@ const Header = ({ setIsDrawerOpen }: { setIsDrawerOpen: (isDrawerOpen: boolean) 
         <header className="flex flex-row items-center w-full h-[80px] bg-[#FFFCF6]">
           <div className="flex flex-row relative justify-center items-center w-full h-[60%] border-y-[1px] border-x-0 border-solid border-[#7c7c7c]">
             <Typography
-              scroll-m-20
-              text-base
-              font-semibold
-              tracking-tight
-              className="w-[25%] text-center text-[20px] rounded-[15px] border-[1px] border-solid  border-black cursor-pointer"
+              className="w-[25%] text-center text-[20px] rounded-[15px] border-[1px] border-solid border-black cursor-pointer scroll-m-20 font-semibold tracking-tight"
               onClick={handleGoMain}>
               MCY
             </Typography>
