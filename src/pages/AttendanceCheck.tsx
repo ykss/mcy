@@ -1,13 +1,10 @@
 import dayjs from "dayjs"
 import "dayjs/locale/ko"
-import { ChevronLeftIcon, ChevronRightIcon, UserGroupIcon } from "@heroicons/react/24/outline"
-import { PlusIcon, MinusIcon } from "@heroicons/react/24/solid"
+import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon, UserGroupIcon } from "@heroicons/react/24/outline"
+import { PlusIcon, MinusIcon, CheckIcon } from "@heroicons/react/24/solid"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
-import { Checkbox } from "../components/ui/checkbox"
-import { Button } from "../components/ui/button"
 import Layout from "../components/Layout/Layout"
 import { McyMember } from "../types/McyMember"
 import { AttendanceStatus, CellData } from "../types/CheckedMember"
@@ -15,6 +12,45 @@ import PAGE_PATH from "../constants/path"
 
 import { getMcyMemberApi } from "../api/mcyMemberApi"
 import { getAttendanceStatusApi, updateAttendanceApi } from "../api/mcyAttendanceDataApi"
+
+const CELL_COLORS = [
+  {
+    cardBg: "bg-[#CCCAF0]",
+    panelBg: "bg-[#D9D7F4]",
+    checkedBg: "bg-[#6664C8]",
+    uncheckedBg: "bg-white",
+    avatarBg: "bg-white",
+    avatarText: "text-[#6664C8]",
+  },
+  {
+    cardBg: "bg-[#C5DFC2]",
+    panelBg: "bg-[#D5E9D3]",
+    checkedBg: "bg-[#5E9E5A]",
+    uncheckedBg: "bg-[#E8F4E7]",
+    avatarBg: "bg-white",
+    avatarText: "text-[#5E9E5A]",
+  },
+  {
+    cardBg: "bg-[#F0E0A0]",
+    panelBg: "bg-[#F7ECC4]",
+    checkedBg: "bg-[#C4A030]",
+    uncheckedBg: "bg-[#FAF4DA]",
+    avatarBg: "bg-white",
+    avatarText: "text-[#C4A030]",
+  },
+  {
+    cardBg: "bg-[#F5C5C5]",
+    panelBg: "bg-[#FAD8D8]",
+    checkedBg: "bg-[#C45050]",
+    uncheckedBg: "bg-[#FFF0F0]",
+    avatarBg: "bg-white",
+    avatarText: "text-[#C45050]",
+  },
+]
+
+const getDayLabel = (date: dayjs.Dayjs) => {
+  return date.day() === 0 ? "주일" : date.locale("ko").format("dddd")
+}
 
 const AttendanceCheck = () => {
   const navigate = useNavigate()
@@ -24,18 +60,25 @@ const AttendanceCheck = () => {
   const [memberList, setMemberList] = useState<McyMember[]>([])
   const [selectedCell, setSelectedCell] = useState<McyMember | null>(null)
   const [currentDate, setCurrentDate] = useState<dayjs.Dayjs>(
-    dayjs().locale("ko").day(0), // 이번 주 일요일
+    dayjs().locale("ko").day(0),
   )
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({})
   const [attendanceData, setAttendanceData] = useState<AttendanceStatus | null>(null)
+  const [showCellDropdown, setShowCellDropdown] = useState<boolean>(false)
 
-  // 공통으로 사용되는 함수들
-  const getCurrentDateStr = () => currentDate.format("YYYY-MM-DD") // 현재 날짜 문자열 반환
+  const cellColorIndex = selectedCell
+    ? memberList.findIndex(m => m.cell === selectedCell.cell) % CELL_COLORS.length
+    : 0
+  const cellColors = CELL_COLORS[Math.max(0, cellColorIndex)]
 
-  const calculateTotalCount = (memberCount: number, adultCount: number) => memberCount + adultCount // 총 인원 수 계산
+  const currentCellCheckedCount = selectedCell
+    ? selectedCell.checkedMember.filter(member => checkedItems[`${selectedCell.cell}:${member}`]).length
+    : 0
+
+  const getCurrentDateStr = () => currentDate.format("YYYY-MM-DD")
+  const calculateTotalCount = (memberCount: number, adult: number) => memberCount + adult
 
   const updateFirebaseAttendance = async (newData: AttendanceStatus) => {
-    // 출석 데이터 업데이트
     const dateStr = getCurrentDateStr()
     try {
       await updateAttendanceApi(dateStr, newData)
@@ -43,32 +86,26 @@ const AttendanceCheck = () => {
       console.error("출석 데이터 업데이트 중 오류 발생:", error)
     }
   }
-  // 컴포넌트 마운트 시 멤버 목록과 출석 데이터 로드
+
   useEffect(() => {
     const fetchMemberList = async () => {
-      const data = await getMcyMemberApi() // 셀 정보 가져오기
+      const data = await getMcyMemberApi()
       setMemberList(data)
       setSelectedCell(data[0])
     }
-
     fetchMemberList()
   }, [])
 
-  // 셀 선택 시 체크박스 목록 변경
   const handleCellChange = (value: string) => {
     const cell = memberList.find(member => member.cell === value)
-    if (cell) {
-      setSelectedCell(cell)
-    }
+    if (cell) setSelectedCell(cell)
   }
 
-  // 현재 날짜의 출석 데이터 로드
   const loadAttendanceData = async () => {
     const dateStr = getCurrentDateStr()
     try {
       const data: AttendanceStatus | [] = await getAttendanceStatusApi(dateStr)
       if (Array.isArray(data) || !data) {
-        // 새 데이터 생성
         const newData: AttendanceStatus = {
           adultCount: 0,
           cellData: [],
@@ -82,7 +119,6 @@ const AttendanceCheck = () => {
         setAdultCount(0)
         setTotalMember(0)
       } else {
-        // 기존 데이터 설정
         setAttendanceData(data)
         const newCheckedItems: Record<string, boolean> = {}
         data.cellData.forEach((cellData: CellData) => {
@@ -105,37 +141,25 @@ const AttendanceCheck = () => {
     }
   }
 
-  // 어른 카운트 업데이트 공통 함수
   const handleAdultCountUpdate = async (newCount: number) => {
     if (!attendanceData) return
-
     const updatedData: AttendanceStatus = {
       ...attendanceData,
       adultCount: newCount,
       totalCount: calculateTotalCount(attendanceData.memberCount, newCount),
     }
-
     setAttendanceData(updatedData)
     setAdultCount(newCount)
     setTotalMember(calculateTotalCount(attendanceData.memberCount, newCount))
-
-    // Firebase 업데이트
     await updateFirebaseAttendance(updatedData)
   }
 
-  // 어른 수 증가
-  const handleAdultPlusMember = () => {
-    handleAdultCountUpdate(adultCount + 1)
-  }
+  const handleAdultPlusMember = () => handleAdultCountUpdate(adultCount + 1)
 
-  // 어른 수 감소
   const handleAdultMinusMember = () => {
-    if (adultCount > 0) {
-      handleAdultCountUpdate(adultCount - 1)
-    }
+    if (adultCount > 0) handleAdultCountUpdate(adultCount - 1)
   }
 
-  // 체크박스 상태 변경 처리
   const handleCheckChange = async (compositeKey: string, checked: boolean) => {
     if (!attendanceData) return
 
@@ -144,142 +168,191 @@ const AttendanceCheck = () => {
 
     if (!checked && newMemberCount < 0) return
 
-    // 체크박스 상태 업데이트
-    setCheckedItems(prev => ({
-      ...prev,
-      [compositeKey]: checked,
-    }))
+    setCheckedItems(prev => ({ ...prev, [compositeKey]: checked }))
 
-    // 출석 데이터 업데이트
     const updatedData = { ...attendanceData }
     const cellIndex = updatedData.cellData.findIndex(data => data.cell === cell)
 
     if (cellIndex >= 0) {
       if (checked) {
-        // 체크 설정: 멤버 추가
         if (!updatedData.cellData[cellIndex].checkedMember.includes(memberName)) {
           updatedData.cellData[cellIndex].checkedMember.push(memberName)
           updatedData.memberCount += 1
         }
       } else {
-        // 체크 해제: 멤버 제거
         const memberIndex = updatedData.cellData[cellIndex].checkedMember.indexOf(memberName)
         if (memberIndex !== -1) {
           updatedData.cellData[cellIndex].checkedMember.splice(memberIndex, 1)
           updatedData.memberCount -= 1
-
-          //셀에 멤버가 없으면 셀 자체를 제거
           if (updatedData.cellData[cellIndex].checkedMember.length === 0) {
             updatedData.cellData.splice(cellIndex, 1)
           }
         }
       }
     } else if (checked) {
-      // 출석체크에 셀이 없고 체크 설정이면 새 셀 추가
       updatedData.cellData.push({ cell, checkedMember: [memberName] })
       updatedData.memberCount += 1
     }
 
     updatedData.totalCount = calculateTotalCount(updatedData.memberCount, updatedData.adultCount)
 
-    // 상태 업데이트
     setAttendanceData(updatedData)
     setAttendanceMember(updatedData.memberCount)
     setTotalMember(updatedData.totalCount)
 
-    // Firebase 업데이트
     await updateFirebaseAttendance(updatedData)
   }
 
-  // 이전 주 일요일로 이동
-  const handlePrevWeek = () => {
-    setCurrentDate(currentDate.subtract(7, "day"))
-  }
+  const handlePrevWeek = () => setCurrentDate(currentDate.subtract(7, "day"))
+  const handleNextWeek = () => setCurrentDate(currentDate.add(7, "day"))
 
-  // 다음 주 일요일로 이동
-  const handleNextWeek = () => {
-    setCurrentDate(currentDate.add(7, "day"))
-  }
-
-  // 날짜가 변경될 때마다 출석 데이터 로드
   useEffect(() => {
     loadAttendanceData()
   }, [currentDate])
 
-  const handleGoAttendanceStatus = () => {
-    navigate(PAGE_PATH.ATTENDANCE_STATUS)
-  }
+  const handleGoAttendanceStatus = () => navigate(PAGE_PATH.ATTENDANCE_STATUS)
 
   return (
-    <div className="w-full h-[100dvh] flex flex-col box-border">
+    <div className="w-full min-h-[100dvh] flex flex-col">
       <Layout>
-        {/* 날짜 */}
-        <div className="w-full px-[5%] flex flex-row items-center justify-center gap-[30px] py-[20px] box-border">
-          <ChevronLeftIcon className="w-5 h-5 stroke-[2px] cursor-pointer" onClick={handlePrevWeek} />
-          <div className="text-[20px] font-semibold">{currentDate.format("YYYY.MM.DD")}</div>
-          <ChevronRightIcon className="w-5 h-5 stroke-[2px] cursor-pointer" onClick={handleNextWeek} />
-        </div>
-        {/* 출석체크 */}
-        {/* 선택 영역 */}
-        <div className="w-full px-[5%] flex flex-row items-center justify-between box-border py-[20px]">
-          <Select onValueChange={handleCellChange}>
-            <SelectTrigger className="w-[77%] h-[71px] bg-[#C7BDEB] text-[24px] text-black font-bold border border-solid border-black rounded-[22px] flex justify-between items-center px-7 box-border">
-              <SelectValue placeholder={memberList[0]?.cell || "셀 선택"} data-slot="select-value" className="" />
-            </SelectTrigger>
-            <SelectContent className="w-full bg-[#DDD6F9] rounded-[22px] border border-solid border-black box-border overflow-y-auto max-h-[300px]" position="popper" sideOffset={5}>
-              <SelectGroup className="px-7 py-2 box-border">
-                {memberList.map(member => (
-                  <SelectItem key={member.cell} className="w-full h-[55px] text-[18px] font-semibold" value={member.cell}>
-                    <span className="">{member.cell}</span>
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          {/* 출석부 바로 가기 */}
-          <div className="w-[71px] h-[71px] bg-[#DDD6F9] rounded-[22px] border border-solid border-black flex items-center justify-center" onClick={handleGoAttendanceStatus}>
-            <UserGroupIcon className="w-11 h-11" />
+        <div className="w-full flex flex-col pb-32">
+          {/* 날짜 헤더 */}
+          <div className="w-full px-5 pt-6 pb-5 flex flex-col items-center gap-1">
+            <span className="text-[11px] text-gray-400 font-medium tracking-widest">출석 체크 · CHECK-IN</span>
+            <div className="flex items-center gap-8 mt-1">
+              <button onClick={handlePrevWeek} className="p-1 rounded-full">
+                <ChevronLeftIcon className="w-5 h-5 stroke-[2.5px] text-gray-500" />
+              </button>
+              <span className="text-[28px] font-bold tracking-tight text-gray-800">
+                {currentDate.format("YYYY.MM.DD")}
+              </span>
+              <button onClick={handleNextWeek} className="p-1 rounded-full">
+                <ChevronRightIcon className="w-5 h-5 stroke-[2.5px] text-gray-500" />
+              </button>
+            </div>
+            <span className="text-sm text-gray-500 mt-0.5">{getDayLabel(currentDate)}</span>
           </div>
-        </div>
-        {/* 출석체크 */}
-        <div className="w-full h-[50%] px-[5%] py-[20px] box-border bg-[#FFFCF6]">
-          <div className="w-full h-full px-[10%] py-[40px] overflow-y-scroll bg-[#F8E6BA] border border-solid border-black rounded-[25px] box-border flex flex-wrap items-start content-start justify-between gap-[15px] scrollbar-hide">
-            {selectedCell?.checkedMember.map((member, index) => {
-              const key = `${selectedCell.cell}:${member}`
-              return (
+
+          {/* 셀 선택 */}
+          <div className="w-full px-5 flex gap-3 relative">
+            <div
+              className={`flex-1 ${cellColors.cardBg} rounded-2xl px-4 py-3.5 flex items-center justify-between cursor-pointer`}
+              onClick={() => setShowCellDropdown(prev => !prev)}
+            >
+              <div className="flex items-center gap-3">
                 <div
-                  key={index}
-                  className="w-[100px] min-h-[43px] my-[5px] bg-[#F0F0F0] rounded-[18px] border border-solid border-black flex flex-row items-center justify-center gap-2 py-[5px] px-[10px] ">
-                  <Checkbox id={key} checked={checkedItems[key] || false} onCheckedChange={checked => handleCheckChange(`${selectedCell.cell}:${member}`, checked as boolean)} className="bg-white" />
-                  <label htmlFor={key} className={`text-[20px]  ${checkedItems[key] ? "font-bold" : "font-medium"} break-keep text-center leading-[1.2]`}>
-                    {member}
-                  </label>
+                  className={`w-10 h-10 rounded-xl ${cellColors.avatarBg} ${cellColors.avatarText} flex items-center justify-center font-bold text-xl flex-shrink-0`}
+                >
+                  {selectedCell?.cell.charAt(0)}
                 </div>
-              )
-            })}
+                <div>
+                  <div className="font-bold text-gray-800 text-[15px] leading-tight">{selectedCell?.cell}</div>
+                  <div className="text-sm text-gray-500 mt-0.5">
+                    출석 {currentCellCheckedCount} / {selectedCell?.checkedMember.length}
+                  </div>
+                </div>
+              </div>
+              <ChevronDownIcon
+                className={`w-5 h-5 text-gray-500 transition-transform duration-200 flex-shrink-0 ${showCellDropdown ? "rotate-180" : ""}`}
+              />
+            </div>
+
+            {/* 전체 버튼 */}
+            <div
+              className={`w-16 ${cellColors.cardBg} rounded-2xl flex flex-col items-center justify-center gap-1 cursor-pointer`}
+              onClick={handleGoAttendanceStatus}
+            >
+              <UserGroupIcon className="w-7 h-7 text-gray-600" />
+              <span className="text-xs text-gray-600 font-medium">전체</span>
+            </div>
+
+            {/* 셀 드롭다운 */}
+            {showCellDropdown && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowCellDropdown(false)} />
+                <div className="absolute top-[calc(100%+8px)] left-5 right-5 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
+                  {memberList.map((member, idx) => {
+                    const isSelected = selectedCell?.cell === member.cell
+                    const color = CELL_COLORS[idx % CELL_COLORS.length]
+                    return (
+                      <div
+                        key={member.cell}
+                        className={`px-4 py-3.5 flex items-center gap-3 cursor-pointer transition-colors ${isSelected ? color.cardBg : "hover:bg-gray-50"}`}
+                        onClick={() => {
+                          handleCellChange(member.cell)
+                          setShowCellDropdown(false)
+                        }}
+                      >
+                        <div
+                          className={`w-8 h-8 rounded-lg ${color.cardBg} ${color.avatarText} flex items-center justify-center font-bold text-sm flex-shrink-0`}
+                        >
+                          {member.cell.charAt(0)}
+                        </div>
+                        <span className={`text-gray-800 ${isSelected ? "font-bold" : "font-medium"}`}>{member.cell}</span>
+                        {isSelected && <CheckIcon className="w-4 h-4 ml-auto text-gray-500" />}
+                      </div>
+                    )
+                  })}
+                </div>
+              </>
+            )}
           </div>
-        </div>
-        {/* 출석 인원 */}
-        <div className="w-full px-[5%] flex flex-row items-center justify-between box-border bg-[#FFFCF6] py-[20px]">
-          <div className="w-full h-[70px] mr-[5px] bg-[#C7BDEB] border border-solid border-black rounded-[25px] flex flex-row items-center justify-center">
-            <div className="text-[24px] font-bold">
-              출석 : {attendanceMember} / {totalMember}
+
+          {/* 멤버 패널 */}
+          <div className={`mx-5 mt-4 ${cellColors.panelBg} rounded-2xl p-4`}>
+            <div className="flex items-center justify-between mb-3 px-0.5">
+              <span className="font-semibold text-gray-700 text-[15px]">{selectedCell?.cell} 명단</span>
+              <div className="flex items-baseline gap-0.5">
+                <span className="font-bold text-gray-700 text-base">{currentCellCheckedCount}</span>
+                <span className="text-gray-400 text-sm"> / {selectedCell?.checkedMember.length}</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {selectedCell?.checkedMember.map((member, index) => {
+                const key = `${selectedCell.cell}:${member}`
+                const isChecked = checkedItems[key] || false
+                return (
+                  <div
+                    key={index}
+                    className={`${isChecked ? `${cellColors.checkedBg} text-white` : `${cellColors.uncheckedBg} text-gray-800`} rounded-xl px-3 py-3.5 flex items-center gap-2.5 cursor-pointer transition-all duration-150 active:scale-[0.97]`}
+                    onClick={() => handleCheckChange(key, !isChecked)}
+                  >
+                    <div
+                      className={`w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 ${
+                        isChecked ? "bg-white/25" : "border-[1.5px] border-gray-300"
+                      }`}
+                    >
+                      {isChecked && <CheckIcon className="w-3 h-3 text-white" />}
+                    </div>
+                    <span className={`text-sm leading-tight ${isChecked ? "font-semibold" : "font-medium"}`}>{member}</span>
+                  </div>
+                )
+              })}
             </div>
           </div>
-          <div className="flex flex-row items-center gap-[5px]">
-            {/* 출석 인원 증가 */}
-            <Button
-              onClick={handleAdultPlusMember}
-              className="w-[70px] h-[70px] px-[5%] bg-[#DDD6F9] text-black box-border border border-solid border-black rounded-[25px] [&_svg]:size-10 focus:bg-[#DDD6F9] focus:border-black">
-              <PlusIcon />
-            </Button>
-            {/* 출석 인원 감소 */}
-            <Button
-              onClick={handleAdultMinusMember}
-              className="w-[70px] h-[70px] px-[5%] bg-[#DDD6F9] text-black box-border border border-solid border-black rounded-[25px] [&_svg]:size-10 focus:bg-[#DDD6F9] focus:border-black">
-              <MinusIcon />
-            </Button>
+        </div>
+
+        {/* 하단 바 */}
+        <div className="fixed bottom-0 left-0 right-0 px-5 pb-6 pt-3 flex items-center gap-3 bg-[#FFFCF6]/90 backdrop-blur-sm">
+          <div className="flex-1 bg-[#5B4FCF] rounded-2xl px-5 py-3 flex flex-col justify-center min-h-[64px]">
+            <span className="text-white/70 text-xs font-medium">전체 출석</span>
+            <div className="flex items-baseline gap-1.5 mt-0.5">
+              <span className="text-white text-[28px] font-bold leading-none">{attendanceMember}</span>
+              <span className="text-white/50 text-lg leading-none">/ {totalMember}</span>
+            </div>
           </div>
+          <button
+            onClick={handleAdultPlusMember}
+            className="w-[60px] h-[64px] bg-white rounded-2xl flex items-center justify-center shadow-sm border border-gray-100 active:scale-95 transition-transform"
+          >
+            <PlusIcon className="w-6 h-6 text-gray-700" />
+          </button>
+          <button
+            onClick={handleAdultMinusMember}
+            className="w-[60px] h-[64px] bg-white rounded-2xl flex items-center justify-center shadow-sm border border-gray-100 active:scale-95 transition-transform"
+          >
+            <MinusIcon className="w-6 h-6 text-gray-700" />
+          </button>
         </div>
       </Layout>
     </div>
