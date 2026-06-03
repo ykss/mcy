@@ -8,6 +8,7 @@ import WeeklySection from "../components/Main/WeeklySection"
 import MainFooter from "../components/Main/MainFooter"
 
 const Main = () => {
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const navigate = useNavigate()
 
@@ -20,6 +21,7 @@ const Main = () => {
         {/* <WeeklySection /> */}
         <MainFooter />
         <MenuDrawer open={isDrawerOpen} setOpen={setIsDrawerOpen} navigate={navigate} />
+
       </div>
     </div>
   )
