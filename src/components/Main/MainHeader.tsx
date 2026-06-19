@@ -2,16 +2,18 @@ import { useState, useEffect } from "react"
 
 interface MainHeaderProps {
   onMenuClick: () => void
+  solid?: boolean
 }
 
-const MainHeader = ({ onMenuClick }: MainHeaderProps) => {
-  const [scrolled, setScrolled] = useState(false)
+const MainHeader = ({ onMenuClick, solid = false }: MainHeaderProps) => {
+  const [scrolled, setScrolled] = useState(solid)
 
   useEffect(() => {
+    if (solid) return
     const onScroll = () => setScrolled(window.scrollY > 10)
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
-  }, [])
+  }, [solid])
 
   return (
     <header
