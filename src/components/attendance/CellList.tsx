@@ -5,23 +5,60 @@ interface CellListProps {
   maxRows: number
 }
 
-export const CellList = ({ cellData, maxRows }: CellListProps) => {
+const CELL_COLORS = ["#DCD5F7", "#F6E4A4", "#F9C5C8", "#C4E6CC", "#C8DDF4", "#E8D5F7", "#F6CCD0"]
+
+export const CellList = ({ cellData }: CellListProps) => {
   return (
-    <div className="flex flex-col gap-y-2">
-      {cellData.map((cell, index) => (
-        <div key={cell.cell + index} className="w-full box-border flex border border-solid border-black" style={{ height: `${Math.max(80, maxRows * 40)}px` }}>
-          <div className="w-[30%] flex items-center justify-center text-[12px] bg-[#D9D9D9] border-0 border-r border-solid border-black">{cell.cell}</div>
-          <div className="w-[55%] px-3 flex flex-wrap items-center gap-y-2 text-[12px] box-border py-3">
-            {cell.checkedMember.length > 0 &&
-              cell.checkedMember.map((member, index) => (
-                <div key={member + index} className="w-1/4 flex justify-center items-center">
-                  {member}
+    <div className="w-full flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <p className="text-base font-bold text-[#2C2722]">셀별 출석</p>
+        <p className="text-xs text-[#9B9B9B]">{cellData.length}개 셀</p>
+      </div>
+
+      {cellData.map((cell, index) => {
+        const isMinistry = !cell.cell.endsWith(" 셀")
+        const leaderName = isMinistry ? null : cell.cell.replace(" 셀", "")
+        const leaderInitial = leaderName ? leaderName[0] : "+"
+        const color = CELL_COLORS[index % CELL_COLORS.length]
+        const accentStyle = isMinistry ? { background: `repeating-linear-gradient(45deg, #F9C5C8, #F9C5C8 4px, #fff 4px, #fff 8px)` } : { backgroundColor: color }
+
+        return (
+          <div key={cell.cell + index} className="w-full bg-white rounded-2xl overflow-hidden border border-black/10">
+            <div className="flex">
+              <div className="w-1.5 shrink-0" style={accentStyle} />
+              <div className="flex-1 p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shrink-0 text-[#2C2722]" style={{ backgroundColor: color }}>
+                    {leaderInitial}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-[#2C2722] text-sm">{cell.cell}</p>
+                    <p className="text-xs text-[#9B9B9B]">{isMinistry ? "MINISTRY" : `LED BY ${leaderName}`}</p>
+                  </div>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-[#2C2722] gap-1" style={{ backgroundColor: color }}>
+                    <span className="font-bold text-sm leading-none">{cell.checkedMember.length}</span>
+                    <span className="text-[10px] leading-tight">명</span>
+                  </div>
                 </div>
-              ))}
+
+                <div className="flex flex-wrap gap-2">
+                  {cell.checkedMember.map((member, i) => {
+                    const isLeader = member === leaderName
+                    return (
+                      <span
+                        key={member + i}
+                        className="px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap text-[#2C2722]"
+                        style={isLeader ? { backgroundColor: color } : { backgroundColor: 'rgba(0,0,0,0.06)' }}>
+                        {isLeader ? `★ ${member}` : member}
+                      </span>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="w-[15%] flex items-center justify-center text-[12px] bg-[#D9D9D9] border-0 border-l border-solid border-black">{cell.checkedMember.length}</div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }

@@ -5,26 +5,31 @@ interface AttendanceStatsProps {
 }
 
 export const AttendanceStats = ({ adultCount, memberCount, totalCount }: AttendanceStatsProps) => {
+  const attendanceRate = totalCount > 0 ? Math.round((memberCount / totalCount) * 100) : 0
+
   return (
-    <div className="w-full h-[60px] flex flex-row gap-x-2 justify-between text-[12px]">
-      {/* 왼쪽 */}
-      <div className="w-[50%] h-full border border-solid border-black">
-        {/* 상단 출석 */}
-        <div className="w-full h-[50%] flex flex-row items-center justify-between">
-          <div className="w-[30%] h-full flex items-center justify-center border-0 border-r border-b border-solid border-black">출석</div>
-          <div className="w-[70%] h-full flex items-center justify-center border-0 border-b border-solid border-black">{memberCount}명</div>
+    <div className="w-full flex flex-col gap-3">
+      <div className="flex gap-2">
+        <div className="flex-1 flex flex-col gap-1 rounded-2xl p-4 bg-[#C4E6CC]">
+          <p className="text-xs font-medium text-[#2A6049]">출석</p>
+          <p className="text-2xl font-bold text-[#2A6049]">
+            {memberCount}
+            <span className="text-sm font-medium ml-0.5">명</span>
+          </p>
         </div>
-        {/* 하단 기타 */}
-        <div className="w-full h-[50%] flex flex-row items-center justify-between">
-          <div className="w-[30%] h-full flex items-center justify-center border-0 border-r border-solid border-black">기타</div>
-          <div className="w-[70%] h-full flex items-center justify-center">{adultCount}명</div>
+        <div className="flex-1 flex flex-col gap-1 rounded-2xl p-4 bg-white border border-black/10">
+          <p className="text-xs font-medium text-[#6A6157]">기타</p>
+          <p className="text-2xl font-bold text-[#2C2722]">
+            {adultCount}
+            <span className="text-sm font-medium ml-0.5">명</span>
+          </p>
         </div>
-      </div>
-      {/* 오른쪽 */}
-      <div className="w-[50%] h-full border border-solid border-black">
-        <div className="w-full h-full flex flex-row items-center justify-between">
-          <div className="w-[30%] h-full flex items-center justify-center border-0 border-r border-solid border-black">총인원</div>
-          <div className="w-[70%] h-full flex items-center justify-center">{totalCount}명</div>
+        <div className="flex-1 flex flex-col gap-1 rounded-2xl p-4 bg-[#DCD5F7]">
+          <p className="text-xs font-medium text-[#5A3E8A]">총인원</p>
+          <p className="text-2xl font-bold text-[#5A3E8A]">
+            {totalCount}
+            <span className="text-sm font-medium ml-0.5">명</span>
+          </p>
         </div>
       </div>
     </div>
