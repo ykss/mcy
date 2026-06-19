@@ -1,88 +1,46 @@
-import dayjs from "dayjs"
-import customParseFormat from "dayjs/plugin/customParseFormat"
-
 import Layout from "../components/Layout/Layout"
-import { Button } from "../components/ui/button"
+import BirthDayBanner from "../components/BirthDay/BirthDayBanner"
+import MonthChips from "../components/BirthDay/MonthChips"
 import BirthDayCard from "../components/BirthDay/BirthDayCard"
-import { useState, useEffect } from "react"
-import { McyBirthdayApi } from "../api/mcyBirthdayApi"
-import { BirthdayInfo } from "../types/BirthdayInfo"
+import useBirthDay from "../hooks/useBirthDay"
+import useFadeIn from "../hooks/useFadeIn"
 
 const BirthDay = () => {
-  const [monthChipId, setMonthChipId] = useState<number>(dayjs().month() + 1)
-  const [birthDayData, setBirthDayData] = useState<BirthdayInfo[]>([]) // 파이어베이스 저장된 전체 생일 데이터
-  const [selectedData, setSelectedData] = useState<BirthdayInfo[]>([]) // 선택된 해당 월 생일 데이터
-
-  dayjs.extend(customParseFormat)
-
-  // 파이어베이스에서 데이터 가져오기
-  const fetchData = async (): Promise<void> => {
-    try {
-      const data = await McyBirthdayApi()
-      setBirthDayData(data)
-    } catch (error) {
-      console.error("Error fetching data: ", error)
-    }
-  }
-
-  // 해당 월 생일 데이터 필터링
-  const filterData = (): void => {
-    const filteredData = birthDayData.filter(item => {
-      if (!item.date) return false
-      const date = dayjs(item.date, "MM/DD")
-      const month = date.month() + 1
-      return month === monthChipId
-    })
-    setSelectedData(filteredData)
-  }
-
-  const handleChipClick = (targetId: number): void => {
-    setMonthChipId(targetId)
-  }
-
-  // 첫 렌더링시 파이어베이스에서 데이터 가져오기
-  useEffect(() => {
-    fetchData()
-  }, [])
-
-  // birthDayData가 변경되거나 monthChipId가 변경될 때 필터링 실행
-  useEffect(() => {
-    if (birthDayData.length > 0) {
-      filterData()
-    }
-  }, [birthDayData, monthChipId])
+  const { selectedMonth, setSelectedMonth, selectedData } = useBirthDay()
+  const ref = useFadeIn()
 
   return (
     <div className="w-full h-[100dvh]">
       <Layout>
-        <div className="w-full h-full flex flex-col box-border">
-          {/* 월 선택 버튼 */}
-          <div className="w-full px-[5%] h-[30%] mx-auto flex flex-col justify-center gap-[4vw] box-border">
-            <div className="text-[clamp(18px,5vw,24px)] font-bold">월 선택</div>
-            <div className="grid grid-cols-6 gap-1">
-              {Array.from({ length: 12 }, (_, i) => (
-                <Button
-                  key={i}
-                  variant="ghost"
-                  className={`p-0 w-full h-[clamp(36px,11vw,50px)] bg-[#F0F0F0] rounded-none hover:bg-[#F0F0F0] border-0 ${i === monthChipId - 1 ? "bg-[#b4dfc3] hover:bg-[#b4dfc3]" : ""} ${i === 0 ? "rounded-tl-lg" : i === 5 ? "rounded-tr-lg" : i === 6 ? "rounded-bl-lg" : i === 11 ? "rounded-br-lg" : ""}`}
-                  onClick={() => handleChipClick(i + 1)}>
-                  <div className="text-[clamp(10px,3vw,14px)] text-[#7C7C7C]">{i + 1}월</div>
-                </Button>
-              ))}
-            </div>
+        <section ref={ref} className="w-full h-full flex flex-col gap-6 px-[5%] py-6 box-border overflow-y-auto">
+          <div data-fade data-delay="0">
+            <BirthDayBanner month={selectedMonth} count={selectedData.length} />
           </div>
-
-          {/* 생일 리스트 */}
-          <div className="w-full flex-1 px-[5%] my-[4vw] rounded-[17px] box-border bg-[#FFFCF6] overflow-y-auto">
-            <div className="w-full text-[clamp(16px,4.5vw,20px)] font-bold box-border">{monthChipId}월 생일을 축하합니다</div>
-            <div className="w-full grid grid-cols-2 gap-[3vw] pt-[4vw]">
-              {selectedData.map((item, index) => (
-                <BirthDayCard key={index} name={item.name} date={item.date} />
-              ))}
-            </div>
+          <div data-fade data-delay="100">
+            <MonthChips selectedMonth={selectedMonth} onSelect={setSelectedMonth} />
           </div>
-        </div>
-        {/* <Footer /> */}
+          <div data-fade data-delay="200" className="flex flex-col gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-[clamp(15px,4.5vw,20px)] font-bold">
+                {selectedMonth}월 생일을 축하합니다
+              </span>
+              <span className="px-2.5 py-0.5 bg-[#FDEAEA] text-[#E07070] text-sm font-semibold rounded-full">
+                {selectedData.length}명
+              </span>
+            </div>
+            {selectedData.length === 0 ? (
+              <div className="text-center text-[#999999] text-sm py-8">
+                이번 달 생일인 멤버가 없어요
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-[3vw]">
+                {selectedData.map((item, index) => (
+                  <BirthDayCard key={index} name={item.name} date={item.date} />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
       </Layout>
     </div>
   )
