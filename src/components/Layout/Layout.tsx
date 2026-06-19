@@ -13,7 +13,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate()
 
   return (
-    <div className="w-full h-full mx-auto bg-[#FAF5EA]">
+    <div className="w-full h-full mx-auto bg-[#FFFCF6]">
       {!isRootPath && <MainHeader onMenuClick={() => setIsDrawerOpen(true)} solid />}
       <MenuDrawer open={isDrawerOpen} setOpen={setIsDrawerOpen} navigate={navigate} />
       <div className={`w-full mt-16 h-main-calc`}>{children}</div>
