@@ -62,6 +62,11 @@ const EditMemberDialog = ({ open, onClose, member, cellName, cells, onSuccess }:
     setAddingPosition(false)
   }
 
+  const handleDeletePosition = (pos: string) => {
+    setPositions(prev => prev.filter(p => p !== pos))
+    if (selectedPosition === pos) setSelectedPosition(null)
+  }
+
   const handleSave = async () => {
     if (!member) return
     if (selectedRoles.size === 0) {
@@ -156,24 +161,35 @@ const EditMemberDialog = ({ open, onClose, member, cellName, cells, onSuccess }:
             </label>
             <div className="flex flex-wrap gap-2">
               {positions.map(pos => (
-                <button
+                <div
                   key={pos}
-                  className="px-4 py-2 rounded-xl text-sm font-medium border transition-all"
                   style={{
                     backgroundColor: selectedPosition === pos ? "#DCD5F7" : "#FFFFFF",
                     borderColor: selectedPosition === pos ? "#5B4FCF" : "#E5E7EB",
-                    color: selectedPosition === pos ? "#5B4FCF" : "#374151",
                   }}
-                  onClick={() => setSelectedPosition(prev => (prev === pos ? null : pos))}
+                  className="inline-flex items-center gap-4 pl-4 pr-3 py-2.5 rounded-xl text-sm font-medium border transition-all"
                 >
-                  {pos}
-                </button>
+                  <div
+                    style={{ color: selectedPosition === pos ? "#5B4FCF" : "#374151" }}
+                    className="cursor-pointer"
+                    onClick={() => setSelectedPosition(prev => (prev === pos ? null : pos))}
+                  >
+                    {pos}
+                  </div>
+                  <div
+                    style={{ color: selectedPosition === pos ? "#9B8FE8" : "#D1D5DB" }}
+                    className="text-base hover:text-gray-500 transition-colors cursor-pointer"
+                    onClick={() => handleDeletePosition(pos)}
+                  >
+                    ✕
+                  </div>
+                </div>
               ))}
             </div>
             <div className="flex items-center gap-2">
               <button
                 className="px-4 py-2.5 rounded-xl text-sm font-medium border-2 border-dashed border-[#9B8FE8] text-[#5B4FCF] shrink-0"
-                onClick={() => setAddingPosition(true)}
+                onClick={() => setAddingPosition(prev => !prev)}
               >
                 + 직책 추가
               </button>

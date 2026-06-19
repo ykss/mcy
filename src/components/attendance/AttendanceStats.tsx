@@ -5,8 +5,6 @@ interface AttendanceStatsProps {
 }
 
 export const AttendanceStats = ({ adultCount, memberCount, totalCount }: AttendanceStatsProps) => {
-  const attendanceRate = totalCount > 0 ? Math.round((memberCount / totalCount) * 100) : 0
-
   return (
     <div className="w-full flex flex-col gap-3">
       <div className="flex gap-2">
