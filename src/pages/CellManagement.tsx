@@ -3,7 +3,7 @@ import Layout from "../components/Layout/Layout"
 import useFadeIn from "../hooks/useFadeIn"
 import useCellManagement, { FilterType } from "../hooks/useCellManagement"
 import CellManagementStats from "../components/cellManagement/CellManagementStats"
-import CellCard from "../components/cellManagement/CellCard"
+import CellCard, { CELL_COLORS } from "../components/cellManagement/CellCard"
 import MemberRow from "../components/cellManagement/MemberRow"
 import AddCellDialog from "../components/cellManagement/AddCellDialog"
 import AddMemberDialog from "../components/cellManagement/AddMemberDialog"
@@ -92,31 +92,61 @@ const CellManagement = () => {
           </div>
 
           <div data-fade data-delay="300" className="flex flex-col gap-3">
-            {filteredCells.map((cell, index) => (
-              <CellCard
-                key={cell.cell}
-                cell={cell}
-                index={index}
-                isExpanded={expandedCells.has(cell.cell)}
-                onToggle={() => toggleCell(cell.cell)}
-                onSettingsClick={() => setEditCellTarget(cell)}
-              >
-                {(cell.members ?? []).map((member, i) => {
-                  const isChecked = checkedMembers.get(cell.cell)?.has(member.name) ?? false
-                  return (
-                    <div key={member.name}>
-                      {i > 0 && <div className="mx-4 border-t border-black/5" />}
-                      <MemberRow
-                        member={member}
-                        checked={isChecked}
-                        onCheck={() => toggleMemberCheck(cell.cell, member.name)}
-                        onEditClick={() => setEditTarget({ cellName: cell.cell, member })}
+            {activeFilter === '전체'
+              ? filteredCells.map((cell, index) => (
+                  <CellCard
+                    key={cell.cell}
+                    cell={cell}
+                    index={index}
+                    isExpanded={expandedCells.has(cell.cell)}
+                    onToggle={() => toggleCell(cell.cell)}
+                    onSettingsClick={() => setEditCellTarget(cell)}
+                  >
+                    {(cell.members ?? []).map((member, i) => {
+                      const isChecked = checkedMembers.get(cell.cell)?.has(member.name) ?? false
+                      return (
+                        <div key={member.name}>
+                          {i > 0 && <div className="mx-4 border-t border-black/5" />}
+                          <MemberRow
+                            member={member}
+                            checked={isChecked}
+                            onCheck={() => toggleMemberCheck(cell.cell, member.name)}
+                            onEditClick={() => setEditTarget({ cellName: cell.cell, member })}
+                          />
+                        </div>
+                      )
+                    })}
+                  </CellCard>
+                ))
+              : filteredCells.map((cell, index) => (
+                  <div key={cell.cell} className="flex flex-col gap-1.5">
+                    <div className="flex items-center gap-2 px-1">
+                      <div
+                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        style={{ backgroundColor: cell.color || CELL_COLORS[index % CELL_COLORS.length] }}
                       />
+                      <span className="text-xs font-bold text-gray-400 tracking-wide">{cell.cell}</span>
+                      <span className="text-xs text-gray-300">{cell.members.length}명</span>
                     </div>
-                  )
-                })}
-              </CellCard>
-            ))}
+                    <div className="bg-white rounded-2xl border border-black/5 overflow-hidden">
+                      {cell.members.map((member, i) => {
+                        const isChecked = checkedMembers.get(cell.cell)?.has(member.name) ?? false
+                        return (
+                          <div key={member.name}>
+                            {i > 0 && <div className="mx-4 border-t border-black/5" />}
+                            <MemberRow
+                              member={member}
+                              checked={isChecked}
+                              onCheck={() => toggleMemberCheck(cell.cell, member.name)}
+                              onEditClick={() => setEditTarget({ cellName: cell.cell, member })}
+                            />
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                ))
+            }
           </div>
         </section>
       </Layout>
