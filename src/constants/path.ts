@@ -4,6 +4,7 @@ const PAGE_PATH = {
   BIRTHDAY: "/birthDay",
   ATTENDANCE_CHECK: "/attendanceCheck",
   ATTENDANCE_STATUS: "/attendanceStatus",
+  CELL_MANAGEMENT: "/cellManagement",
 } as const
 
 export default PAGE_PATH

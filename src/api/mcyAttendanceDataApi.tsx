@@ -44,4 +44,26 @@ const updateAttendanceApi = async (date: string, attendanceData: AttendanceStatu
   }
 }
 
-export { getAttendanceStatusApi, updateAttendanceApi }
+const renameCellInAttendanceApi = async (
+  oldCellName: string,
+  newCellName: string,
+  date: string
+): Promise<void> => {
+  const docRef = doc(db, "attendanceData", date)
+  const docSnap = await getDoc(docRef)
+  if (!docSnap.exists()) return
+
+  const data = docSnap.data() as AttendanceStatus
+  const hasOldCell = data.cellData.some(c => c.cell === oldCellName)
+  if (!hasOldCell) return
+
+  const updated = {
+    ...data,
+    cellData: data.cellData.map(c =>
+      c.cell === oldCellName ? { ...c, cell: newCellName } : c
+    ),
+  }
+  await updateDoc(docRef, updated as { [key: string]: unknown })
+}
+
+export { getAttendanceStatusApi, updateAttendanceApi, renameCellInAttendanceApi }

@@ -72,7 +72,7 @@ const AttendanceCheck = () => {
   const cellColors = CELL_COLORS[Math.max(0, cellColorIndex)]
 
   const currentCellCheckedCount = selectedCell
-    ? selectedCell.checkedMember.filter(member => checkedItems[`${selectedCell.cell}:${member}`]).length
+    ? selectedCell.members.map(m => m.name).filter(member => checkedItems[`${selectedCell.cell}:${member}`]).length
     : 0
 
   const getCurrentDateStr = () => currentDate.format("YYYY-MM-DD")
@@ -248,7 +248,7 @@ const AttendanceCheck = () => {
                 <div>
                   <div className="font-bold text-gray-800 text-[15px] leading-tight">{selectedCell?.cell}</div>
                   <div className="text-sm text-gray-500 mt-0.5">
-                    출석 {currentCellCheckedCount} / {selectedCell?.checkedMember.length}
+                    출석 {currentCellCheckedCount} / {selectedCell?.members.length}
                   </div>
                 </div>
               </div>
@@ -304,11 +304,11 @@ const AttendanceCheck = () => {
               <span className="font-semibold text-gray-700 text-[15px]">{selectedCell?.cell} 명단</span>
               <div className="flex items-baseline gap-0.5">
                 <span className="font-bold text-gray-700 text-base">{currentCellCheckedCount}</span>
-                <span className="text-gray-400 text-sm"> / {selectedCell?.checkedMember.length}</span>
+                <span className="text-gray-400 text-sm"> / {selectedCell?.members.length}</span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              {selectedCell?.checkedMember.map((member, index) => {
+              {selectedCell?.members.map(({ name: member }, index) => {
                 const key = `${selectedCell.cell}:${member}`
                 const isChecked = checkedItems[key] || false
                 return (

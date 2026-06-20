@@ -1,5 +1,8 @@
+import { CellMember } from './CellMember'
+
 export interface McyMember {
   cell: string
-  checkedMember: string[]
+  members: CellMember[]
+  color: string
   history: string
 }
