@@ -1,6 +1,8 @@
+import dayjs from "dayjs"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { updateCellApi, deleteCellApi } from "../../api/mcyMemberApi"
+import { renameCellInAttendanceApi } from "../../api/mcyAttendanceDataApi"
 import { McyMember } from "../../types/McyMember"
 import { CELL_COLORS } from "./CellCard"
 
@@ -31,7 +33,12 @@ const EditCellDialog = ({ open, onClose, cell, onSuccess }: Props) => {
     }
     setLoading(true)
     try {
-      await updateCellApi(cell.cell, { cell: cellName.trim(), color: selectedColor })
+      const trimmedName = cellName.trim()
+      await updateCellApi(cell.cell, { cell: trimmedName, color: selectedColor })
+      if (trimmedName !== cell.cell) {
+        const currentSunday = dayjs().day(0).format("YYYY-MM-DD")
+        await renameCellInAttendanceApi(cell.cell, trimmedName, currentSunday)
+      }
       toast.success("셀이 수정됐습니다.")
       onSuccess()
       onClose()
