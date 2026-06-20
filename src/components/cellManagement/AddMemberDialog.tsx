@@ -34,10 +34,11 @@ const AddMemberDialog = ({ open, onClose, cells, onSuccess }: Props) => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (!selectedCell && cells.length > 0) {
+    const exists = cells.some(c => c.cell === selectedCell)
+    if (!exists && cells.length > 0) {
       setSelectedCell(cells[0].cell)
     }
-  }, [cells])
+  }, [cells, selectedCell])
 
   const toggleRole = (role: MemberRole) => {
     setSelectedRoles(prev => {
