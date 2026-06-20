@@ -1,7 +1,10 @@
 import dayjs from "dayjs"
+import { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import Layout from "../components/Layout/Layout"
 import useFadeIn from "../hooks/useFadeIn"
 import useCellManagement, { FilterType } from "../hooks/useCellManagement"
+import PAGE_PATH from "../constants/path"
 import CellManagementStats from "../components/cellManagement/CellManagementStats"
 import CellCard, { CELL_COLORS } from "../components/cellManagement/CellCard"
 import MemberRow from "../components/cellManagement/MemberRow"
@@ -12,8 +15,15 @@ import EditCellDialog from "../components/cellManagement/EditCellDialog"
 import MoveMembersDialog from "../components/cellManagement/MoveMembersDialog"
 
 const CellManagement = () => {
+  const navigate = useNavigate()
   const ref = useFadeIn()
   const year = dayjs().year()
+
+  useEffect(() => {
+    if (localStorage.getItem("admin") !== "true") {
+      navigate(PAGE_PATH.MAIN, { replace: true })
+    }
+  }, [navigate])
   const {
     cells,
     filteredCells,
