@@ -80,6 +80,11 @@ const AddMemberDialog = ({ open, onClose, cells, onSuccess }: Props) => {
       toast.error("소속 셀을 선택해주세요.")
       return
     }
+    const targetCell = cells.find(c => c.cell === selectedCell)
+    if (targetCell?.members.some(m => m.name === name.trim())) {
+      toast.error("같은 셀에 이미 같은 이름의 멤버가 있습니다.")
+      return
+    }
     setLoading(true)
     try {
       await addMemberApi(selectedCell, {
