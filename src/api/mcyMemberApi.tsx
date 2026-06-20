@@ -18,21 +18,15 @@ const normalizeMember = (raw: McyMember & { checkedMember?: string[] }): McyMemb
 }
 
 const getMcyMemberApi = async (): Promise<McyMember[]> => {
-  try {
-    const docRef = doc(db, COLLECTION, DOCUMENT)
-    const docSnap = await getDoc(docRef)
+  const docRef = doc(db, COLLECTION, DOCUMENT)
+  const docSnap = await getDoc(docRef)
 
-    if (docSnap.exists()) {
-      const memberInfo = docSnap.data()[FIELD] as (McyMember & { checkedMember?: string[] })[]
-      return memberInfo
-        ? memberInfo.map(normalizeMember).sort((a, b) => Number(a.history) - Number(b.history))
-        : []
-    }
-    return []
-  } catch (error) {
-    console.error("문서 가져오기 에러: ", error)
-    return []
-  }
+  if (!docSnap.exists()) return []
+
+  const memberInfo = docSnap.data()[FIELD] as (McyMember & { checkedMember?: string[] })[]
+  return memberInfo
+    ? memberInfo.map(normalizeMember).sort((a, b) => Number(a.history) - Number(b.history))
+    : []
 }
 
 const cleanMember = (member: CellMember): CellMember =>

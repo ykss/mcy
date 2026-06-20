@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
+import toast from "react-hot-toast"
 import { getMcyMemberApi } from "../api/mcyMemberApi"
 import { McyMember } from "../types/McyMember"
 import { CellMember } from "../types/CellMember"
@@ -16,7 +17,13 @@ const useCellManagement = () => {
   const [moveOpen, setMoveOpen] = useState(false)
   const [checkedMembers, setCheckedMembers] = useState<Map<string, Set<string>>>(new Map())
 
-  const fetchCells = () => getMcyMemberApi().then(setCells)
+  const fetchCells = async () => {
+    try {
+      setCells(await getMcyMemberApi())
+    } catch {
+      toast.error("데이터를 불러오지 못했습니다.")
+    }
+  }
 
   useEffect(() => {
     fetchCells()
