@@ -1,27 +1,34 @@
 import { useState } from "react"
 import toast from "react-hot-toast"
 import { addCellApi } from "../../api/mcyMemberApi"
+import { McyMember } from "../../types/McyMember"
 import { CELL_COLORS } from "./CellCard"
 
 interface Props {
   open: boolean
   onClose: () => void
+  cells: McyMember[]
   onSuccess: () => void
 }
 
-const AddCellDialog = ({ open, onClose, onSuccess }: Props) => {
+const AddCellDialog = ({ open, onClose, cells, onSuccess }: Props) => {
   const [cellName, setCellName] = useState("")
   const [selectedColor, setSelectedColor] = useState(CELL_COLORS[0])
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async () => {
-    if (!cellName.trim()) {
+    const trimmedName = cellName.trim()
+    if (!trimmedName) {
       toast.error("셀 이름을 입력해주세요.")
+      return
+    }
+    if (cells.some(c => c.cell === trimmedName)) {
+      toast.error("이미 존재하는 셀 이름입니다.")
       return
     }
     setLoading(true)
     try {
-      await addCellApi({ cell: cellName.trim(), color: selectedColor, members: [], history: "99" })
+      await addCellApi({ cell: trimmedName, color: selectedColor, members: [], history: "99" })
       toast.success("셀이 추가됐습니다.")
       setCellName("")
       setSelectedColor(CELL_COLORS[0])

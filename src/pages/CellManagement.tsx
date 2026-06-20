@@ -185,6 +185,7 @@ const CellManagement = () => {
       <AddCellDialog
         open={addCellOpen}
         onClose={() => setAddCellOpen(false)}
+        cells={cells}
         onSuccess={fetchCells}
       />
       <AddMemberDialog
@@ -205,6 +206,7 @@ const CellManagement = () => {
         open={!!editCellTarget}
         onClose={() => setEditCellTarget(null)}
         cell={editCellTarget}
+        cells={cells}
         onSuccess={fetchCells}
       />
       <MoveMembersDialog

@@ -10,10 +10,11 @@ interface Props {
   open: boolean
   onClose: () => void
   cell: McyMember | null
+  cells: McyMember[]
   onSuccess: () => void
 }
 
-const EditCellDialog = ({ open, onClose, cell, onSuccess }: Props) => {
+const EditCellDialog = ({ open, onClose, cell, cells, onSuccess }: Props) => {
   const [cellName, setCellName] = useState("")
   const [selectedColor, setSelectedColor] = useState(CELL_COLORS[0])
   const [loading, setLoading] = useState(false)
@@ -32,8 +33,13 @@ const EditCellDialog = ({ open, onClose, cell, onSuccess }: Props) => {
       return
     }
     setLoading(true)
+    const trimmedName = cellName.trim()
+    if (trimmedName !== cell.cell && cells.some(c => c.cell === trimmedName)) {
+      toast.error("이미 존재하는 셀 이름입니다.")
+      setLoading(false)
+      return
+    }
     try {
-      const trimmedName = cellName.trim()
       await updateCellApi(cell.cell, { cell: trimmedName, color: selectedColor })
       if (trimmedName !== cell.cell) {
         const currentSunday = dayjs().day(0).format("YYYY-MM-DD")
