@@ -20,7 +20,7 @@ const ROLE_ACTIVE_STYLE: Record<MemberRole, { bg: string; text: string }> = {
   리더: { bg: "#DCD5F7", text: "#5B4FCF" },
   셀원: { bg: "#C4E6CC", text: "#2E7D32" },
   사역자: { bg: "#FDE8CC", text: "#B45309" },
-  군인: { bg: "#D1E8FF", text: "#1D4ED8" },
+  군인: { bg: "#D8DCCA", text: "#4B5320" },
 }
 
 const DEFAULT_POSITIONS = ["회장", "부회장", "총무", "서기", "대표리더"]
