@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { getMcyMemberApi } from "../api/mcyMemberApi"
 import { McyMember } from "../types/McyMember"
 import { CellMember } from "../types/CellMember"
 
+export type FilterType = '전체' | '사역자' | '군인' | '임원 & 리더'
+
 const useCellManagement = () => {
   const [cells, setCells] = useState<McyMember[]>([])
+  const [activeFilter, setActiveFilter] = useState<FilterType>('전체')
   const [expandedCells, setExpandedCells] = useState<Set<string>>(new Set())
   const [addCellOpen, setAddCellOpen] = useState(false)
   const [addMemberOpen, setAddMemberOpen] = useState(false)
@@ -18,6 +21,19 @@ const useCellManagement = () => {
   useEffect(() => {
     fetchCells()
   }, [])
+
+  const filteredCells = useMemo(() => {
+    if (activeFilter === '전체') return cells
+    return cells
+      .map(cell => ({
+        ...cell,
+        members: (cell.members ?? []).filter(m => {
+          if (activeFilter === '임원 & 리더') return m.roles.some(r => r === '임원' || r === '리더')
+          return m.roles.includes(activeFilter as '사역자' | '군인')
+        }),
+      }))
+      .filter(cell => cell.members.length > 0)
+  }, [cells, activeFilter])
 
   const totalChecked = Array.from(checkedMembers.values()).reduce((acc, s) => acc + s.size, 0)
 
@@ -48,6 +64,9 @@ const useCellManagement = () => {
 
   return {
     cells,
+    filteredCells,
+    activeFilter,
+    setActiveFilter,
     expandedCells,
     addCellOpen,
     setAddCellOpen,

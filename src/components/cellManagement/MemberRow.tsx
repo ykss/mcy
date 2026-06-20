@@ -14,6 +14,8 @@ const ROLE_STYLES: Record<MemberRole, string> = {
   리더: "bg-[#DCD5F7] text-[#5B4FCF]",
   셀원: "bg-[#F0F0F0] text-gray-500",
   임원: "bg-[#C4E6CC] text-[#2E7D32]",
+  사역자: "bg-[#FDE8CC] text-[#B45309]",
+  군인: "bg-[#D1E8FF] text-[#1D4ED8]",
 }
 
 const MemberRow = ({ member, checked = false, onCheck, onEditClick }: Props) => {

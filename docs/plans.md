@@ -17,3 +17,8 @@
 | ✅ | `feat: 임원 직책 칩 UI 개선 및 직책 삭제 기능 추가` | 직책 칩 인라인 ✕ 버튼, 직책 삭제, 토글 기능 |
 | ✅ | `fix: EditMemberDialog 소속 셀 변경 시 Firebase 이동 반영` | selectedCell !== cellName일 때 moveMembersApi 호출 후 updateMemberApi로 역할/직책 업데이트 |
 | ✅ | `fix: Firestore undefined 필드 저장 오류 수정` | saveMcyMembersApi에서 멤버 객체의 undefined 필드 제거 후 저장 |
+| ✅ | `feat: MemberRole에 사역자·군인 타입 추가` | CellMember.ts MemberRole 타입 확장 |
+| ✅ | `feat: MemberRow 역할 칩 스타일에 사역자·군인 추가` | ROLE_STYLES에 사역자·군인 색상 추가 |
+| ✅ | `feat: EditMemberDialog 역할 토글에 사역자·군인 추가` | ROLES 배열·ROLE_ACTIVE_STYLE에 사역자·군인 추가 |
+| ✅ | `feat: useCellManagement 멤버 필터 상태 추가` | FilterType·activeFilter·filteredCells 추가 |
+| ✅ | `feat: 셀 관리 페이지 필터 칩 UI 추가` | 전체·사역자·군인·임원&리더 칩 렌더링, filteredCells 적용 |

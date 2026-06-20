@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import Layout from "../components/Layout/Layout"
 import useFadeIn from "../hooks/useFadeIn"
-import useCellManagement from "../hooks/useCellManagement"
+import useCellManagement, { FilterType } from "../hooks/useCellManagement"
 import CellManagementStats from "../components/cellManagement/CellManagementStats"
 import CellCard from "../components/cellManagement/CellCard"
 import MemberRow from "../components/cellManagement/MemberRow"
@@ -16,6 +16,9 @@ const CellManagement = () => {
   const year = dayjs().year()
   const {
     cells,
+    filteredCells,
+    activeFilter,
+    setActiveFilter,
     expandedCells,
     addCellOpen, setAddCellOpen,
     addMemberOpen, setAddMemberOpen,
@@ -72,8 +75,24 @@ const CellManagement = () => {
             </p>
           </div>
 
+          <div data-fade data-delay="250" className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            {(['전체', '사역자', '군인', '임원 & 리더'] as FilterType[]).map(f => (
+              <button
+                key={f}
+                onClick={() => setActiveFilter(f)}
+                className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border transition-all ${
+                  activeFilter === f
+                    ? 'bg-[#5B4FCF] text-white border-[#5B4FCF]'
+                    : 'bg-white text-gray-600 border-black/10'
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+
           <div data-fade data-delay="300" className="flex flex-col gap-3">
-            {cells.map((cell, index) => (
+            {filteredCells.map((cell, index) => (
               <CellCard
                 key={cell.cell}
                 cell={cell}
