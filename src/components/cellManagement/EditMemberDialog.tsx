@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
-import { updateMemberApi, deleteMemberApi } from "../../api/mcyMemberApi"
+import { updateMemberApi, deleteMemberApi, moveMembersApi } from "../../api/mcyMemberApi"
 import { McyMember } from "../../types/McyMember"
 import { CellMember, MemberRole } from "../../types/CellMember"
 
@@ -75,7 +75,10 @@ const EditMemberDialog = ({ open, onClose, member, cellName, cells, onSuccess }:
     }
     setLoading(true)
     try {
-      await updateMemberApi(cellName, member.name, {
+      if (selectedCell !== cellName) {
+        await moveMembersApi(cellName, selectedCell, [member.name])
+      }
+      await updateMemberApi(selectedCell, member.name, {
         roles: Array.from(selectedRoles),
         position: selectedPosition ?? undefined,
       })

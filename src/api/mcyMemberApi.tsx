@@ -35,9 +35,13 @@ const getMcyMemberApi = async (): Promise<McyMember[]> => {
   }
 }
 
+const cleanMember = (member: CellMember): CellMember =>
+  Object.fromEntries(Object.entries(member).filter(([, v]) => v !== undefined)) as CellMember
+
 const saveMcyMembersApi = async (members: McyMember[]): Promise<void> => {
   const docRef = doc(db, COLLECTION, DOCUMENT)
-  await updateDoc(docRef, { [FIELD]: members })
+  const cleaned = members.map(cell => ({ ...cell, members: cell.members.map(cleanMember) }))
+  await updateDoc(docRef, { [FIELD]: cleaned })
 }
 
 const addCellApi = async (newCell: McyMember): Promise<void> => {
