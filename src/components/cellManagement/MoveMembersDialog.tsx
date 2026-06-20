@@ -1,5 +1,5 @@
 import toast from "react-hot-toast"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { moveMembersApi } from "../../api/mcyMemberApi"
 import { McyMember } from "../../types/McyMember"
 import { CELL_COLORS } from "./CellCard"
@@ -15,6 +15,10 @@ interface Props {
 const MoveMembersDialog = ({ open, onClose, checkedMembers, cells, onSuccess }: Props) => {
   const [selectedTarget, setSelectedTarget] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (open) setSelectedTarget(null)
+  }, [open])
 
   const totalCount = Array.from(checkedMembers.values()).reduce((acc, s) => acc + s.size, 0)
   const sourceCells = Array.from(checkedMembers.keys())
